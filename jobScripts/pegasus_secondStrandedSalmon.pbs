@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_salmon
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -25,7 +25,8 @@ echo "### RUNDIR: ${RUNDIR}"
 
 echo "### Starting salmon..."
 
-module load salmon/0.5.0
+module load salmon/0.6.0
+#module load salmon/0.5.0
 
 ##unstranded salmon
 
@@ -44,10 +45,10 @@ perf stat ${SALMONPATH}/salmon quant \
 if [ $? -eq 0 ] ; then
         echo "salmon cDNA passed"
 	cd ${DIR}/cDNA
-	mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
-	mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
-	mv quant.genes.sf ${SAMPLE}_salmon_cDNA_genes.sf
-	mv quant.sf ${SAMPLE}_salmon_cDNA_transcripts.sf
+	#mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
+	#mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
+	mv quant.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
+	mv quant.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
 
 	perf stat ${SALMONPATH}/salmon quant \
 		--index ${SALMON_INDEX_GTF} \
@@ -61,10 +62,10 @@ if [ $? -eq 0 ] ; then
 	if [ $? = 0 ] ; then
 		echo "Salmon GTF Passed"
 		cd ${DIR}/gtf
-		mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
-		mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
-		mv quant.genes.sf ${SAMPLE}_salmon_gtf_genes.sf
-		mv quant.sf ${SAMPLE}_salmon_gtf_transcripts.sf
+		#mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
+		#mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
+		mv quant.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
+		mv quant.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
 		touch ${DIR}.salmonPass
 	else
 		echo "Salmon GTF Failed"

@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_hc
 #PBS -l walltime=170:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -24,7 +24,7 @@ echo "### KNOWN: ${KNOWN}"
 echo "### BAMLIST: ${BAMLIST}"
 
 echo "### Haplotype caller started for multiple bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
+perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 -l INFO \
 -R ${REF} \
 -L ${CHRLIST}/Step${STEP}.list \

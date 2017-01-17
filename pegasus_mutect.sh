@@ -21,9 +21,9 @@ nxtStep2="pegasus_nextJob_vcfMerger.txt"
 #nxtStep5="pegasus_nextJob_deSeq.txt"
 #nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep7="pegasus_nextJob_samtoolsStats.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

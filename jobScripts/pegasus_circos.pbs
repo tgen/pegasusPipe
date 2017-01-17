@@ -4,7 +4,7 @@
 #PBS -N pegasus_circos
 #PBS -l walltime=96:00:00
 #PBS -l nodes=1:ppn=12
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
 #PBS -e /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out

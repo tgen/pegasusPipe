@@ -16,9 +16,9 @@ thisStep="pegasus_nextJob_finalize.txt"
 nxtStep1="central_nextJob_saveToIsilon.txt"
 nxtStep2="central_nextJob_saveStats.txt"
 nxtStep3="central_nextJob_saveToReport.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

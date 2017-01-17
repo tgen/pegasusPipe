@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_cna15.txt"
 nxtStep1="pegasus_nextJob_postCna15.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
@@ -135,6 +135,10 @@ do
 				bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_V6_noUTR_hs37d5_PaddedTargets_Picard_DGV_1kg_100_interval.bed"
 			elif [[ "$pair1KitName" == *S4U ]]  ; then
                                 bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
+		        elif [[ "$pair1KitName" == *S4U ]]  ; then
+                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_Padded_DGV_1kg.cna.bed"
+			elif [[ "$pair1KitName" == *ST2 ]]  ; then
+                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_Padded_DGV_1kg.cna.bed"
 			else
 				echo "We don't have a bed filter for this kit for no matched normal at this time"
 			fi
@@ -204,6 +208,8 @@ do
 
 				if [[ ! -e $nHsMetricPass || ! -e $tHsMetricPass || ! -e $tHsMetric || ! -e $nHsMetric ]] ; then
 					echo "### Normal, tumor Hs Metrics Pass or the hs metric file itself does not exist"
+					echo "$nHsMetricPass"
+					echo "$tHsMetricPass"
 					((qsubFails++))
 					continue
 				fi

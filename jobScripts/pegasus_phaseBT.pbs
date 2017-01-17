@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_phaseBT
 #PBS -l walltime=96:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -23,7 +23,7 @@ echo "### PED: ${PED}"
 echo "### OUTTRACKNAME: ${OUTTRACKNAME}"
 
 echo "### Phase by transmission started at $time."
-perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
 -R ${REF} \
 -T PhaseByTransmission \
 -V ${VCF} \

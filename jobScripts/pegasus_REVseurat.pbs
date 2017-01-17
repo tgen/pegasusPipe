@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_REVseurat
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -26,7 +26,7 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### SEURATPATH: ${SEURATPATH}"
 
 echo "### Seurat caller started for bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
+perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
 -T Seurat \
 -l INFO \
 -R ${REF} \

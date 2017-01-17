@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_SScuffQuant
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -56,7 +56,7 @@ endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))
 (( mins=$elapsed%3600/60 ))
-echo "RUNTIME:CUFFLINKS:$hours:$mins" > ${DIRNAME}.cuffquant.totalTime
+echo "RUNTIME:CUFFQUANT:$hours:$mins" > ${DIRNAME}.cuffquant.totalTime
 
 time=`date +%d-%m-%Y-%H-%M`
-echo "TIME:$time finished cufflinks on ${DIRNAME}"
+echo "TIME:$time finished cuffquant on ${DIRNAME}"

@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_snpEff
 #PBS -l walltime=16:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -30,6 +30,7 @@ java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
 	-v \
 	-i vcf \
 	-o txt \
+	-noLog \
 	-s ${summaryOut} \
 	-c ${SNPEFFPATH}/snpEff.config \
 	${DBVERSION} \
@@ -38,6 +39,7 @@ java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
 	-v \
 	-i vcf \
 	-o vcf \
+	-noLog \
 	-s ${summaryOut} \
 	-c ${SNPEFFPATH}/snpEff.config \
 	${DBVERSION} \

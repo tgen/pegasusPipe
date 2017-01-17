@@ -18,9 +18,9 @@ nxtStep2="pegasus_nextJob_dnaAlign.txt"
 nxtStep3="pegasus_nextJob_mergeFastqs.txt"
 nxtStep4="pegasus_nextJob_splitFastqs.txt"
 
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -90,7 +90,7 @@ do
 						echo "###This fastq doesn't have the proper extension: $thisFq"
 						echo "###Exiting"
 			                        echo "###This fastq doesn't have the proper extension: $thisFq, the proper extension is _R1_001.fastq.gz" >> ~/mailtmp-$$.txt
-				                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "mrussell@tgen.org"
+				                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
 				                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
 							
                                                 mv ~/mailtmp-$$.txt $runDir/checkConfig.wrongFQextension
@@ -101,7 +101,7 @@ do
 					if [[ ! -f $r2File ]] ; then
 						echo "FILE: $r2File not found, EXITING"
 						echo "###FILE: $r2File not found" >> ~/mailtmp-$$.txt
-                                                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "mrussell@tgen.org"
+                                                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
                                                 cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
                                                 mv ~/mailtmp-$$.txt $runDir/checkConfig.copyFastqFail
 						exit

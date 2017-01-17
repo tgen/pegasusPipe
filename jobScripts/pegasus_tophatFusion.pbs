@@ -2,8 +2,8 @@
 ##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #PBS -N pegasus_thFusion
-#PBS -l walltime=96:00:00
-#PBS -M mrussell@tgen.org
+#PBS -l walltime=150:00:00
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -52,7 +52,7 @@ cd ${DIR}
 #if [[ ${PRE1} != 0 || ${POS1} != 0 ]] ; then
 #	r1Trimmed=1
 #	echo "### we need trimming first on ${FASTQ1}"
-#	/home/mrussell/bin/DPtrimFastq.pl ${FASTQ1} ${PRE1} ${POS1} | gzip > $trimmedRead1 &
+#	/home/tgenjetstream/bin/DPtrimFastq.pl ${FASTQ1} ${PRE1} ${POS1} | gzip > $trimmedRead1 &
 #	f1id=$! #throw in background capture pid
 #else
 #	echo "### no trimming needed on ${FASTQ1}"
@@ -62,7 +62,7 @@ cd ${DIR}
 #if [[ ${PRE2} != 0 || ${POS2} != 0 ]] ; then
 #	r2Trimmed=1
 #	echo "### we need trimming first on ${FASTQ2}"
-#	/home/mrussell/bin/DPtrimFastq.pl ${FASTQ2} ${PRE2} ${POS2} | gzip > $trimmedRead2
+#	/home/tgenjetstream/bin/DPtrimFastq.pl ${FASTQ2} ${PRE2} ${POS2} | gzip > $trimmedRead2
 #	if [ $? -eq 0 ] ; then
 #		echo "### trim finished OK"
 		#juggling files

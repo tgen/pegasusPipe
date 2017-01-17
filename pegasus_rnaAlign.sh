@@ -24,9 +24,9 @@ nxtStep8="pegasus_nextJob_rnaMarkDup.txt"
 nxtStep9="pegasus_nextJob_cuffQuant.txt"
 nxtStep10="pegasus_nextJob_deSeq2.txt"
 nxtStep11="pegasus_nextJob_DEXseqCount.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

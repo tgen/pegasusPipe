@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_vcfMerger.txt"
 nxtStep1="pegasus_nextJob_mergeVcfAlleleCount.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -63,8 +63,8 @@ snpeffPath=`grep @@"$recipe"@@ $constants | grep @@SNPEFFPATH= | cut -d= -f2`
 picardPath=`grep @@"$recipe"@@ $constants | grep @@PICARDPATH= | cut -d= -f2`
 
 DBNSFP=/home/tgenref/pecan/bin/vcfMerger/dbNSFP2.4.txt.gz
-VCFMERGER=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600623/pecan.merge.3vcfs.main.sh
-VCFMERGER_DIR=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600623
+VCFMERGER_DIR=/home/tgenref/pecan/bin/mergeVcf/normalization/vcfMerger
+VCFMERGER=${VCFMERGER_DIR}/pecan.merge.3vcfs.main.sh
 VCFSORTER=/home/tgenref/pecan/bin/vcfMerger/vcfsorter.pl
 RNA_VCF_HEADER=/home/tgenref/pecan/bin/vcfMerger/RNA_VCF_HEADER.vcf
 COSMIC=/home/tgenref/pecan/bin/vcfMerger/CosmicCodingMuts_v66_20130725_sorted.vcf
@@ -74,7 +74,7 @@ COSMICC=`grep "@@"$recipe"@@" $constants | grep @@COSMICC= | cut -d= -f2`
 COSMICNC=`grep "@@"$recipe"@@" $constants | grep @@COSMICNC= | cut -d= -f2`
 EXAC=`grep "@@"$recipe"@@" $constants | grep @@EXAC= | cut -d= -f2`
 
-POST_MERGE_VENN=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600623/pecan.Venn_postMMRF_specific_filtering.sh
+POST_MERGE_VENN=${VCFMERGER_DIR}/pecan.Venn_postMMRF_specific_filtering.sh
 #DBSNP=/home/tgenref/pecan/bin/vcfMerger/dbsnp_137.b37.vcf
 
 ##used if there is no matched normal
@@ -161,6 +161,12 @@ do
 		bedFile="/home/tgenref/pecan/annotations/exome_capture/StrAD/StrAD_targets_intersect_sorted_padded100.bed"
         elif [[ "$kitName" == *S4U ]] ; then
 		bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+	elif [[ "$kitName" == *E62 ]] ; then
+                bedFile="/home/tgenref/pecan/annotations/exome_capture/illumina_nextera_expanded/NexteraExpandedExome_hs37d5_Targets_PicardPadded100.bed"
+	elif [[ "$kitName" == *STP ]] ; then
+                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+	elif [[ "$kitName" == *ST2 ]] ; then
+                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
         fi
 
 	#bedFileGrep=$kitName"_CNABED"

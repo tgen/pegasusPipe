@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_picRNAMetrics
 #PBS -l walltime=32:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -20,7 +20,7 @@ echo "### BAMFILE: ${BAMFILE}"
 echo "### PICARDPATH: ${PICARDPATH}"
 
 echo "### Starting picard rna metrics"
-perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar ${PICARDPATH}/picard.jar CollectRnaSeqMetrics \
+perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${PICARDPATH}/picard.jar CollectRnaSeqMetrics \
 	REF_FLAT=${REFFLAT} \
 	REFERENCE_SEQUENCE=${REF} \
 	RIBOSOMAL_INTERVALS=${RIBINTS} \
@@ -28,7 +28,7 @@ perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar ${PICARDPATH
 	INPUT=${BAMFILE} \
 	OUTPUT=${BAMFILE}.picRNAMetrics \
 	CHART_OUTPUT=${BAMFILE}.picRNAMetrics.pdf \
-	TMP_DIR=/scratch/mrussell/tmp/ \
+	TMP_DIR=/scratch/tgenjetstream/tmp/ \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picRNAMetricsOut 2> ${BAMFILE}.picardRNA.perfOut
 if [ $? -eq 0 ] ; then
 	mv ${BAMFILE}.picRNAMetricsOut ${BAMFILE}.picRNAMetricsPass

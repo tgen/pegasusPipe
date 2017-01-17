@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_picGCMtrcs
 #PBS -l walltime=32:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -25,7 +25,7 @@ perf stat java -Xmx15g -jar ${PICARDPATH}/picard.jar CollectGcBiasMetrics \
 	OUTPUT=${BAMFILE}.picGcBiasMetrics \
 	CHART_OUTPUT=${BAMFILE}.picGcBiasMetrics.pdf \
 	SUMMARY_OUTPUT=${BAMFILE}.picGcBiasMetrics.summary \
-	TMP_DIR=/scratch/mrussell/tmp/ \
+	TMP_DIR=/scratch/tgenjetstream/tmp/ \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picGcBiasMetricsOut 2> ${BAMFILE}.picardGcBias.perfOut
 if [ $? -eq 0 ] ; then

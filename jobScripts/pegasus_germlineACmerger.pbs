@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_vcfMergerAC
 #PBS -l walltime=16:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -371,6 +371,6 @@ endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))
 (( mins=$elapsed%3600/60 ))
-echo "RUNTIME:SNPEFF:$hours:$mins" > ${MERGERDIR}/${BASENAME}.vcfMerger.totalTime
+echo "RUNTIME:GERMLINEACMERGE:$hours:$mins" > ${MERGERDIR}/${BASENAME}.GERMvcfMergerAC.totalTime
 time=`date +%d-%m-%Y-%H-%M` 
 echo "Ending snpEff Annotator."

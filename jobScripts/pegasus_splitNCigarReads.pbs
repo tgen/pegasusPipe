@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_splitNCigar
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -21,7 +21,7 @@ echo "### RNABAM: ${RNABAM}"
 echo "### OUTBAM: ${OUTBAM}"
 
 #eecho "### GATK splitNCigarReads started at $time."
-#perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+#perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
 #-l INFO \
 #-R ${REF} \
 #-T SplitNCigarReads \
@@ -30,8 +30,8 @@ echo "### OUTBAM: ${OUTBAM}"
 #-o ${OUTBAM} > ${RNABAM}.splitNCigarOut 2> ${RNABAM}.splitNCigar.perfOut
 echo "### GATK splitNCigarReads started at $time."
 ##All mapping qualities of 255 will be reassigned to 60 in the bam
-#perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar -Xmx44g ${GATKPATH}/GenomeAnalysisTK.jar \
-perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+#perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx44g ${GATKPATH}/GenomeAnalysisTK.jar \
+perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 -l INFO \
 -R ${REF} \
 -T SplitNCigarReads \

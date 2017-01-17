@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_picMltMtrcs
 #PBS -l walltime=32:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -19,7 +19,7 @@ echo "### PICARDPATH: ${PICARDPATH}"
 
 cd ${DIR}
 echo "### Starting picard multi metrics"
-perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -Xmx15g -jar ${PICARDPATH}/picard.jar CollectMultipleMetrics \
+perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -Xmx15g -jar ${PICARDPATH}/picard.jar CollectMultipleMetrics \
 	INPUT=${BAMFILE} \
 	REFERENCE_SEQUENCE=${REF} \
 	PROGRAM=CollectInsertSizeMetrics \
@@ -27,7 +27,7 @@ perf stat java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -Xmx15g -jar ${PICARDPATH
 	PROGRAM=QualityScoreDistribution \
 	PROGRAM=MeanQualityByCycle \
 	OUTPUT=${BAMFILE}.picMultiMetrics \
-	TMP_DIR=/scratch/mrussell/tmp/ \
+	TMP_DIR=/scratch/tgenjetstream/tmp/ \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picMultiMetricsOut 2> ${BAMFILE}.picardMulti.perfOut
 if [ $? -eq 0 ] ; then

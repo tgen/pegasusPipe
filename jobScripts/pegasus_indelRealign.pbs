@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_IR
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -17,7 +17,7 @@ echo "### GATK: ${GATKPATH}"
 
 echo "### Starting indel realigning of file ${BAMFILE}"
 echo "### Starting step 1, target creator"
-perf stat java -Xmx4g -Djava.io.tmpdir=/scratch/mrussell/tmp/ \
+perf stat java -Xmx4g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 	-jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	-I ${BAMFILE} \
 	-R ${REF} \
@@ -33,7 +33,7 @@ if [ $? -ne 0 ] ; then
 	exit
 fi
 echo "### Starting step 2, indel realignment"
-perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/mrussell/tmp/ \
+perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 	-jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	-I ${BAMFILE} \
 	-R ${REF} \

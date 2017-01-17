@@ -14,9 +14,9 @@
 source ~/.bashrc
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
-scriptsHome="/home/mrussell/pegasus-pipe"
-logs="/scratch/mrussell/pegasusPipe/logs"
-topProjDir="/scratch/mrussell/centralPipe/projects"
+scriptsHome="/home/tgenjetstream/pegasus-pipe"
+logs="/scratch/tgenjetstream/pegasusPipe/logs"
+topProjDir="/scratch/tgenjetstream/centralPipe/projects"
 myhostname=`hostname`
 
 echo "### ~~Running on $myhostname~~"

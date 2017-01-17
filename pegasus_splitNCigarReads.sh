@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_splitNCigarReads.txt"
 nxtStep1="pegasus_nextJob_RNArecalibrate.txt"
-pbsHome="/home/mrussell/pegasus-pipe/jobScripts"
-constants="/home/mrussell/central-pipe/constants/constants.txt"
-constantsDir="/home/mrussell/central-pipe/constants"
+pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
+constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -90,7 +90,7 @@ do
                                 continue
                         fi						
 			echo "Starting splitNCigarReads"
-			qsub -A $debit -l nodes=1:ppn=16 -v GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_splitNCigarReads.pbs
+			qsub -q hmem -A $debit -l nodes=1:ppn=16 -v GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_splitNCigarReads.pbs
 			if [ $? -eq 0 ] ; then
 				touch $rnaBam.splitNCigarInQueue
 			else

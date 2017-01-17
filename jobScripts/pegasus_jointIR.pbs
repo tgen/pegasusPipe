@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_jointIR
 #PBS -l walltime=96:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -35,7 +35,7 @@ cd ${WORKDIR}
 	echo "### Step 1, target creator..."
 	test=0
 	if [ $test -eq 0 ] ; then
-	perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/mrussell/tmp/ \
+	perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 		-jar ${GATKPATH}/GenomeAnalysisTK.jar \
 		${BAMLIST} \
 		-R ${REF} \
@@ -54,7 +54,7 @@ cd ${WORKDIR}
 	fi
 #fi
 	echo "### Starting step 2, indel realignment"
-	perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/mrussell/tmp/ \
+	perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 		-jar ${GATKPATH}/GenomeAnalysisTK.jar \
 		-T IndelRealigner \
 		${BAMLIST} \

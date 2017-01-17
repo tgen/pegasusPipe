@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_Summarystats
 #PBS -l walltime=12:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -42,7 +42,7 @@ if [ $? -eq 0 ] ; then
 	#grep MEDIAN_ABSOLUTE_DEVIATION ${RUNDIR}/Summary_allStats.txt >> ${TARGETDIR}/mini_Summary_allStats.txt
 	#this is where we grep things out of file above and make it the body of the email below.
 	#cat ${TARGETDIR}/mini_Summary_allStats.txt | mail -s "pnap pipeline: stats for project ${TARGETDIR}" -a ${RUNDIR}/Summary_allStats.txt ${EMAIL}
-	#cat ${TARGETDIR}/mini_Summary_allStats.txt | mail -s "pnap pipeline: stats for project ${TARGETDIR}" -a ${RUNDIR}/Summary_allStats.txt mrussell@tgen.org
+	#cat ${TARGETDIR}/mini_Summary_allStats.txt | mail -s "pnap pipeline: stats for project ${TARGETDIR}" -a ${RUNDIR}/Summary_allStats.txt tgenjetstream@tgen.org
 	#cat ${TARGETDIR}/mini_Summary_allStats.txt | mail -s "pnap pipeline: stats for project ${TARGETDIR}" -a ${RUNDIR}/Summary_allStats.txt snasser@tgen.org
 	#cat ${TARGETDIR}/mini_Summary_allStats.txt | mail -s "pnap pipeline: stats for project ${TARGETDIR}" -a ${RUNDIR}/Summary_allStats.txt jaldrich@tgen.org
 elif [ $? -eq 1 ] ; then

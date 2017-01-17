@@ -3,7 +3,7 @@
 #PBS -S /bin/bash
 #PBS -N pegasus_mutect
 #PBS -l walltime=48:00:00
-#PBS -M mrussell@tgen.org
+#PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
@@ -27,7 +27,7 @@ echo "### TUMOR: ${TUMOR}"
 echo "### NORMAL: ${NORMAL}"
 echo "### MUTECTPATH: ${MUTECTPATH}"
 
-/usr/lib/jvm/java-1.6.0/bin/java -Djava.io.tmpdir=/scratch/mrussell/tmp/ -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
+/usr/lib/jvm/java-1.6.0/bin/java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
 	--analysis_type MuTect \
 	--reference_sequence ${REF} \
 	--intervals ${CHRLIST}/Step${STEP}.list \
