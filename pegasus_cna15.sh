@@ -139,6 +139,8 @@ do
                                 bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_Padded_DGV_1kg.cna.bed"
 			elif [[ "$pair1KitName" == *ST2 ]]  ; then
                                 bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_Padded_DGV_1kg.cna.bed"
+			elif [[ "$pair1KitName" == *S2U ]]  ; then
+                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_Padded_DGV_1kg.cna.bed"
 			else
 				echo "We don't have a bed filter for this kit for no matched normal at this time"
 			fi
