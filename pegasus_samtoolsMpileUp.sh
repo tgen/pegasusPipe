@@ -79,6 +79,7 @@ do
                 mkdir $mpDir
         fi
 	bamText="$mpDir/${usableName}_bams.txt"
+	echo -n "" > $bamText
         for eachSample in ${sampleNames//,/ }
         do
                 ((sampleCount++))
@@ -121,17 +122,17 @@ do
         trackName="$runDir/mpileup/$usableName/$usableName"
         STEP=0
         #STEP_COUNT=24
+	echo "getting step count from the number of bed files in $chrListBed..."
         STEP_COUNT=`ls $chrListBed/*bed | wc -l`
         echo "### Submitting to queue to run mpileup on $wd"
         while [ ${STEP} -lt $STEP_COUNT ]
         do
                 (( STEP++ ))
                 if [[ -e ${trackName}_Step${STEP}.samtoolsMpileUpInQueue || -e ${trackName}_Step${STEP}.samtoolsMpileUpPass || -e ${trackName}_Step${STEP}.samtoolsMpileUpFail ]] ; then
-                        echo "### mpileup is already done, failed, or inqueue for ${trackName}"
+                        echo "### mpileup is already done, failed, or inqueue for ${trackName} step ${STEP} out of ${STEP_COUNT}"
                         continue
                 fi
                         echo Starting mpileup Step${STEP}
-                        ##qsub -A $debit -l nodes=1:ppn=$nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_haplotypeCaller.pbs
 			qsub -A $debit -l nodes=1:ppn=8 -v BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_samtoolsMpileUpMulti.pbs
                         if [ $? -eq 0 ] ; then
                                 touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
