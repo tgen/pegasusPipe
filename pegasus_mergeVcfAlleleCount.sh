@@ -107,7 +107,7 @@ do
 		sampleList=""
 		mergerDir="$runDir/vcfMerger/$usableName"
 		
-		if [[ -e ${mergerDir}/${seurat_basename}.vcfMergerACPass || -e ${mergerDir}/${seurat_basename}.vcfMergerACInQueue || -e ${mergerDir}/${seurat_basename}.vcfMergerACFail ]] ; then
+		if [[ -e ${mergerDir}/${usableName}.vcfMergerACPass || -e ${mergerDir}/${usableName}.vcfMergerACInQueue || -e ${mergerDir}/${usableName}.vcfMergerACFail ]] ; then
 			
 			echo "### This vcf merger allele count pair already passed, failed, or inQueue."
 			continue
