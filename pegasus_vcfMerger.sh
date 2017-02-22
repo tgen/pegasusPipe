@@ -169,6 +169,8 @@ do
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
 	elif [[ "$kitName" == *S2U ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+	elif [[ "$kitName" == *V6C ]] ; then
+                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusCOSMIC/Agilent_SureSelect_V6R2_plusCOSMIC_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
         fi
 
 	#bedFileGrep=$kitName"_CNABED"
