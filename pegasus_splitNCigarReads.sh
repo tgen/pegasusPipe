@@ -90,7 +90,7 @@ do
                                 continue
                         fi						
 			echo "Starting splitNCigarReads"
-			qsub -q hmem -A $debit -l nodes=1:ppn=16 -v GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_splitNCigarReads.pbs
+			qsub -A $debit -l nodes=1:ppn=16 -v GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_splitNCigarReads.pbs
 			if [ $? -eq 0 ] ; then
 				touch $rnaBam.splitNCigarInQueue
 			else
