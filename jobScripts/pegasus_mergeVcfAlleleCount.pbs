@@ -331,7 +331,7 @@ echo "Finished Adding RNA Calls to VCF"
                 ${BASENAME}.merge.sort.clean.f2t.ann.rna.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf 2> ${MERGERDIR}/${BASENAME}.dbnsfpannote.perfOut
         if [ $? -ne 0 ] ; then
                 echo "### vcf merger failed at annotate with dbNSFP stage"
-                mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerFail
+                mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
                 exit
         fi
 
@@ -340,15 +340,15 @@ java -Xmx4G -jar ${SNPEFFPATH}/snpEff.jar -canon -c ${SNPEFFPATH}/snpEff.config 
 java -Xmx4G -jar ${SNPEFFPATH}/snpEff.jar -c ${SNPEFFPATH}/snpEff.config -v -noLog -lof ${DBVERSION} ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lof.vcf
 if [ $? -ne 0 ] ; then
 echo "### vcf merger failed at snpEff annotation stage"
-mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerFail
+mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
 exit
 fi
 
 # Make final call list venn
 ${POST_MERGE_VENN} --vcf ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${BASENAME}_finalVenn  --maintitle ${BASENAME} --
 if [ $? -ne 0 ] ; then
-echo "### vcf merger failed at venn diagram stage"
-mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerFail
+	echo "### vcf merger failed at venn diagram stage"
+	mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
 exit
 fi
 
@@ -373,4 +373,4 @@ elapsed=$(( $endTime - $beginTime ))
 (( mins=$elapsed%3600/60 ))
 echo "RUNTIME:MERGEACALLELLECOUNT:$hours:$mins" > ${MERGERDIR}/${BASENAME}.vcfMergerAC.totalTime
 time=`date +%d-%m-%Y-%H-%M` 
-echo "Ending snpEff Annotator."
+echo "Ending vcfMergerAC. "
