@@ -2,7 +2,7 @@
 ##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #PBS -N pegasus_vcfMerger
-#PBS -l walltime=48:00:00
+#PBS -l walltime=96:00:00
 #PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
@@ -246,7 +246,8 @@ if [ "${RECIPE}" == "cerberus" ] ; then
 		-o ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.vcf \
 		-U ALLOW_SEQ_DICT_INCOMPATIBILITY \
 		--variant ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.vcf \
-		--dbsnp ${DBSNP} 2> ${MERGERDIR}/${SEURAT_BASENAME}.annotateMerge.perfOut 
+		--dbsnp ${DBSNP} \
+		--disable_auto_index_creation_and_locking_when_reading_rods 2> ${MERGERDIR}/${SEURAT_BASENAME}.annotateMerge.perfOut 
 		if [ $? -ne 0 ] ; then
 			echo "### vcf merger failed at annotate merged vcf stage"
 			mv ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerInQueue ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerFail
@@ -264,7 +265,8 @@ else
 		--comp:NHLBI ${NHLBI} \
 		--comp:1000G ${KG} \
 		--comp:COSMIC_NC ${COSMICNC} \
-		--comp:COSMIC_C ${COSMICC} 2> ${MERGERDIR}/${SEURAT_BASENAME}.annotateMerge.perfOut 
+		--comp:COSMIC_C ${COSMICC} \
+		--disable_auto_index_creation_and_locking_when_reading_rods 2> ${MERGERDIR}/${SEURAT_BASENAME}.annotateMerge.perfOut 
 		if [ $? -ne 0 ] ; then
 			echo "### vcf merger failed at annotate merged vcf stage"
 			mv ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerInQueue ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerFail

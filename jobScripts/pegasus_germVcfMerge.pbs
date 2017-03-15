@@ -63,6 +63,7 @@ perf stat java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	--variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
 	--variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
 	--genotypemergeoption UNIQUIFY \
+	--disable_auto_index_creation_and_locking_when_reading_rods \
 	--out ${TRACKNAME}.merged.vcf 2> ${TRACKNAME}.merger.perfOut
 if [ $? -eq 0 ] ; then
         echo "the 3 variant callers were merged successfully"
