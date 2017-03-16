@@ -89,21 +89,24 @@ do
 					if [[ "$thisFq" != *"$fqExt" ]] ; then
 						echo "###This fastq doesn't have the proper extension: $thisFq"
 						echo "###Exiting"
-			                        echo "###This fastq doesn't have the proper extension: $thisFq, the proper extension is _R1_001.fastq.gz" >> ~/mailtmp-$$.txt
-				                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
-				                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
-							
-                                                mv ~/mailtmp-$$.txt $runDir/checkConfig.wrongFQextension
+						if [ ! -e $runDir/checkConfig.wrongFQextension ] ; then
+							echo "###This fastq doesn't have the proper extension: $thisFq, the proper extension is _R1_001.fastq.gz" >> ~/mailtmp-$$.txt
+							cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
+							cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
+							mv ~/mailtmp-$$.txt $runDir/checkConfig.wrongFQextension
+						fi
 						exit
 					fi
 					#r2File=${thisFq/_R1/_R2}
 					r2File=`echo $thisFq | sed 's/\(.*\)_R1_/\1_R2_/'`
 					if [[ ! -f $r2File ]] ; then
 						echo "FILE: $r2File not found, EXITING"
-						echo "###FILE: $r2File not found" >> ~/mailtmp-$$.txt
-                                                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
-                                                cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
-                                                mv ~/mailtmp-$$.txt $runDir/checkConfig.copyFastqFail
+						if [ ! -e $runDir/checkConfig.copyFastqFail ] ; then
+							echo "###FILE: $r2File not found" >> ~/mailtmp-$$.txt
+							cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
+							cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
+							mv ~/mailtmp-$$.txt $runDir/checkConfig.copyFastqFail
+						fi
 						exit
 					fi
 					targetName="$runDir/$kitName/$samName/$samName"`printf "_%03d" "$i"`"_R1.fastq.gz"
