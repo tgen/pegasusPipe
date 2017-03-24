@@ -44,6 +44,7 @@ cd ${WORKDIR}
 		--maxIntervalSize 350 \
 		-DBQ 1 \
 		-o ${INTS} \
+		--disable_auto_index_creation_and_locking_when_reading_rods \
 		-known ${INDELS} > ${TRK}.jointIROut 2> ${TRK}.realignTC.perfOut
 	if [ $? -ne 0 ] ; then
 		echo "### JIR failed at RealignerTargetCreator stage"
@@ -67,6 +68,7 @@ cd ${WORKDIR}
 		--maxReadsForRealignment 12000 \
 		--nWayOut .jr.bam \
 		-model KNOWNS_ONLY \
+		--disable_auto_index_creation_and_locking_when_reading_rods \
 		-known ${INDELS} >> ${TRK}.jointIROut 2> ${TRK}.indelRealign.perfOut
 	fi #end for test
 
