@@ -26,6 +26,7 @@ perf stat java -Xmx4g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 	--maxIntervalSize 350 \
 	-DBQ 1 \
 	-o ${INTS} \
+	--disable_auto_index_creation_and_locking_when_reading_rods \
 	--known ${INDELS} 2> ${BAMFILE}.irStep1.perfOut > ${BAMFILE}.indelRealignOut
 if [ $? -ne 0 ] ; then
 	mv ${BAMFILE}.indelRealignOut ${BAMFILE}.indelRealignFail
@@ -46,6 +47,7 @@ perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
 	--maxReadsForRealignment 12000 \
 	-o ${IRBAMFILE} \
 	-model KNOWNS_ONLY \
+	--disable_auto_index_creation_and_locking_when_reading_rods \
 	-known ${INDELS} 2> ${BAMFILE}.irStep2.perfOut >> ${BAMFILE}.indelRealignOut
 if [ $? -eq 0 ] ; then
 	mv ${BAMFILE}.indelRealignOut ${BAMFILE}.indelRealignPass
