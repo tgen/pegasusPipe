@@ -2,7 +2,7 @@
 ##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #PBS -N pegasus_cuffQuant
-#PBS -l walltime=48:00:00
+#PBS -l walltime=240:00:00
 #PBS -M tgenjetstream@tgen.org
 #PBS -m a
 #PBS -j oe
