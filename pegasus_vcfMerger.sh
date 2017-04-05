@@ -173,6 +173,8 @@ do
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusCOSMIC/Agilent_SureSelect_V6R2_plusCOSMIC_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
 	elif [[ "$kitName" == *CCC ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_ClearSeq_Beta_ComprehensiveCancer/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+	elif [[ "$kitName" == *CR2 ]] ; then
+                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_CREv2_cliRes/Agilent_SureSelect_CREv2_cliRes_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
         fi
 
 	#bedFileGrep=$kitName"_CNABED"
