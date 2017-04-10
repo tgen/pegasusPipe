@@ -38,6 +38,7 @@ if [ $? -eq 0 ] ; then
 	echo "hcVcf was normalized correctly"
 else
 	touch ${TRACKNAME}.vcfMergerFail
+	rm -f ${TRACKNAME}.vcfMergerInQueue
 	exit
 fi
 cat ${FBVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.freebayes.norm.vcf
@@ -45,6 +46,7 @@ if [ $? -eq 0 ] ; then
         echo "fbVcf was normalized correctly"
 else
         touch ${TRACKNAME}.vcfMergerFail
+	rm -f ${TRACKNAME}.vcfMergerInQueue
 	exit	
 fi
 cat ${MPVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.mpileup.norm.vcf
@@ -52,6 +54,7 @@ if [ $? -eq 0 ] ; then
         echo "mpVcf was normalized correctly"
 else
         touch ${TRACKNAME}.vcfMergerFail
+	rm -f ${TRACKNAME}.vcfMergerInQueue
 	exit
 fi
 
