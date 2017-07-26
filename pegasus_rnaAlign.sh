@@ -198,7 +198,12 @@ do
 							#fi
 							if [[ -e $ownDir.starPass || -e $ownDir.starFail || -e $ownDir.starInQueue ]] ; then
 								echo "### STAR already done, failed or inQueue"
+								kitName=`echo $configLine | cut -d= -f2 | cut -d, -f1`
+								samName=`echo $configLine | cut -d= -f2 | cut -d, -f2`
+								assayID=`echo $configLine | cut -d= -f2 | cut -d, -f3`
 								unset mergeArray
+								count=0
+								skipGroup=0
 								continue
 							fi
 							#if [ ! -d $ownDir ] ; then
