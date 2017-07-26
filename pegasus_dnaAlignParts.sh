@@ -107,7 +107,7 @@ do
 						fi
 						if [[ ! -e $thisFq.fastqSplitPass || ! -e $thisR2.fastqSplitPass ]] ; then
 							echo "### This fastq file did need splitting but not done yet."
-							echo "### $thisFq.fastqSplitPass"
+							echo "### $thisFq.fastqSplitPass and/or $thisR2.fastqSplitPass needed"
 							((qsubFails++))
 							continue
 						fi
