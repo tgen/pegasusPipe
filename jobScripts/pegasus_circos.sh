@@ -1,13 +1,22 @@
+#!/usr/bin/env bash
 ##### Author: Ahmet Kurdoglu #####
 ##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_circos"
 #SBATCH --time=0-96:00:00
-#SBATCH --ntasks=1
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --cpus-per-task 4
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
 #SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
 #SBATCH --error="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
+
+# TODO:
+# WHY are there hardcoded paths in here that point to the home of an
+# employee that doesn't even work here in any more?
+# This script does not return meaningful exit codes
+# What is the random 'cd -' line for?
 
 time=`date +%d-%m-%Y-%H-%M` 
 beginTime=`date +%s`
@@ -43,12 +52,6 @@ mkdir ${OUTDIR}/data
 /packages/circos-0.62-1/bin/circos -conf ${CONF} 
 if [ $? -eq 0 ] ; then
         touch ${OUTFILE}.circosPass
-        #grep "${RUNDIR}" ${MSG1} > /dev/null
-        #if [ $? -eq 0 ] ; then
-        #        echo "${RUNDIR} already in ${MSG1}. Not appending."
-        #else
-        #        echo "${RUNDIR}" >> ${MSG1}
-        #fi
 else
         touch ${OUTFILE}.circosFail
 fi

@@ -36,12 +36,9 @@ if [ ! -e $configFile ] ; then
 else
 	echo "### Config file found."
 fi
+
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
-
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
-
-
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 rnaAligner=`grep "@@"$recipe"@@" $constants | grep @@RNAALIGNER= | cut -d= -f2`
 gatkPath=`grep @@"$recipe"@@ $constants | grep @@GATKPATH= | cut -d= -f2`
@@ -84,13 +81,14 @@ do
 	normalBaiFile=${normalBamFile/.bam/.bai}
 	tumorBaiFile=${tumorBamFile/.bam/.bai}
 
-        echo "first checking for seurat snpeff vcf"
-        seuratTrackName="$runDir/seurat/$usableName/$usableName"
-        if [ ! -e $seuratTrackName.seurat.vcf.snpEffPass ] ; then
-                echo "### Seurat snpEffPass doesnt exist yet: $seuratTrackName.seurat.vcf.snpEffPass"
-                ((qsubFails++))
-                exit
-        fi
+    echo "first checking for seurat snpeff vcf"
+    seuratTrackName="$runDir/seurat/$usableName/$usableName"
+    if [ ! -e $seuratTrackName.seurat.vcf.snpEffPass ] ; then
+        echo "### Seurat snpEffPass doesnt exist yet: $seuratTrackName.seurat.vcf.snpEffPass"
+        ((qsubFails++))
+        exit
+    fi
+
 	if [ $assayID == "Exome"  ] ; then
 		cnvsTSV="$runDir/cna/${usableName}_exo/${usableName}_exo.cna.tsv"
 		cnvsPass="$runDir/cna/${usableName}_exo/${usableName}_exo.cnaExomePass"
@@ -120,6 +118,7 @@ do
 	if [ ! -d $circosDir ] ; then
 		mkdir $circosDir
 	fi
+
 	mkdir -p $circosDir/$usableName
 	#trackName="$runDir/circos/$usableName/$usableName"
 	outDir="$circosDir/$usableName"
@@ -128,6 +127,7 @@ do
 		echo "Circos are already passed, failed, or in queue for $circosSamples"
 		continue
 	fi
+
 	conf=$outDir/template_circos.conf
 	cp -r /home/tizatt/circosTemplateFolder/* $outDir/
 	cat $outDir/template_circos.part1.conf > $outDir/template_circos.conf
@@ -138,7 +138,7 @@ do
 	cat $outDir/template_circos.part2.conf >> $outDir/template_circos.conf
 
 	echo "### Submitting to queue with $normalBamFile"
-	qsub -A $debit -l nodes=1:ppn=$nCores -v OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_circos.pbs
+	qsub -v OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_circos.pbs
 	if [ $? -eq 0 ] ; then
 		touch $circosSamples.circosInQueue
 	else
