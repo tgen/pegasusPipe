@@ -38,10 +38,6 @@ else
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
-
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
-
-
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 rnaAligner=`grep "@@"$recipe"@@" $constants | grep @@RNAALIGNER= | cut -d= -f2`
 gatkPath=`grep @@"$recipe"@@ $constants | grep @@GATKPATH= | cut -d= -f2`
@@ -98,7 +94,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $normalBamFile"
-			qsub -A $debit -l nodes=1:ppn=$nCores -v BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+			sbatch -v BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $normalBamFile.clonalCovInQueue
 			else
@@ -115,7 +111,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $tumorBamFile"
-			qsub -A $debit -l nodes=1:ppn=$nCores -v BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+			sbatch -v BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $tumorBamFile.clonalCovInQueue
 			else
@@ -166,7 +162,7 @@ do
 				((qsubFails++))
 			else
 				echo "### Submitting to queue with $bamFile"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+				sbatch -v BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
 				if [ $? -eq 0 ] ; then
 					touch $normalBamFile.clonalCovInQueue
 				else
