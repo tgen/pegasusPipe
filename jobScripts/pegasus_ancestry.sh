@@ -5,6 +5,9 @@
 #SBATCH --time=0-60:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
+#SBATCH -N 1
+#SBATCH -n 1
+#SBATCH --cpus-per-task 8
 #PBS -j oe
 #SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
 ##PBS -e /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err
@@ -45,12 +48,15 @@ if [ $? -eq 0 ] ; then
 			touch ${TRACKNAME}.ancestryPass
 		else
 			touch ${TRACKNAME}.ancestryFail
+			exit 1
 		fi
 	else
 		touch ${TRACKNAME}.ancestryFail
+		exit 1
 	fi
 else
 	touch ${TRACKNAME}.ancestryFail
+	exit 1
 fi
 
 rm ${TRACKNAME}.ancestryInQueue

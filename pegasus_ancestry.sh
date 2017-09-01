@@ -96,7 +96,7 @@ do
                			mkdir -p $ancestryDir
         		fi
 			echo "Starting ancestry for ${bamFile}"
-			qsub -A $debit -l nodes=1:ppn=8 -v ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_ancestry.pbs
+			sbatch --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_ancestry.sh
 			if [ $? -eq 0 ] ; then
 				touch ${trackName}.ancestryInQueue
 			else
