@@ -28,18 +28,18 @@ echo "### TRACKNAME: ${TRACKNAME}"
 
 
 cd ${ANCESTRYDIR}
-echo "perf stat ${SAMTOOLSPATH}/samtools mpileup -q 30 -Q 20 -f ${REF} -l ${HGDPPATH}/HGDP_938.bed ${BAMFILE} > ${TRACKNAME}.pileup 2> ${TRACKNAME}.mpileup.perfOut"
-perf stat ${SAMTOOLSPATH}/samtools mpileup -q 30 -Q 20 -f ${REF} -l ${HGDPPATH}/HGDP_938.bed ${BAMFILE} > ${TRACKNAME}.pileup 2> ${TRACKNAME}.mpileup.perfOut
+echo "${SAMTOOLSPATH}/samtools mpileup -q 30 -Q 20 -f ${REF} -l ${HGDPPATH}/HGDP_938.bed ${BAMFILE} > ${TRACKNAME}.pileup"
+${SAMTOOLSPATH}/samtools mpileup -q 30 -Q 20 -f ${REF} -l ${HGDPPATH}/HGDP_938.bed ${BAMFILE} > ${TRACKNAME}.pileup
 if [ $? -eq 0 ] ; then
-	perf stat python ${LASERPATH}/pileup2seq/pileup2seq.py \
+	python ${LASERPATH}/pileup2seq/pileup2seq.py \
 	-m ${HGDPPATH}/HGDP_938.site \
 	-o ${TRACKNAME} \
-	${TRACKNAME}.pileup 2> ${TRACKNAME}.pileup2seq.perfOut
+	${TRACKNAME}.pileup
 	if [ $? -eq 0 ] ; then
-		perf stat ${LASERPATH}/laser -g ${HGDPPATH}/HGDP_938.geno -c ${HGDPPATH}/HGDP_938.RefPC.coord -s ${TRACKNAME}.seq -K 20 -k 4 -o ${TRACKNAME} 2> ${TRACKNAME}.laser.perfOut
+		${LASERPATH}/laser -g ${HGDPPATH}/HGDP_938.geno -c ${HGDPPATH}/HGDP_938.RefPC.coord -s ${TRACKNAME}.seq -K 20 -k 4 -o ${TRACKNAME}
 		if [ $? -eq 0 ] ; then
 			
-			perf stat Rscript ${LASERPATH}/plot/plotHGDPMegan.r ${TRACKNAME}.SeqPC.coord ${HGDPPATH}/HGDP_938.RefPC.coord 2> ${TRACKNAME}.plot.perfOut
+			Rscript ${LASERPATH}/plot/plotHGDPMegan.r ${TRACKNAME}.SeqPC.coord ${HGDPPATH}/HGDP_938.RefPC.coord
 			mv ${ANCESTRYDIR}/Ancestry_on_HGDP.pdf ${TRACKNAME}.ancestry_on_HGDP.pdf
 
 			touch ${TRACKNAME}.ancestryPass
@@ -53,11 +53,10 @@ else
 	touch ${TRACKNAME}.ancestryFail
 fi
 
-
 rm ${TRACKNAME}.ancestryInQueue
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))
 (( mins=$elapsed%3600/60 ))
-echo "RUNTIME:ANCESTRY:$hours:$mins" > ${TRACKNAME}.ancestry.totalTime
+echo "RUNTIME:ANCESTRY:$hours:$mins"
 echo "### Ending LASER ancestry script."
