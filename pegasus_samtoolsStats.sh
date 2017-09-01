@@ -85,7 +85,7 @@ do
 				echo "### Samtools stats already passed, in queue, or failed for $mdBam"
 			else
 				echo "### Submitting for samtools stats: $mdBam"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mdBam.samtoolsStatsInQueue
 				else
@@ -105,7 +105,7 @@ do
 					echo "### Samtools stats already passed, in queue, or failed for $jrBam"
 				else
 					echo "### Submitting for samtools stats: $jrBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
 					if [ $? -eq 0 ] ; then
 						touch $jrBam.samtoolsStatsInQueue
 					else
@@ -152,7 +152,7 @@ do
 			echo "### Samtools stats already passed, in queue, or failed for $rnaBam"
 		else
 					echo "### Submitting for samtools stats: $rnaBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$rnaBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$rnaBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_samtoolsStats.pbs
 					if [ $? -eq 0 ] ; then
 						touch $rnaBam.samtoolsStatsInQueue
 					else

@@ -146,7 +146,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for sleuth..."
-                qsub -A $debit -l nodes=1:ppn=$nCores -v SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sleuth.pbs
+                sbatch -n 1 -N 1 --cpus-per-task $nCores -v SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sleuth.pbs
                 if [ $? -eq 0 ] ; then
                        touch $sleuthDir.sleuthInQueue
                 else

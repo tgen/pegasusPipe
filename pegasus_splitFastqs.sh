@@ -79,7 +79,7 @@ do
 						else
 							echo "### Submitting to split: $targetName"		
 							prefix="$samName"`printf "_%03d" "$i"`"_R1.split.fastq.gz"
-							qsub -A $debit -l nodes=1:ppn=$nCores -v PF=$prefix,DIR=$splitDir,D=$d,FQ=$targetName,NXT1=$nxtStep1,RUNDIR=$runDir $pbsHome/pegasus_splitFastq.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v PF=$prefix,DIR=$splitDir,D=$d,FQ=$targetName,NXT1=$nxtStep1,RUNDIR=$runDir $pbsHome/pegasus_splitFastq.pbs
 							if [ $? -eq 0 ] ; then
 								touch $targetName.fastqSplitInQueue
 							else
@@ -92,7 +92,7 @@ do
 						else
 							echo "### Submitting to split: $targR2Name"		
 							prefix="$samName"`printf "_%03d" "$i"`"_R2.split.fastq.gz"
-							qsub -A $debit -l nodes=1:ppn=$nCores -v PF=$prefix,DIR=$splitDir,D=$d,FQ=$targR2Name,NXT1=$nxtStep1,RUNDIR=$runDir $pbsHome/pegasus_splitFastq.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v PF=$prefix,DIR=$splitDir,D=$d,FQ=$targR2Name,NXT1=$nxtStep1,RUNDIR=$runDir $pbsHome/pegasus_splitFastq.pbs
 							if [ $? -eq 0 ] ; then
 								touch $targR2Name.fastqSplitInQueue
 							else

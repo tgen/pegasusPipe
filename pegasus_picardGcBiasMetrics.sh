@@ -83,7 +83,7 @@ do
 		#		echo "### Picard GC Bias summary metric already passed, in queue, or failed for $inBam"
 		#	else
 		#		echo "### Submitting for picard AS Metrics: $inBam"
-		#		qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
+		#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
 		#		if [ $? -eq 0 ] ; then
 		#			touch $inBam.picGcBiasMetricsInQueue
 		#		else
@@ -101,7 +101,7 @@ do
 				echo "### Picard GC Bias summary metric already passed, in queue, or failed for $mdBam"
 			else
 				echo "### Submitting for picard GC Bias Metrics: $mdBam"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mdBam.picGcBiasMetricsInQueue
 				else
@@ -121,7 +121,7 @@ do
 					echo "### Picard GC Bias summary metric already passed, in queue, or failed for $jrBam"
 				else
 					echo "### Submitting for picard GC Bias Metrics: $jrBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardGcBiasMetrics.pbs
 					if [ $? -eq 0 ] ; then
 						touch $jrBam.picGcBiasMetricsInQueue
 					else

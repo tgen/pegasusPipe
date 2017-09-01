@@ -79,7 +79,7 @@ if [ -e $runDir/summaryStatsInQueue ] ; then
 fi
 if [ $alreadyDone -eq 0 ] ; then
 	echo "submitting $runDir to queue for Summary stats"
-	qsub -A $debit -l nodes=1:ppn=$nCores -v SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_summaryStats.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_summaryStats.pbs
 	if [ $? -eq 0 ] ; then
 		touch $runDir/summaryStatsInQueue
 	else

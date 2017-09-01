@@ -91,7 +91,7 @@ do
 				continue
 			fi 
 			echo "### Submitting $accHitsSam to queue for HT Seq..."
-			qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_htSeq.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_htSeq.pbs
 			if [ $? -eq 0 ] ; then
 				touch $accHitsSam.htSeqInQueue
 			else
@@ -122,7 +122,7 @@ do
 			echo "### Submitting $alignedSam to queue for HT Seq..."
 			 if [[ $rnaStrand == "FIRST" ]] ; then                        
 				echo "##running stranded STAR case"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_strandedHtSeqForStar.pbs		
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_strandedHtSeqForStar.pbs
 				if [ $? -eq 0 ] ; then
 					touch $alignedSam.htSeqInQueue
 				else
@@ -131,7 +131,7 @@ do
 				sleep 2
 			elif  [[ $rnaStrand == "SECOND"  ]] ; then
                                 echo "##running stranded STAR case"
-                                qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_revStrandedHtSeqForStar.pbs                
+                                sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_revStrandedHtSeqForStar.pbs
                                 if [ $? -eq 0 ] ; then
                                         touch $alignedSam.htSeqInQueue
                                 else
@@ -141,7 +141,7 @@ do
 				
 			else
 				echo "##running unstranded STAR case"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_htSeqForStar.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_htSeqForStar.pbs
 				if [ $? -eq 0 ] ; then
 					touch $alignedSam.htSeqInQueue
 				else

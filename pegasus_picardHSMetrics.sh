@@ -92,7 +92,7 @@ do
 		#		echo "### Picard alignment summary metric already passed, in queue, or failed for $inBam"
 		#	else
 		#		echo "### Submitting for picard HS Metrics: $inBam"
-		#		qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+		#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
 		#		if [ $? -eq 0 ] ; then
 		#			touch $inBam.picHSMetricsInQueue
 		#		else
@@ -110,7 +110,7 @@ do
 				echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
 			else
 				echo "### Submitting for picard HS Metrics: $mdBam"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mdBam.picHSMetricsInQueue
 				else
@@ -130,7 +130,7 @@ do
 					echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
 				else
 					echo "### Submitting for picard HS Metrics: $jrBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
 					if [ $? -eq 0 ] ; then
 						touch $jrBam.picHSMetricsInQueue
 					else

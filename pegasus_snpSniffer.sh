@@ -101,7 +101,7 @@ do
 				echo "### Looks like snp sniff is alread in queue, failed, or passed"
 			else
 				echo "### Submitting for snpSniffer: $bamFile"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
 				if [ $? -eq 0 ] ; then
 					touch $bamFile.snpSniffInQueue
 				else
@@ -135,7 +135,7 @@ do
 			else
 				finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
 				echo "### Submitting for snpSniffer: $bamFile"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
 				if [ $? -eq 0 ] ; then
 					touch $bamFile.snpSniffInQueue
 				else

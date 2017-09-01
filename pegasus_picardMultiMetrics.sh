@@ -83,7 +83,7 @@ do
 		#		echo "### Picard alignment summary metric already passed, in queue, or failed for $inBam"
 		#	else
 		#		echo "### Submitting for picard AS Metrics: $inBam"
-		#		qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
+		#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
 		#		if [ $? -eq 0 ] ; then
 		#			touch $inBam.picMultiMetricsInQueue
 		#		else
@@ -101,7 +101,7 @@ do
 				echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
 			else
 				echo "### Submitting for picard Multi Metrics: $mdBam"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mdBam.picMultiMetricsInQueue
 				else
@@ -121,7 +121,7 @@ do
 					echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
 				else
 					echo "### Submitting for picard Multi Metrics: $jrBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
 					if [ $? -eq 0 ] ; then
 						touch $jrBam.picMultiMetricsInQueue
 					else
@@ -172,7 +172,7 @@ do
 			mkdir $runDir/stats
 		fi
 		echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-		qsub -A $debit -l nodes=1:ppn=$nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_picardMultiMetrics.pbs
 		if [ $? -eq 0 ] ; then
 			touch $rnaBam.picMultiMetricsInQueue
 		else

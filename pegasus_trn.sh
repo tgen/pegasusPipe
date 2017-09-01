@@ -132,7 +132,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue with $normalBamFile"
-	qsub -A $debit -l nodes=1:ppn=$nCores -v ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_trn.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_trn.pbs
 	if [ $? -eq 0 ] ; then
 		touch $trnDatFile.trnInQueue
 	else

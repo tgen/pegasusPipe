@@ -133,7 +133,7 @@ do
 					fi
 					fileList="$fileList I=$thisBam"
 				done
-				qsub -A $debit -l nodes=1:ppn=$nCores -v NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d $pbsHome/pegasus_mergeBamsForBigJIR.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d $pbsHome/pegasus_mergeBamsForBigJIR.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mergedBam.mergeBamInQueue
 				else

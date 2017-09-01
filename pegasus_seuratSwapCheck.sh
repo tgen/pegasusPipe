@@ -83,7 +83,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.REVseurat.vcf to queue for seuratSwapCheck..."
-        qsub -A $debit -l nodes=1:ppn=$nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_seuratSwapCheck.pbs
+        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_seuratSwapCheck.pbs
         if [ $? -eq 0 ] ; then
                 touch $trackName.REVseurat.vcf.seuratSwapCheckInQueue
         else
@@ -120,7 +120,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.seurat.vcf to queue for seuratSwapCheck..."
-        qsub -A $debit -l nodes=1:ppn=$nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_seuratSwapCheck.pbs
+        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_seuratSwapCheck.pbs
         if [ $? -eq 0 ] ; then
                 touch $trackName.seurat.vcf.seuratSwapCheckInQueue
         else

@@ -164,7 +164,7 @@ do
 		fi
 
 		echo Starting MuTect Step${STEP}
-		qsub -A $debit -l nodes=1:ppn=$nCores -v SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_mutect.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_mutect.pbs
 		if [ $? -eq 0 ] ; then
 			touch ${wd}_Step${STEP}.mutectInQueue
 		else

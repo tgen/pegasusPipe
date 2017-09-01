@@ -127,8 +127,8 @@ do
 						fi
 						d=`echo $runDir | cut -c 2-`
 						echo "### Submitting to recalibrate to create $rcBamFile"
-						echo "qsub -A $debit -l nodes=1:ppn=$nCores -v GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs"
-						qsub -A $debit -l nodes=1:ppn=$nCores -v GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs
+						echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs"
+						sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs
 						if [ $? -eq 0 ] ; then
 							touch $inputForNext.recalibrateInQueue
 						else

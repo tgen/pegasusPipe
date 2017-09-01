@@ -147,7 +147,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for DEXseq..."
-                qsub -A $debit -l nodes=1:ppn=$nCores -v DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_DEXseq.pbs
+                sbatch -n 1 -N 1 --cpus-per-task $nCores -v DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_DEXseq.pbs
                 if [ $? -eq 0 ] ; then
                        touch $DEXseqDir.DEXseqInQueue
                 else

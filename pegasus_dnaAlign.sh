@@ -129,7 +129,7 @@ do
 							fi
 
 							echo "$rgTag"
-							qsub -A $debit -l nodes=1:ppn=$nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pbsHome/pegasus_bwaMem.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pbsHome/pegasus_bwaMem.pbs
 							if [ $? -eq 0 ] ; then
 								touch $bamName.dnaAlignInQueue
 							else

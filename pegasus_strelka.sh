@@ -152,7 +152,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue to run strelka on $wd"
-	qsub -A $debit -l nodes=1:ppn=$nCores -v ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_strelka.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_strelka.pbs
 	if [ $? -eq 0 ] ; then
 		touch $wd.strelkaInQueue
 	else

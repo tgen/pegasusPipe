@@ -144,7 +144,7 @@ do
 		echo "### Submitting $ownDir to queue for tophat fusion..."
 		if [ $rnaStrand == "FIRST" ] ; then
                         echo "##running stranded tophatfusion case"
-			qsub -A $debit -l nodes=1:ppn=$nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_firstStrandedtophatFusion.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_firstStrandedtophatFusion.pbs
 			if [ $? -eq 0 ] ; then
 				touch $ownDir.thFusionInQueue
 			else
@@ -154,7 +154,7 @@ do
 		        
 		elif [ $rnaStrand == "SECOND" ] ; then
                         echo "##running second  stranded tophatfusion case"
-                        qsub -A $debit -l nodes=1:ppn=$nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_secondStrandedtophatFusion.pbs
+                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_secondStrandedtophatFusion.pbs
                         if [ $? -eq 0 ] ; then
                                 touch $ownDir.thFusionInQueue
                         else
@@ -163,7 +163,7 @@ do
                         sleep 2
 		else
 			echo "###running unstranded tophatfusion case"
-			qsub -A $debit -l nodes=1:ppn=$nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_tophatFusion.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v FAI=$faiFile,PICARDPATH=$picardPath,REFPRETOPHAT=$ref,BWAPATH=$bwaPath,BOWTIE1PATH=$bowtie1Path,INDEXBASE=$indexBase,TOPHAT2PATH=$tophat2Path,THFUSIONPATH=$thfPath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d,PRE1=$pre1,POS1=$pos1,PRE2=$pre2,POS2=$pos2 $pbsHome/pegasus_tophatFusion.pbs
 			if [ $? -eq 0 ] ; then
 				touch $ownDir.thFusionInQueue
 			else
@@ -229,7 +229,7 @@ do
 		echo "### Read 2 name: $read2Name"
 
 		echo "### Submitting $ownDir to queue for soap fuse..."
-		qsub -A $debit -l nodes=1:ppn=$nCores -v SAMPLE=$samName,SLFILE=$ownDir/soapFuse.sampleList,SPCONFIG=$spConfig,SOAPFUSEPATH=$soapFusePath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pecan_soapFuse.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMPLE=$samName,SLFILE=$ownDir/soapFuse.sampleList,SPCONFIG=$spConfig,SOAPFUSEPATH=$soapFusePath,SAMTOOLSPATH=$samtoolsPath,REF=$ref,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pecan_soapFuse.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.soapFuseInQueue
 		else

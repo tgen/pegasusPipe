@@ -108,7 +108,7 @@ do
 	echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
 	if [ $rnaStrand == "FIRST" ] ; then
                 echo "##running stranded picard metrics case"
-		qsub -A $debit -l nodes=1:ppn=$nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_FSpicardRNAMetrics.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_FSpicardRNAMetrics.pbs
 		if [ $? -eq 0 ] ; then
 			touch $rnaBam.picRNAMetricsInQueue
 		else
@@ -118,7 +118,7 @@ do
 	
         elif [ $rnaStrand == "SECOND" ] ; then
                 echo "##running stranded picard metrics case"
-                qsub -A $debit -l nodes=1:ppn=$nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_SSpicardRNAMetrics.pbs
+                sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_SSpicardRNAMetrics.pbs
                 if [ $? -eq 0 ] ; then
                         touch $rnaBam.picRNAMetricsInQueue
                 else
@@ -127,7 +127,7 @@ do
                 sleep 2
         else
 		echo "###running unstranded picard metrics case"
-		qsub -A $debit -l nodes=1:ppn=$nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_picardRNAMetrics.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_picardRNAMetrics.pbs
 		if [ $? -eq 0 ] ; then
 			touch $rnaBam.picRNAMetricsInQueue
 		else
