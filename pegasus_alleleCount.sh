@@ -19,6 +19,7 @@ constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
 constantsDir="/home/tgenjetstream/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
+
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
@@ -26,9 +27,13 @@ if [ "$1" == "" ] ; then
 	echo "### Exiting!!!"
 	exit
 fi
+
+
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
+
+
 if [ ! -e $configFile ] ; then
 	echo "### Config file not found at $configFile!!!"
 	echo "### Exiting!!!"
@@ -36,12 +41,11 @@ if [ ! -e $configFile ] ; then
 else
 	echo "### Config file found."
 fi
+
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 
 nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
-
-
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 alPath=`grep "@@"$recipe"@@" $constants | grep @@ALPATH= | cut -d= -f2`
 rnaAligner=`grep "@@"$recipe"@@" $constants | grep @@RNAALIGNER= | cut -d= -f2`
@@ -143,7 +147,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue for allele count..."
-	qsub -v OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_alleleCount.pbs
+	sbatch --export OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_alleleCount.sh
 	if [ $? -eq 0 ] ; then
 		touch $trackName/$usableName.alleleCountInQueue
 	else
