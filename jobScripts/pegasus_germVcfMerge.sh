@@ -9,14 +9,14 @@
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
 #PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
-#SBATCH --error="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err"
+#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
+#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
 echo "### NODE: $machine" >> ${TRACKNAME}.vcfMergerInQueue
-echo "### JOBID: ${PBS_JOBID}" >> ${TRACKNAME}.vcfMergerInQueue
+echo "### JOBID: ${SLURM_JOB_ID}" >> ${TRACKNAME}.vcfMergerInQueue
 echo "### REF: ${REF}"
 echo "### RUNDIR: ${RUNDIR}"
 echo "### NXT1: ${NXT1}"

@@ -6,8 +6,8 @@
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
 #PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
-##PBS -e /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err
+#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
+##PBS -e /${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err
 
 module load R/3.2.1
 module load HTSeq/0.6.0

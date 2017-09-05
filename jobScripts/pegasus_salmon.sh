@@ -6,8 +6,8 @@
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
 #PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
-#SBATCH --error="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err"
+#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
+#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -82,4 +82,4 @@ elapsed=$(( $endTime - $beginTime ))
 (( mins=$elapsed%3600/60 ))
 echo "RUNTIME:SALMON:$hours:$mins" > ${DIR}.salmon.totalTime
 echo "### Ending salmon"
-echo ${PBS_JOBNAME} completed at for sample >> /ProjectRunSummary.txt
+echo ${SLURM_JOB_NAME} completed at for sample >> /ProjectRunSummary.txt
