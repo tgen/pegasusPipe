@@ -5,6 +5,9 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
+#SBATCH -n 1
+#SBATCH -N 1
+#SBATCH -N 14
 #PBS -j oe
 #SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
 #SBATCH --error="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err"
@@ -41,7 +44,7 @@ fi
 echo "gatk base recalibration print reads stage started"
 perf stat java -Xmx44g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 		-l INFO \
-		-nct 16 \
+		-nct 14 \
 		-R ${REF} \
 		-I ${BAMFILE} \
 		-T PrintReads \
