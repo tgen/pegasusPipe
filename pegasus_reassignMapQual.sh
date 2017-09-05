@@ -86,7 +86,7 @@ do
                                 continue
                         fi						
 			echo "Starting reassignMappingQuality"
-			qsub -A $debit -l nodes=1:ppn=8 -v GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_reassignMapQual.pbs
+			sbatch --export GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_reassignMapQual.pbs
 			if [ $? -eq 0 ] ; then
 				touch $rnaBam.reassignMapInQueue
 			else

@@ -112,7 +112,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.HC_All.snpEff.vcf to queue for sexRelCheck..."
-	qsub -A $debit -l nodes=1:ppn=8 -v PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sexRelCheck.pbs
+	sbatch --export PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sexRelCheck.pbs
 	if [ $? -eq 0 ] ; then
 		touch $outTrackName.sexRelCheckInQueue
 	else

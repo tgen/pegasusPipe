@@ -7,7 +7,7 @@
 #SBATCH --mail-type=FAIL
 #SBATCH -n 1
 #SBATCH -N 1
-#SBATCH -N 14
+#SBATCH --cpus-per-task 14
 #PBS -j oe
 #SBATCH --output="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out"
 #SBATCH --error="/${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err"

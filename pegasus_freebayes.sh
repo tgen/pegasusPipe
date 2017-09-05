@@ -126,7 +126,7 @@ do
                 fi
 	        echo Starting freebayes caller Step${STEP}
 		##sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_haplotypeCaller.pbs
-		qsub -A $debit -l nodes=1:ppn=8 -v FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayesMulti.pbs
+		sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayesMulti.pbs
 		if [ $? -eq 0 ] ; then
 			touch ${trackName}_Step${STEP}.freebayesInQueue
 		else
@@ -188,7 +188,7 @@ do
 					fi
 
 					echo Starting freebayes for ${fbBam}
-					qsub -A $debit -l nodes=1:ppn=8 -v FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayes.pbs
+					sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayes.pbs
 					if [ $? -eq 0 ] ; then
 						touch ${trackName}_Step${STEP}.freebayesInQueue
 					else

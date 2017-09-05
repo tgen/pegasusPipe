@@ -138,7 +138,7 @@ do
 	cat $outDir/template_circos.part2.conf >> $outDir/template_circos.conf
 
 	echo "### Submitting to queue with $normalBamFile"
-	qsub -v OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_circos.pbs
+	sbatch --export OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_circos.pbs
 	if [ $? -eq 0 ] ; then
 		touch $circosSamples.circosInQueue
 	else

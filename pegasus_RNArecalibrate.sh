@@ -87,7 +87,7 @@ do
                                 continue
                         fi
                         echo "Starting RNA recalibration"
-			qsub -A $debit -l nodes=1:ppn=16 -v GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs
+			sbatch --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_recalibrate.pbs
                         if [ $? -eq 0 ] ; then
                                 touch $rnaBam.recalibrateInQueue
                         else

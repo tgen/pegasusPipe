@@ -113,7 +113,7 @@ do
 				fi
 
 				echo Starting Haplotype caller for Step${STEP}
-				qsub -A $debit -l nodes=1:ppn=8 -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_RNAhaplotypeCaller.pbs
+				sbatch --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_RNAhaplotypeCaller.pbs
 				if [ $? -eq 0 ] ; then
 					touch ${trackName}_Step${STEP}.RNAhcInQueue
 				else
