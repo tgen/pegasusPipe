@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_picardRNAMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicRnaMetric.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+pbsHome="~/pegasus-pipe/jobScripts"
+constants="~/central-pipe/constants/constants.txt"
+constantsDir="~/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

@@ -14,7 +14,7 @@
 
 thisStep="pegasus_nextJob_splitFastqs.txt"
 nxtStep1="pegasus_nextJob_dnaAlignParts.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
+pbsHome="~/pegasus-pipe/jobScripts"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

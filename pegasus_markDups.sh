@@ -23,9 +23,9 @@ nxtStep7="pegasus_nextJob_snpSniff.txt"
 nxtStep8="pegasus_nextJob_freebayes.txt"
 nxtStep9="pegasus_nextJob_samtoolsMpileUp.txt"
 nxtStep10="pegasus_nextJob_ancestry.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+pbsHome="~/pegasus-pipe/jobScripts"
+constants="~/central-pipe/constants/constants.txt"
+constantsDir="~/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
