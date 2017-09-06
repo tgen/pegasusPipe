@@ -16,9 +16,9 @@ thisStep="pegasus_nextJob_haplotypeCaller.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_phaseBT.txt"
 nxtStep3="pegasus_nextJob_sexRelCheck.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+pbsHome="~/pegasus-pipe/jobScripts"
+constants="~/central-pipe/constants/constants.txt"
+constantsDir="~/central-pipe/constants"
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

@@ -11,12 +11,36 @@
 # installing this Software you are agreeing to the terms of the LICENSE 
 # file distributed with this software.
 #####################################################################
-source ~/.bashrc
+# source ~/.bashrc # Why?
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
-scriptsHome="/home/tgenjetstream/pegasus-pipe"
-logs="/scratch/tgenjetstream/pegasusPipe/logs"
-topProjDir="/scratch/tgenjetstream/centralPipe/projects"
+
+
+# scriptsHome="/home/tgenjetstream/pegasus-pipe" # scriptsHome should always be
+# relative to the location of this main script.
+# There is no reliable way of resolving the location of a script in bash, see
+# http://mywiki.wooledge.org/BashFAQ/028
+# https://stackoverflow.com/a/246128/3924113
+# but, this should work most of the time
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
+done
+scriptsHome="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+
+
+#logs="/scratch/tgenjetstream/pegasusPipe/logs" # Lets stick with standard
+# locations for now, but let them be adjustable with configuration files or
+# environment variables
+logs=${PEGASUS_LOGS:-~/pegasus-pipe/}
+
+
+#topProjDir="/scratch/tgenjetstream/centralPipe/projects" # Why does this need
+# to be hardcoded, just pass it as an argument. Now the source is decoupled
+# from the deployment.
+topProjDir=${1? Projects directory is required}
 myhostname=`hostname`
 
 echo "### ~~Running on $myhostname~~"
@@ -320,5 +344,3 @@ do
 		;;
 	esac
 done
-
-echo "**********DONE************"
