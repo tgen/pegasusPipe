@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_dnaAlign.txt"
 nxtStep1="pegasus_nextJob_indelRealign.txt"
 nxtStep2="pegasus_nextJob_recalibrate.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -129,7 +129,7 @@ do
 							fi
 
 							echo "$rgTag"
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pbsHome/pegasus_bwaMem.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pegasusPbsHome/pegasus_bwaMem.pbs
 							if [ $? -eq 0 ] ; then
 								touch $bamName.dnaAlignInQueue
 							else

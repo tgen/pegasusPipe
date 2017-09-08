@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_cuffLink.txt"
 nxtStep1="pegasus_nextJob_postCuffLinks.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -92,7 +92,7 @@ do
 		fi 
 
 		echo "### Submitting $topHatDir to queue for cuff links..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=${params},DIRNAME=$topHatDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffLink.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=${params},DIRNAME=$topHatDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffLink.pbs
 		if [ $? -eq 0 ] ; then
 			touch $topHatDir.cuffLinkInQueue
 		else
@@ -116,7 +116,7 @@ do
 		echo "### Submitting $starDir to queue for cuff links..."
 		if [[ $rnaStrand == "FIRST" ]] ; then
                         echo "##running stranded cufflinks case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_firstStrandedCuffLink.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedCuffLink.pbs
 			if [ $? -eq 0 ] ; then
                         	touch $starDir.cuffLinkInQueue
                 	else
@@ -125,7 +125,7 @@ do
                 	sleep 2
 		elif [[ $rnaStrand == "SECOND" ]] ; then
                         echo "##running second stranded cufflinks case"
-                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_secondStrandedCuffLink.pbs
+                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedCuffLink.pbs
                         if [ $? -eq 0 ] ; then
                                 touch $starDir.cuffLinkInQueue
                         else
@@ -135,7 +135,7 @@ do
 
 		else
 			echo "running unstranded cufflinks case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffLink.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffLink.pbs
 			if [ $? -eq 0 ] ; then
 				touch $starDir.cuffLinkInQueue
 			else

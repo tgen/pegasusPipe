@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_digarPost.txt"
 nxtStep1="pegasus_nextJob_postdigarPost.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -126,7 +126,7 @@ do
 			fi
  
 			echo "### Submitting $digarDir to queue for digarPost..."
-			sbatch --export DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pbsHome/pegasus_digarPost.pbs
+			sbatch --export DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digarPost.pbs
 			if [ $? -eq 0 ] ; then
 				touch $digarDir.digarPostInQueue
 			else

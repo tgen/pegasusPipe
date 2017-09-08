@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_cuffDiff.txt"
 nxtStep1="pegasus_nextJob_postCuffDiff.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -136,7 +136,7 @@ do
 		fi 
 
 		echo "### Submitting $cdName to queue for cuff diff..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffDiff.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffDiff.pbs
 		if [ $? -eq 0 ] ; then
 			touch $cdDir.cuffDiffInQueue
 		else
@@ -202,7 +202,7 @@ do
 		echo "### Submitting $cdName to queue for cuff diff..."
 		if [ $rnaTumorStrand == "FIRST" ] ; then
                         echo "##running stranded cuffDiff case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_firstStrandedCuffDiff.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedCuffDiff.pbs
 			if [ $? -eq 0 ] ; then
 				touch $cdDir.cuffDiffInQueue
 			else
@@ -211,7 +211,7 @@ do
 			sleep 2
                 elif [ $rnaTumorStrand == "SECOND" ] ; then
                         echo "##running second stranded cuffDiff case"
-                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_secondStrandedCuffDiff.pbs
+                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedCuffDiff.pbs
                         if [ $? -eq 0 ] ; then
                                 touch $cdDir.cuffDiffInQueue
                         else
@@ -220,7 +220,7 @@ do
                         sleep 2
 		else
 			echo "running unstranded cuffDiff case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffDiff.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffDiff.pbs
 			if [ $? -eq 0 ] ; then
 				touch $cdDir.cuffDiffInQueue
 			else

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -22,9 +22,9 @@ nxtStep5="pegasus_nextJob_trn.txt"
 nxtStep6="pegasus_nextJob_strelka.txt"
 nxtStep7="pegasus_nextJob_snpSniff.txt"
 nxtStep8="pegasus_nextJob_REVseurat.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -164,7 +164,7 @@ do
 			continue
 		fi 
 		echo "### Submitting $usableName to queue for joint indel realignment..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d $pbsHome/pegasus_jointIR.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIR.pbs
 		if [ $? -eq 0 ] ; then
 		touch $trackName.jointIRInQueue
 		else
@@ -181,7 +181,7 @@ do
 	#		fi 
 	#		bamName=`basename $trackName`
 	#		echo "submitting chr grp $chrGrp on $trackName to queue for gatk unified genotyper"
-	#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v GRPNAME=$grpName,CHRGRP=$chrGrp,WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStepA,RUNDIR=$runDir,D=$d $pbsHome/pegasus_jointIRsplit.pbs
+	#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v GRPNAME=$grpName,CHRGRP=$chrGrp,WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStepA,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIRsplit.pbs
 	#		if [ $? -eq 0 ] ; then
 	#			touch $trackName.jointIR-group$grpName-InQueue
 	#		else

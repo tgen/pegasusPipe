@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_kallisto.txt"
 nxtStep1="pegasus_nextJob_postKallisto.txt"
 ##nxtStep1="pegasus_nextJob_sleuth.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -178,7 +178,7 @@ do
 							
 							 if [[ $rnaStrand == "FIRST" ]] ; then
                 						echo "##running first stranded kallisto case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_firstStrandedKallisto.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedKallisto.pbs
 								if [ $? -eq 0 ] ; then
 									touch $ownDir.kallistoInQueue
 								else
@@ -187,7 +187,7 @@ do
 								fi
 							elif [[ $rnaStrand == "SECOND" ]] ; then
                 						echo "##running second stranded kallisto case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_secondStrandedKallisto.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedKallisto.pbs
                                                                 if [ $? -eq 0 ] ; then
                                                                         touch $ownDir.kallistoInQueue
                                                                 else
@@ -196,7 +196,7 @@ do
                                                                 fi
 							else
                 						echo "##running unstranded kallisto case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_kallisto.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_kallisto.pbs
                                                                 if [ $? -eq 0 ] ; then
                                                                         touch $ownDir.kallistoInQueue
                                                                 else

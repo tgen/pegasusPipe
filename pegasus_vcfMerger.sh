@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_vcfMerger.txt"
 nxtStep1="pegasus_nextJob_mergeVcfAlleleCount.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -218,8 +218,8 @@ do
 			continue
 		fi
                 echo "### Submitting vcfs to queue for vcf merger..."
-                echo "qsub -A $debit -l nodes=1:ppn=8 -v MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,TUMOR=$tumor,CONTROL=$control,SNPSIFT=$snpSift,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_vcfMerger.pbs"
-                sbatch --export RECIPE=$recipe,PICARDPATH=$picardPath,EXAC=$EXAC,COSMICC=$COSMICC,COSMICNC=$COSMICNC,DBSNP_SNV_BED=$DBSNP_SNV_BED,DBSNP_DIV_BED=$DBSNP_DIV_BED,MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,CONTROL=$control,TUMOR=$tumor,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_vcfMerger.pbs
+                echo "qsub -A $debit -l nodes=1:ppn=8 -v MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,TUMOR=$tumor,CONTROL=$control,SNPSIFT=$snpSift,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_vcfMerger.pbs"
+                sbatch --export RECIPE=$recipe,PICARDPATH=$picardPath,EXAC=$EXAC,COSMICC=$COSMICC,COSMICNC=$COSMICNC,DBSNP_SNV_BED=$DBSNP_SNV_BED,DBSNP_DIV_BED=$DBSNP_DIV_BED,MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,CONTROL=$control,TUMOR=$tumor,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_vcfMerger.pbs
                 if [ $? -eq 0 ] ; then
                         touch ${mergerDir}/${seurat_basename}.vcfMergerInQueue
                 else

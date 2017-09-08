@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -21,9 +21,9 @@ nxtStep2="pegasus_nextJob_vcfMerger.txt"
 #nxtStep5="pegasus_nextJob_deSeq.txt"
 #nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep7="pegasus_nextJob_samtoolsStats.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -164,7 +164,7 @@ do
 		fi
 
 		echo Starting MuTect Step${STEP}
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_mutect.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pegasusPbsHome/pegasus_mutect.pbs
 		if [ $? -eq 0 ] ; then
 			touch ${wd}_Step${STEP}.mutectInQueue
 		else

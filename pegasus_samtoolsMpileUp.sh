@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_samtoolsMpileUp.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_germVcfMerger.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -133,7 +133,7 @@ do
                         continue
                 fi
                         echo Starting mpileup Step${STEP}
-			sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_samtoolsMpileUpMulti.pbs
+			sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUpMulti.pbs
                         if [ $? -eq 0 ] ; then
                                 touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
                         else
@@ -201,7 +201,7 @@ do
 					fi
 
 					echo Starting samtoolsMpileUp for ${bamFile}
-					sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_samtoolsMpileUp.pbs
+					sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUp.pbs
 					if [ $? -eq 0 ] ; then
 						touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
 					else

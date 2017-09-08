@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -18,9 +18,9 @@ nxtStep2="pegasus_nextJob_snpSniff.txt"
 nxtStep3="pegasus_nextJob_digar.txt"
 nxtStep4="pegasus_nextJob_picardMultiMetrics.txt"
 nxtStep5="pegasus_nextJob_splitNCigarReads.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -111,7 +111,7 @@ do
 		mkdir $runDir/stats
 	fi
 	echo "### Submitting $rnaBam to queue for RNA Mark Dups..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,OUTPUTBAM=$mdBam,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,D=$d $pbsHome/pegasus_rnaMarkDup.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v REF=$ref,OUTPUTBAM=$mdBam,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,D=$d $pegasusPbsHome/pegasus_rnaMarkDup.pbs
 	if [ $? -eq 0 ] ; then
 		touch $rnaBam.rnaMarkDupInQueue
 	else

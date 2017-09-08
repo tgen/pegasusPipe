@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -17,9 +17,9 @@ nxtStep1="pegasus_nextJob_rnaAlign.txt"
 nxtStep2="pegasus_nextJob_detectFusion.txt"
 nxtStep3="pegasus_nextJob_salmon.txt"
 nxtStep4="pegasus_nextJob_kallisto.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -131,7 +131,7 @@ do
 							echo "### Already passed, inQueue, or failed"
 						else
 							echo "### Ready to submit for read 1..."
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v CNT=$read1Count,RUNDIR=$runDir,NTX1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList1",MERGEDFASTQ=$targetName,D=$d $pbsHome/pegasus_mergeFastqs.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v CNT=$read1Count,RUNDIR=$runDir,NTX1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList1",MERGEDFASTQ=$targetName,D=$d $pegasusPbsHome/pegasus_mergeFastqs.pbs
 							if [ $? -eq 0 ] ; then
 								touch $targetName.mergeFastqInQueue
 							else
@@ -143,7 +143,7 @@ do
 							echo "### Already passed, inQueue, or failed"
 						else
 							echo "### Ready to submit for read 2..."
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v CNT=$read1Count,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList2",MERGEDFASTQ=$targR2Name,D=$d $pbsHome/pegasus_mergeFastqs.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v CNT=$read1Count,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList2",MERGEDFASTQ=$targR2Name,D=$d $pegasusPbsHome/pegasus_mergeFastqs.pbs
 							if [ $? -eq 0 ] ; then
 								touch $targR2Name.mergeFastqInQueue
 							else

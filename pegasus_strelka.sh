@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -20,9 +20,9 @@ nxtStep1="pegasus_nextJob_snpEff.txt"
 #nxtStep5="pegasus_nextJob_deSeq.txt"
 #nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep7="pegasus_nextJob_samtoolsStats.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -152,7 +152,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue to run strelka on $wd"
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_strelka.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pegasusPbsHome/pegasus_strelka.pbs
 	if [ $? -eq 0 ] ; then
 		touch $wd.strelkaInQueue
 	else

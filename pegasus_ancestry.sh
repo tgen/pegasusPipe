@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_ancestry.txt"
 nxtStep1="pegasus_nextJob_postAncestry.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -96,7 +96,7 @@ do
                			mkdir -p $ancestryDir
         		fi
 			echo "Starting ancestry for ${bamFile}"
-			sbatch --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_ancestry.sh
+			sbatch --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_ancestry.sh
 			if [ $? -eq 0 ] ; then
 				touch ${trackName}.ancestryInQueue
 			else

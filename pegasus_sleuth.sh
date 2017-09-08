@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_sleuth.txt"
 nxtStep1="pegasus_nextJob_postSleuth.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -146,7 +146,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for sleuth..."
-                sbatch -n 1 -N 1 --cpus-per-task $nCores -v SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sleuth.pbs
+                sbatch -n 1 -N 1 --cpus-per-task $nCores -v SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_sleuth.pbs
                 if [ $? -eq 0 ] ; then
                        touch $sleuthDir.sleuthInQueue
                 else

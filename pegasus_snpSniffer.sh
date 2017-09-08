@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_snpSniff.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -101,7 +101,7 @@ do
 				echo "### Looks like snp sniff is alread in queue, failed, or passed"
 			else
 				echo "### Submitting for snpSniffer: $bamFile"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.pbs
 				if [ $? -eq 0 ] ; then
 					touch $bamFile.snpSniffInQueue
 				else
@@ -135,7 +135,7 @@ do
 			else
 				finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
 				echo "### Submitting for snpSniffer: $bamFile"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpSniffer.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.pbs
 				if [ $? -eq 0 ] ; then
 					touch $bamFile.snpSniffInQueue
 				else

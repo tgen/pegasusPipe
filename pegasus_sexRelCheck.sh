@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_sexRelCheck.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -112,7 +112,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.HC_All.snpEff.vcf to queue for sexRelCheck..."
-	sbatch --export PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_sexRelCheck.pbs
+	sbatch --export PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_sexRelCheck.pbs
 	if [ $? -eq 0 ] ; then
 		touch $outTrackName.sexRelCheckInQueue
 	else

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_cuffQuant.txt"
 nxtStep1="pegasus_nextJob_postCuffQuant.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -96,7 +96,7 @@ do
 		fi 
 
 		echo "### Submitting $topHatDir to queue for cuff quant..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffQuant.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.pbs
 		if [ $? -eq 0 ] ; then
 			touch $topHatDir.cuffQuantInQueue
 		else
@@ -120,7 +120,7 @@ do
 		echo "### Submitting $starDir to queue for cuff quant..."
 		if [ $rnaStrand == "FIRST" ] ; then
                         echo "##running stranded cuffQuant case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_firstStrandedCuffQuant.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedCuffQuant.pbs
 			if [ $? -eq 0 ] ; then
 				touch $starDir.cuffQuantInQueue
 			else
@@ -129,7 +129,7 @@ do
 			sleep 2
                 elif [ $rnaStrand == "SECOND" ] ; then
                         echo "##running second stranded cuffQuant case"
-                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_secondStrandedCuffQuant.pbs
+                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedCuffQuant.pbs
                         if [ $? -eq 0 ] ; then
                                 touch $starDir.cuffQuantInQueue
                         else
@@ -138,7 +138,7 @@ do
                         sleep 2
 		else
 			echo "##running unstranded cuffQuant case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_cuffQuant.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores -v PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.pbs
 			if [ $? -eq 0 ] ; then
 				touch $starDir.cuffQuantInQueue
 			else

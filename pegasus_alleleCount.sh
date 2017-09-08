@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_alleleCount.txt"
 nxtStep1="pegasus_nextJob_postAlleleCount.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 
@@ -147,7 +147,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue for allele count..."
-	sbatch --export OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d $pbsHome/pegasus_alleleCount.sh
+	sbatch --export OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_alleleCount.sh
 	if [ $? -eq 0 ] ; then
 		touch $trackName/$usableName.alleleCountInQueue
 	else

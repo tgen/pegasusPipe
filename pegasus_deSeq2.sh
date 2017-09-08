@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_deSeq2.txt"
 nxtStep1="pegasus_nextJob_postDeSeq2.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -147,7 +147,7 @@ do
 		fi 
 
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_deSeq2.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeq2InQueue
 		else
@@ -222,7 +222,7 @@ do
 			mkdir -p $deSeqDir
 		fi
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_deSeq2.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeq2InQueue
 		else

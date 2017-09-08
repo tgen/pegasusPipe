@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -24,9 +24,9 @@ nxtStep8="pegasus_nextJob_rnaMarkDup.txt"
 nxtStep9="pegasus_nextJob_cuffQuant.txt"
 nxtStep10="pegasus_nextJob_deSeq2.txt"
 nxtStep11="pegasus_nextJob_DEXseqCount.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -231,7 +231,7 @@ do
 							echo "### submitting $ownDir to queue for STAR aligner... "
 							if [[ $rnaStrand == "FIRST" || $rnaStrand == "SECOND" ]] ; then
 								echo "##running stranded STAR case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pbsHome/pegasus_strandedStar.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_strandedStar.pbs
 								if [ $? -eq 0 ] ; then
 									touch $ownDir.starInQueue
 								else
@@ -240,8 +240,8 @@ do
 								sleep 2
 							else
 								echo "##running unstranded STAR case"
-								echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pbsHome/pegasus_star.pbs"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pbsHome/pegasus_star.pbs
+								echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.pbs"
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.pbs
 								if [ $? -eq 0 ] ; then
 									touch $ownDir.starInQueue
 								else

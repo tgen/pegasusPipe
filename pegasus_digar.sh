@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_digar.txt"
 nxtStep1="pegasus_nextJob_digarPost.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 |  cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -141,8 +141,8 @@ do
 				fi 
 
 				echo "### Submitting $digarDir to queue for digar..."
-				echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pbsHome/pegasus_digar.pbs"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pbsHome/pegasus_digar.pbs
+				echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs"
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs
 				if [ $? -eq 0 ] ; then
 					touch ${digarDir}/$samName.$geneName.digarInQueue
 				else

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_runFastQC.txt"
 nxtStep1="pegasus_nextJob_postFastQC.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -64,7 +64,7 @@ do
 	fi
 	echo "### Submitting to fastQC for $thisFq"
 	d=`echo $runDir | cut -c 2-`
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_runFastQC.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_runFastQC.pbs
 	if [ $? -eq 0 ] ; then
 		touch $thisFq.fastqcInQueue
 	else

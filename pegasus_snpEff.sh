@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_snpEff.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 ##nxtStep2="pegasus_nextJob_germVcfMerger.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -88,7 +88,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.seurat.vcf to queue for snpEff..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 	if [ $? -eq 0 ] ; then
 		touch $trackName.seurat.vcf.snpEffInQueue
 	else
@@ -126,7 +126,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.REVseurat.vcf to queue for snpEff..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 	if [ $? -eq 0 ] ; then
 		touch $trackName.REVseurat.vcf.snpEffInQueue
 	else
@@ -163,7 +163,7 @@ do
 		echo "### snpEff is already done, failed or inQueue for passed somatic snvs"
 	else
 		echo "### Submitting $vcfPre.passed.somatic.snvs.vcf to queue for snpEff..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.passed.somatic.snvs.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.passed.somatic.snvs.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 		if [ $? -eq 0 ] ; then
 			touch $vcfPre.strelka.passed.somatic.snvs.vcf.snpEffInQueue 
 		else
@@ -175,7 +175,7 @@ do
 		echo "### snpEff is already done, failed or inQueue for all somatic snvs"
 	else
 		echo "### Submitting $vcfPre.all.somatic.snvs.vcf to queue for snpEff..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.all.somatic.snvs.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.all.somatic.snvs.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 		if [ $? -eq 0 ] ; then
 			touch $vcfPre.strelka.all.somatic.snvs.vcf.snpEffInQueue 
 		else
@@ -187,7 +187,7 @@ do
 		echo "### snpEff is already done, failed or inQueue for passed somatic indels"
 	else
 		echo "### Submitting $vcfPre.passed.somatic.indels.vcf to queue for snpEff..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.passed.somatic.indels.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.passed.somatic.indels.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 		if [ $? -eq 0 ] ; then
 			touch $vcfPre.strelka.passed.somatic.indels.vcf.snpEffInQueue 
 		else
@@ -199,7 +199,7 @@ do
 		echo "### snpEff is already done, failed or inQueue for all somatic indels"
 	else
 		echo "### Submitting $vcfPre.all.somatic.indels.vcf to queue for snpEff..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.all.somatic.indels.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcfPre.strelka.all.somatic.indels.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 		if [ $? -eq 0 ] ; then
 			touch $vcfPre.strelka.all.somatic.indels.vcf.snpEffInQueue 
 		else
@@ -238,7 +238,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $vcf to queue for snpEff..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 	if [ $? -eq 0 ] ; then
 		touch $vcf.snpEffInQueue 
 	else
@@ -286,7 +286,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.HC_All.vcf to queue for snpEff..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 	if [ $? -eq 0 ] ; then
 		touch $trackName.HC_All.vcf.snpEffInQueue
 	else
@@ -333,7 +333,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.mpileup_All.vcf to queue for snpEff..."
-        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.mpileup_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.mpileup_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
         if [ $? -eq 0 ] ; then
                 touch $trackName.mpileup_All.vcf.snpEffInQueue
         else
@@ -380,7 +380,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.freebayes_All.vcf to queue for snpEff..."
-        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.freebayes_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$trackName.freebayes_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
         if [ $? -eq 0 ] ; then
                 touch $trackName.freebayes_All.vcf.snpEffInQueue
         else
@@ -420,7 +420,7 @@ do
 					echo "### snpEff already passed, in queue, or failed for $hcVcf"
 				else
 					echo "### Submitting for hc vcf for snpEff: $hcVcf"
-					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$hcVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$hcVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 					if [ $? -eq 0 ] ; then
 						touch $hcVcf.snpEffInQueue
 					else
@@ -437,7 +437,7 @@ do
                                         echo "### snpEff already passed, in queue, or failed for $mpVcf"
                                 else
                                         echo "### Submitting for mp vcf for snpEff: $mpVcf"
-                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$mpVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$mpVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
                                         if [ $? -eq 0 ] ; then
                                                 touch $mpVcf.snpEffInQueue
                                         else
@@ -454,7 +454,7 @@ do
                                         echo "### snpEff already passed, in queue, or failed for $fbVcf"
                                 else
                                         echo "### Submitting for fb vcf for snpEff: $fbVcf"
-                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$fbVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$fbVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
                                         if [ $? -eq 0 ] ; then
                                                 touch $fbVcf.snpEffInQueue
                                         else
@@ -485,7 +485,7 @@ do
 					echo "### snpEff already passed, in queue, or failed for $hcVcf"
 				else
 					echo "### Submitting for hc vcf for snpEff: $hcVcf"
-					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$hcVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_snpEff.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v SNPEFFPATH=$snpeffPath,VCF=$hcVcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpEff.pbs
 					if [ $? -eq 0 ] ; then
 						touch $hcVcf.snpEffInQueue
 					else

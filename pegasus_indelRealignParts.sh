@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_indelRealignParts.txt"
 nxtStep1="pegasus_nextJob_recalibrateParts.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -113,7 +113,7 @@ do
 								continue
 							fi
 							echo "### Submitting to indel realign to create $bamMiniName"
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,INTS=$irIntMiniFile,IRBAMFILE=$irBamMiniFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamMiniName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_indelRealign.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,INTS=$irIntMiniFile,IRBAMFILE=$irBamMiniFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamMiniName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_indelRealign.pbs
 							if [ $? -eq 0 ] ; then
 								touch $bamMiniName.indelRealignInQueue
 							else

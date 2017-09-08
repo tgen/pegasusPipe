@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute Ahmet Kurdoglu. All rights reserved. This License is limited 
@@ -29,13 +29,9 @@ while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symli
 done
 scriptsHome="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 
+export pegasusPbsHome=$scriptsHome/jobScripts/
 
-#logs="/scratch/tgenjetstream/pegasusPipe/logs" # Lets stick with standard
-# locations for now, but let them be adjustable with configuration files or
-# environment variables
-logs=${PEGASUS_LOGS:-~/pegasus-pipe/}
-
-
+logs=~/jetstream/pegasusPipe/logs/
 
 topProjDir=${1? Projects directory is required}
 myhostname=`hostname`
@@ -85,9 +81,9 @@ do
 		sleep 1
 		;;
 	pegasus_nextJob_digarPost.txt)       echo "### Will run digarPost for $projDir"
-                nohup $scriptsHome/pegasus_digarPost.sh $projDir >> $projDir/logs/pegasus_digarPostLOG.txt 2>&1 &
-                sleep 1
-                ;;
+        nohup $scriptsHome/pegasus_digarPost.sh $projDir >> $projDir/logs/pegasus_digarPostLOG.txt 2>&1 &
+        sleep 1
+        ;;
 	pegasus_nextJob_dnaAlignParts.txt)	echo "### Will run dnaAlign in parts for $projDir"
 		nohup $scriptsHome/pegasus_dnaAlignParts.sh $projDir >> $projDir/logs/pegasus_dnaAlignPartsLOG.txt 2>&1 &
 		sleep 1
@@ -168,22 +164,10 @@ do
 		nohup $scriptsHome/pegasus_trn.sh $projDir >> $projDir/logs/pegasus_trnLOG.txt 2>&1 &
 		sleep 1
 		;;
-	#pegasus_nextJob_mergeSeuratVcfs.txt)	echo "### Will run merge seurat vcfs for $projDir"
-	#	nohup $scriptsHome/pegasus_mergeSeuratVcfs.sh $projDir >> $projDir/logs/pegasus_mergeSeuratVcfsLOG.txt 2>&1 &
-	#	sleep 1
-	#	;;
-	#pegasus_nextJob_unifiedGenotyper.txt)	echo "### Will run unified genotyper for $projDir"
-	#	nohup $scriptsHome/pegasus_unifiedGenotyper.sh $projDir >> $projDir/logs/pegasus_unifiedGenotyperLOG.txt 2>&1 &
-	#	sleep 1
-	#	;;
 	pegasus_nextJob_haplotypeCaller.txt)	echo "### Will run haplotype caller for $projDir"
 		nohup $scriptsHome/pegasus_haplotypeCaller.sh $projDir >> $projDir/logs/pegasus_haplotypeCallerLOG.txt 2>&1 &
 		sleep 1
 		;;
-	#pegasus_nextJob_vqsr.txt)	echo "### Will run VQSR for $projDir"
-	#	nohup $scriptsHome/pegasus_vqsr.sh $projDir >> $projDir/logs/pegasus_vqsrLOG.txt 2>&1 &
-	#	sleep 1
-	#	;;
 	pegasus_nextJob_snpEff.txt)	echo "### Will run snpEff for $projDir"
 		nohup $scriptsHome/pegasus_snpEff.sh $projDir >> $projDir/logs/pegasus_snpEffLOG.txt 2>&1 &
 		sleep 1
@@ -288,22 +272,22 @@ do
 		nohup $scriptsHome/pegasus_cuffDiff.sh $projDir >> $projDir/logs/pegasus_cuffDiffLOG.txt 2>&1 &
 		sleep 1
 		;;
-        pegasus_nextJob_DEXseq.txt)      echo "### Will run DEXseq for $projDir"
-                nohup $scriptsHome/pegasus_DEXseq.sh $projDir >> $projDir/logs/pegasus_DEXseqLOG.txt 2>&1 &
-                sleep 1
-                ;;
-        pegasus_nextJob_DEXseqCount.txt)      echo "### Will run DEXseqCount for $projDir"
-                nohup $scriptsHome/pegasus_DEXseqCount.sh $projDir >> $projDir/logs/pegasus_DEXseqCountLOG.txt 2>&1 &
-                sleep 1
-                ;;
-        pegasus_nextJob_sleuth.txt)      echo "### Will run sleuth for $projDir"
-                nohup $scriptsHome/pegasus_sleuth.sh $projDir >> $projDir/logs/pegasus_sleuthLOG.txt 2>&1 &
-                sleep 1
-                ;;
-        pegasus_nextJob_kallisto.txt)      echo "### Will run kallisto for $projDir"
-                nohup $scriptsHome/pegasus_kallisto.sh $projDir >> $projDir/logs/pegasus_kallistoLOG.txt 2>&1 &
-                sleep 1
-                ;;
+    pegasus_nextJob_DEXseq.txt)      echo "### Will run DEXseq for $projDir"
+        nohup $scriptsHome/pegasus_DEXseq.sh $projDir >> $projDir/logs/pegasus_DEXseqLOG.txt 2>&1 &
+        sleep 1
+        ;;
+    pegasus_nextJob_DEXseqCount.txt)      echo "### Will run DEXseqCount for $projDir"
+        nohup $scriptsHome/pegasus_DEXseqCount.sh $projDir >> $projDir/logs/pegasus_DEXseqCountLOG.txt 2>&1 &
+        sleep 1
+        ;;
+    pegasus_nextJob_sleuth.txt)      echo "### Will run sleuth for $projDir"
+        nohup $scriptsHome/pegasus_sleuth.sh $projDir >> $projDir/logs/pegasus_sleuthLOG.txt 2>&1 &
+        sleep 1
+        ;;
+    pegasus_nextJob_kallisto.txt)      echo "### Will run kallisto for $projDir"
+        nohup $scriptsHome/pegasus_kallisto.sh $projDir >> $projDir/logs/pegasus_kallistoLOG.txt 2>&1 &
+        sleep 1
+        ;;
 	pegasus_nextJob_deSeq.txt)	echo "### Will run deSeq for $projDir"
 		nohup $scriptsHome/pegasus_deSeq.sh $projDir >> $projDir/logs/pegasus_deSeqLOG.txt 2>&1 &
 		sleep 1
@@ -317,29 +301,27 @@ do
 		sleep 1
 		;;
 	pegasus_nextJob_vcfMerger.txt)    echo "### Will run vcf Merger for $projDir"
-                nohup $scriptsHome/pegasus_vcfMerger.sh $projDir >> $projDir/logs/pegasus_vcfMergerLOG.txt 2>&1 &
-                sleep 1
-                ;;
-        pegasus_nextJob_mergeVcfAlleleCount.txt)       echo "### Will run merge vcf allele count for $projDir"
-                nohup $scriptsHome/pegasus_mergeVcfAlleleCount.sh $projDir >> $projDir/logs/pegasus_vcfMergerACLOG.txt 2>&1 &
-                sleep 1
-                ;;
+        nohup $scriptsHome/pegasus_vcfMerger.sh $projDir >> $projDir/logs/pegasus_vcfMergerLOG.txt 2>&1 &
+        sleep 1
+        ;;
+    pegasus_nextJob_mergeVcfAlleleCount.txt)       echo "### Will run merge vcf allele count for $projDir"
+        nohup $scriptsHome/pegasus_mergeVcfAlleleCount.sh $projDir >> $projDir/logs/pegasus_vcfMergerACLOG.txt 2>&1 &
+        sleep 1
+        ;;
 	pegasus_nextJob_alleleCount.txt)	echo "### Will run alleleCount for $projDir"
 		nohup $scriptsHome/pegasus_alleleCount.sh $projDir >> $projDir/logs/pegasus_alleleCountLOG.txt 2>&1 &
 		sleep 1
 		;;
 	pegasus_nextJob_deNovoGear.txt)        echo "### Will run deNovoGear for $projDir"
-                nohup $scriptsHome/pegasus_deNovoGear.sh $projDir >> $projDir/logs/pegasus_deNovoGearLOG.txt 2>&1 &
-                sleep 1
-                ;;
+        nohup $scriptsHome/pegasus_deNovoGear.sh $projDir >> $projDir/logs/pegasus_deNovoGearLOG.txt 2>&1 &
+        sleep 1
+        ;;
 	pegasus_nextJob_germVcfMerger.txt)        echo "### Will run germline merger for $projDir"
-                nohup $scriptsHome/pegasus_germVcfMerge.sh $projDir >> $projDir/logs/pegasus_germVcfMergerLOG.txt 2>&1 &
-                sleep 1
-                ;;
+        nohup $scriptsHome/pegasus_germVcfMerge.sh $projDir >> $projDir/logs/pegasus_germVcfMergerLOG.txt 2>&1 &
+        sleep 1
+        ;;
 	*) 	echo "### Nothing to process $msgName with on $myhostname. Skipped."
 		sleep 1
 		;;
 	esac
 done
-
-echo "**********DONE************"

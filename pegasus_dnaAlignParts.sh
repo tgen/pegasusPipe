@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_dnaAlignParts.txt"
 nxtStep1="pegasus_nextJob_indelRealignParts.txt"
 nxtStep2="pegasus_nextJob_recalibrateParts.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -135,7 +135,7 @@ do
 									rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}"
 								fi 
 								echo "$rgTag"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pbsHome/pegasus_bwaMem.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pegasusPbsHome/pegasus_bwaMem.pbs
 								if [ $? -eq 0 ] ; then
 									touch $bamMiniName.dnaAlignInQueue
 								else

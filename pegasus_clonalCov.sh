@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_clonalCov.txt"
 nxtStep1="pegasus_nextJob_cna15.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -94,7 +94,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $normalBamFile"
-			sbatch -v BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+			sbatch -v BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $normalBamFile.clonalCovInQueue
 			else
@@ -111,7 +111,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $tumorBamFile"
-			sbatch -v BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+			sbatch -v BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $tumorBamFile.clonalCovInQueue
 			else
@@ -162,7 +162,7 @@ do
 				((qsubFails++))
 			else
 				echo "### Submitting to queue with $bamFile"
-				sbatch -v BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_clonalCov.pbs
+				sbatch -v BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 				if [ $? -eq 0 ] ; then
 					touch $normalBamFile.clonalCovInQueue
 				else

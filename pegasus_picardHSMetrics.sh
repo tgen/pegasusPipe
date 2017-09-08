@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_picardHSMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicHSMetric.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -92,7 +92,7 @@ do
 		#		echo "### Picard alignment summary metric already passed, in queue, or failed for $inBam"
 		#	else
 		#		echo "### Submitting for picard HS Metrics: $inBam"
-		#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+		#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardHSMetrics.pbs
 		#		if [ $? -eq 0 ] ; then
 		#			touch $inBam.picHSMetricsInQueue
 		#		else
@@ -110,7 +110,7 @@ do
 				echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
 			else
 				echo "### Submitting for picard HS Metrics: $mdBam"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardHSMetrics.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mdBam.picHSMetricsInQueue
 				else
@@ -130,7 +130,7 @@ do
 					echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
 				else
 					echo "### Submitting for picard HS Metrics: $jrBam"
-					sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardHSMetrics.pbs
 					if [ $? -eq 0 ] ; then
 						touch $jrBam.picHSMetricsInQueue
 					else

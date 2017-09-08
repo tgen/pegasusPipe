@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_mergeBams.txt"
 nxtStep1="pegasus_nextJob_markDups.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -181,7 +181,7 @@ do
 						echo "### Already passed, inQueue, or failed"
 					else
 						echo "### Ready to submit to create $mergedBamName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=$bamCount,RUNDIR=$runDir,NXT1=$nxtStep1,BAMLIST="$bamList",MERGEDBAM=$mergedBamName,D=$d $pbsHome/pegasus_mergeBams.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores -v PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=$bamCount,RUNDIR=$runDir,NXT1=$nxtStep1,BAMLIST="$bamList",MERGEDBAM=$mergedBamName,D=$d $pegasusPbsHome/pegasus_mergeBams.pbs
 						if [ $? -eq 0 ] ; then
 							touch $mergedBamName.mergeBamInQueue
 						else

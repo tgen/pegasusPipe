@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_trn.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -132,7 +132,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue with $normalBamFile"
-	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_trn.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores -v ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_trn.pbs
 	if [ $? -eq 0 ] ; then
 		touch $trnDatFile.trnInQueue
 	else

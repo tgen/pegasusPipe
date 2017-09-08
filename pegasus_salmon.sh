@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_salmon.txt"
 nxtStep1="pegasus_nextJob_postSalmon.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -114,7 +114,7 @@ do
 	echo "### salmon path is: $salmonPath"
 	if [[ $rnaStrand == "FIRST" ]] ; then
         	echo "##running first stranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_firstStrandedSalmon.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedSalmon.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.salmonInQueue
 		else
@@ -123,7 +123,7 @@ do
 		sleep 2
 	elif [[ $rnaStrand == "SECOND" ]] ; then
         	echo "##running second stranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_secondStrandedSalmon.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedSalmon.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.salmonInQueue
 		else
@@ -132,7 +132,7 @@ do
 		sleep 2
 	else
 		echo "##running unstranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_salmon.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_salmon.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.salmonInQueue
 		else

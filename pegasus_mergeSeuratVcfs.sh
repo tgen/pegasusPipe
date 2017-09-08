@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -16,9 +16,9 @@ thisStep="pegasus_nextJob_mergeSeuratVcfs.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 nxtStep2="pegasus_nextJob_snpEff.txt"
 nxtStep3="pegasus_nextJob_alleleCount.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -97,7 +97,7 @@ do
 			#echo "thisVCF is $thisVCF"
 			fileList="$fileList I=$thisVCF"
 		done
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pbsHome/pegasus_mergeVCFs.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores -v FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeVCFs.pbs
 		if [ $? -eq 0 ] ; then
 			touch $mergedVCF.mergeVcfInQueue
 		else

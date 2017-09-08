@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -18,9 +18,9 @@ nxtStep2="pegasus_nextJob_clonalCov.txt"
 nxtStep3="pegasus_nextJob_trn.txt"
 nxtStep4="pegasus_nextJob_strelka.txt"
 nxtStep5="pegasus_nextJob_mutect.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -133,7 +133,7 @@ do
 					fi
 					fileList="$fileList I=$thisBam"
 				done
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d $pbsHome/pegasus_mergeBamsForBigJIR.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeBamsForBigJIR.pbs
 				if [ $? -eq 0 ] ; then
 					touch $mergedBam.mergeBamInQueue
 				else

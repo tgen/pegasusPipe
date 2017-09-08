@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,9 +14,9 @@
 
 thisStep="pegasus_nextJob_DEXseqCount.txt"
 nxtStep1="pegasus_nextJob_DEXseq.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -109,7 +109,7 @@ do
 				echo "### DEXseqCount is already done, failed or inQueue"
 			else
 				echo "### Submitting $samName to queue for DEXseqCount..."
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_DEXseqCount.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseqCount.pbs
 				if [ $? -eq 0 ] ; then
 					touch $DEXseqOut.DEXseqCountInQueue
 				else
@@ -138,7 +138,7 @@ do
 				echo "### DEXseqCount is already done, failed or inQueue"
 			else
 				echo "### Submitting $samName to queue for DEXseqCount..."
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_DEXseqCount.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores -v DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseqCount.pbs
 
 				if [ $? -eq 0 ] ; then
 					touch $DEXseqOut.DEXseqCountInQueue

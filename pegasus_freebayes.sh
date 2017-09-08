@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,9 +15,9 @@
 thisStep="pegasus_nextJob_freebayes.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_germVcfMerger.txt"
-pbsHome="~/pegasus-pipe/jobScripts"
-constants="~/central-pipe/constants/constants.txt"
-constantsDir="~/central-pipe/constants"
+
+constants=~/jetstream/constants/constants.txt
+constantsDir=~/jetstream/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -125,8 +125,8 @@ do
                         continue
                 fi
 	        echo Starting freebayes caller Step${STEP}
-		##sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_haplotypeCaller.pbs
-		sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayesMulti.pbs
+		##sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.pbs
+		sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayesMulti.pbs
 		if [ $? -eq 0 ] ; then
 			touch ${trackName}_Step${STEP}.freebayesInQueue
 		else
@@ -188,7 +188,7 @@ do
 					fi
 
 					echo Starting freebayes for ${fbBam}
-					sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayes.pbs
+					sbatch --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayes.pbs
 					if [ $? -eq 0 ] ; then
 						touch ${trackName}_Step${STEP}.freebayesInQueue
 					else
