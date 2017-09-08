@@ -15,7 +15,6 @@
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 
-
 # scriptsHome="/home/tgenjetstream/pegasus-pipe" # scriptsHome should always be
 # relative to the location of this main script.
 # There is no reliable way of resolving the location of a script in bash, see
@@ -37,9 +36,7 @@ scriptsHome="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
 logs=${PEGASUS_LOGS:-~/pegasus-pipe/}
 
 
-#topProjDir="/scratch/tgenjetstream/centralPipe/projects" # Why does this need
-# to be hardcoded, just pass it as an argument. Now the source is decoupled
-# from the deployment.
+
 topProjDir=${1? Projects directory is required}
 myhostname=`hostname`
 
@@ -344,3 +341,5 @@ do
 		;;
 	esac
 done
+
+echo "**********DONE************"
