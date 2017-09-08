@@ -135,16 +135,7 @@ do
                 ((qsubFails++))
                 continue
         fi
-	#trackName="$runDir/denovoGear/$usableName"
-	#hcTrackName="$runDir/hc/$usableName/$usableName"
-	#outTrackName="$runDir/denovoGear/$usableName/$usableName"
-	#outTrack="$runDir/denovoGear"
-	#outVcf="$runDir/denovoGear/$usableName/$usableName"
-	#if [ ! -d $outTrack ] ; then
-	#	mkdir $outTrack
-	#fi
-	#mkdir -p $outTrack/$usableName
-		
+
 
 	if [ ! -e $hcTrackName.HC_All.vcf.snpEffPass ] ; then
 		echo "### HC snpEff pass is not done yet. Missing: $hcTrackName.HC_All.vcf.snpEffPass"

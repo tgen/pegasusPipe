@@ -147,7 +147,7 @@ do
 		fi 
 
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQPATH=$deseqPath,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export DESEQPATH=$deseqPath,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeqInQueue
 		else
@@ -222,7 +222,7 @@ do
 			mkdir -p $deSeqDir
 		fi
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQPATH=$deseqPath,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export DESEQPATH=$deseqPath,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeqInQueue
 		else

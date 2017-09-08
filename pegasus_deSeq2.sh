@@ -147,7 +147,7 @@ do
 		fi 
 
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeq2InQueue
 		else
@@ -206,10 +206,7 @@ do
 			((qsubFails++))
 			continue
 		fi
-		#deSeqDir=$runDir/deSeq/$normlList2-VS-$tumorList2.dsDir
-		#if [ $altNam != "" ] ; then
-		#	deSeqDir=$runDir/deSeq/$altNam
-		#fi
+
 		deSeqDir=$runDir/deSeq2/$deSeqName
 		if [ ! -d $deSeqDir ] ; then
 			mkdir -p $deSeqDir
@@ -222,7 +219,7 @@ do
 			mkdir -p $deSeqDir
 		fi
 		echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="'"$normlList"'",TUMORLIST="'"$tumorList"'",REF=$ref,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deSeq2.pbs
 		if [ $? -eq 0 ] ; then
 			touch $deSeqDir.deSeq2InQueue
 		else

@@ -178,7 +178,7 @@ do
 						echo "CNA gen filt plot already in queue, passed, or failed"
 					else
 						echo "### Submitting to queue with $trackName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
 						if [ $? -eq 0 ] ; then
 							touch $trackName.cnaGenFiltInQueue
 							sleep 1
@@ -196,7 +196,7 @@ do
 						echo "CNA gen filt plot already in queue, passed, or failed"
 					else
 						echo "### Submitting to queue with $trackName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
 						if [ $? -eq 0 ] ; then
 							touch $trackName.cnaGenUnfiInQueue
 							sleep 1
@@ -228,7 +228,7 @@ do
 					echo "CNA gen filt plot already in queue, passed, or failed"
 				else
 					echo "### Submitting to queue with $trackName"
-					sbatch -n 1 -N 1 --cpus-per-task $nCores -v NHETDEPTH=$nHetDepth,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outName3,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName3,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores --export NHETDEPTH=$nHetDepth,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outName3,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName3,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
 					if [ $? -eq 0 ] ; then
 						touch $trackName.cnaExomeInQueue
 						sleep 1
@@ -365,7 +365,7 @@ do
 							echo "CNA gen filt plot already in queue, passed, or failed"
 						else
 							echo "### Submitting to queue with $trackName"
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
 							if [ $? -eq 0 ] ; then
 								touch $trackName.cnaGenFiltInQueue
 								sleep 1
@@ -378,7 +378,7 @@ do
                                                         echo "CNA gen filt plot already in queue, passed, or failed"
                                                 else
                                                         echo "### Submitting to queue with $trackName"
-                                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
+                                                        sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName1,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName1,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenFilt15.pbs
                                                         if [ $? -eq 0 ] ; then
                                                                 touch $trackName.cnaGenFiltInQueue
                                                                 sleep 1
@@ -397,7 +397,7 @@ do
 							echo "CNA gen filt plot already in queue, passed, or failed"
 						else
 							echo "### Submitting to queue with $trackName"
-							sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
 							if [ $? -eq 0 ] ; then
 								touch $trackName.cnaGenUnfiInQueue
 								sleep 1
@@ -410,7 +410,7 @@ do
                                                         echo "CNA gen filt plot already in queue, passed, or failed"
                                                 else
                                                         echo "### Submitting to queue with $trackName"
-                                                        sbatch -n 1 -N 1 --cpus-per-task $nCores -v TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
+                                                        sbatch -n 1 -N 1 --cpus-per-task $nCores --export TRACKNAME=$trackName,MYPATH=$cnaDir/$outName2,CCDSLIST=$ccdsPath,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair1SamName,TUMORSAMPLE=$pair2SamName,NORMALDAT=$normalDatFile,TUMORDAT=$tumorDatFile,OFILE=$outName2,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaGenUnfi15.pbs
                                                         if [ $? -eq 0 ] ; then
                                                                 touch $trackName.cnaGenUnfiInQueue
                                                                 sleep 1
@@ -442,7 +442,7 @@ do
 						echo "CNA gen filt plot already in queue, passed, or failed"
 					else
 						echo "### Submitting to queue with $trackName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v NHETDEPTH=$nHetDepth1,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outNameDad,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair2SamName,TUMORSAMPLE=$pair1SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile1,TUMORDAT=$tumorDatFile,OFILE=$outNameDad,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export NHETDEPTH=$nHetDepth1,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outNameDad,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair2SamName,TUMORSAMPLE=$pair1SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile1,TUMORDAT=$tumorDatFile,OFILE=$outNameDad,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
 						if [ $? -eq 0 ] ; then
 							touch $trackName.cnaExomeInQueue
 							sleep 1
@@ -466,7 +466,7 @@ do
 						echo "CNA gen filt plot already in queue, passed, or failed"
 					else
 						echo "### Submitting to queue with $trackName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v NHETDEPTH=$nHetDepth2,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outNameMom,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair3SamName,TUMORSAMPLE=$pair1SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile2,TUMORDAT=$tumorDatFile,OFILE=$outNameMom,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export NHETDEPTH=$nHetDepth2,THETDEPTH=$tHetDepth,TRACKNAME=$trackName,CCDSLIST=$ccdsPath,MYPATH=$cnaDir/$outNameMom,CNAPATH=$cnaPath,MERGEDVCF=$vcfFile,NORMALSAMPLE=$pair3SamName,TUMORSAMPLE=$pair1SamName,CNAEXOMETARGET=$bedFile,NORMALDAT=$normalDatFile2,TUMORDAT=$tumorDatFile,OFILE=$outNameMom,ASSAY=$assay,GTF=$gtf,NXT1=$nxtStep1,REF=$ref,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cnaExo15.pbs
 						if [ $? -eq 0 ] ; then
 							touch $trackName.cnaExomeInQueue
 							sleep 1

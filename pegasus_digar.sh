@@ -115,19 +115,7 @@ do
 				mkdir -p $digarDir
 			fi
 
-			#cp $read1Name $digarDir
-			#cp $read2Name $digarDir
 
-			#creating linked files to the original reads
-			#ir1Name=`basename $read1Name`
-			#r2Name=`basename $read2Name`
-			#cd $digarDir
-			#ln -s $read1Name $r1Name
-			#read1Name=$digarDir/$r1Name
-			#ln -s $read2Name $r2Name
-			#read2Name=$digarDir/$r2Name
-			#cd -
-			#done creating links. vars for reads changed.
 			echo "### read 1 name: $read1Name"
 			echo "### read 2 name: $read2Name"
 			
@@ -141,8 +129,8 @@ do
 				fi 
 
 				echo "### Submitting $digarDir to queue for digar..."
-				echo "sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores -v FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs
+				echo "sbatch -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs"
+				sbatch -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.pbs
 				if [ $? -eq 0 ] ; then
 					touch ${digarDir}/$samName.$geneName.digarInQueue
 				else

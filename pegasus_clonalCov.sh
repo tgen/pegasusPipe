@@ -94,7 +94,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $normalBamFile"
-			sbatch -v BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
+			sbatch --export BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $normalBamFile.clonalCovInQueue
 			else
@@ -111,7 +111,7 @@ do
 			((qsubFails++))
 		else
 			echo "### Submitting to queue with $tumorBamFile"
-			sbatch -v BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
+			sbatch --export BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 			if [ $? -eq 0 ] ; then
 				touch $tumorBamFile.clonalCovInQueue
 			else
@@ -162,7 +162,7 @@ do
 				((qsubFails++))
 			else
 				echo "### Submitting to queue with $bamFile"
-				sbatch -v BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
+				sbatch --export BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.pbs
 				if [ $? -eq 0 ] ; then
 					touch $normalBamFile.clonalCovInQueue
 				else

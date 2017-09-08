@@ -137,24 +137,14 @@ do
 			continue
 		fi
 
-		#if [[ $recipe == "choc01"  ]] ; then
-                 #       echo Starting Haplotype caller Step${STEP}
-                  #      sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP="chr${STEP}",NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.pbs
-                   #     if [ $? -eq 0 ] ; then
-                    #            touch ${trackName}_Step${STEP}.hcInQueue
-                     #   else
-                      #          ((qsubFails++))
-                       # fi	
-		
-		#else
-			echo Starting Haplotype caller Step${STEP}
-			sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.pbs
-			if [ $? -eq 0 ] ; then
-				touch ${trackName}_Step${STEP}.hcInQueue
-			else
-				((qsubFails++))
-			fi
-		#fi
+        echo Starting Haplotype caller Step${STEP}
+        sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.pbs
+        if [ $? -eq 0 ] ; then
+            touch ${trackName}_Step${STEP}.hcInQueue
+        else
+            ((qsubFails++))
+        fi
+
 		sleep 2
 	done
 done
@@ -193,7 +183,7 @@ do
 					fi
 
 					echo Starting Haplotype caller for Step${STEP}
-					sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCallerSingle.pbs
+					sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCallerSingle.pbs
 					if [ $? -eq 0 ] ; then
 						touch ${mdBam}_Step${STEP}.hcInQueue
 					else

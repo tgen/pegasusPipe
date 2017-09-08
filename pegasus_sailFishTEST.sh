@@ -132,7 +132,7 @@ do
 	echo "### sail fish path is: $sailFishPath"
 	if [[ $rnaStrand == "FIRST" || $rnaStrand == "SECOND" ]] ; then
         	echo "##running stranded sailFish case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAILFISHPATH=$sailFishPath,SAMPLE=$samName,RNASTRAND=$rnaStrand,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedSailFish.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAILFISHPATH=$sailFishPath,SAMPLE=$samName,RNASTRAND=$rnaStrand,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedSailFish.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.sailFishInQueue
 		else
@@ -141,7 +141,7 @@ do
 		sleep 2
 	else
 		echo "##running unstranded Sail Fish case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v SAILFISHPATH=$sailFishPath,SAMPLE=$samName,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_sailFish.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAILFISHPATH=$sailFishPath,SAMPLE=$samName,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_sailFish.pbs
 		if [ $? -eq 0 ] ; then
 			touch $ownDir.sailFishInQueue
 		else

@@ -110,7 +110,7 @@ do
 						fi
 						d=`echo $runDir | cut -c 2-`
 						echo "### Submitting to indel realign to create $bamName"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores -v GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_indelRealign.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_indelRealign.pbs
 						if [ $? -eq 0 ] ; then
 							touch $bamName.indelRealignInQueue
 						else

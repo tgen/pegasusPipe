@@ -127,7 +127,7 @@ do
 							case $dnaAligner in 
 							bwamem) echo "### Submitting to qbwaMem to create $bamMiniName"
 									
-								#rgTag="@RG\tID:${rdGrpID}\tSM:$samName\tPL:ILLUMINA\tLB:$libraID"
+
 								if [ -z "$INDEX" ] ; then
 									echo "This sample doesn't have an index indicated in the FASTQ" 
 									rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}"
@@ -135,7 +135,7 @@ do
 									rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}"
 								fi 
 								echo "$rgTag"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores -v D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pegasusPbsHome/pegasus_bwaMem.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores --export D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pegasusPbsHome/pegasus_bwaMem.pbs
 								if [ $? -eq 0 ] ; then
 									touch $bamMiniName.dnaAlignInQueue
 								else

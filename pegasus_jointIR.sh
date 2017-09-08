@@ -157,40 +157,18 @@ do
 	workDir="$jirDir/$usableName"
 	irIntFile="$runDir/jointIR/$usableName/$usableName.intervals"
 	trackName="$runDir/jointIR/$usableName/$usableName"
-	#if [ $bigBamDetected -eq 0 ] ; then
-	#	echo "### None of the bams must be bigger than 40GB."
+
 		if [[ -e $trackName.jointIRInQueue || -e $trackName.jointIRPass || -e $trackName.jointIRFail ]] ; then 
 			echo "### Joint indel realign is already done, failed or inQueue"
 			continue
 		fi 
 		echo "### Submitting $usableName to queue for joint indel realignment..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores -v WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIR.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIR.pbs
 		if [ $? -eq 0 ] ; then
 		touch $trackName.jointIRInQueue
 		else
 			((qsubFails++))
 		fi
-	#else
-	#	echo "### One of the bams must be bigger than 40GB."
-        #        for chrGrp in "${chrGroups[@]}"
-        #        do
-	#		grpName=`echo $chrGrp | cut -d: -f1`
-	#		if [[ -e $trackName.jointIR-group$grpName-InQueue || -e $trackName.jointIR-group$grpName-Pass || -e $trackName.jointIR-group$grpName-Fail ]] ; then 
-	#			echo "### Joint indel realign on big bam group $chrGrp already done, failed, or inqueue."
-	#			continue
-	#		fi 
-	#		bamName=`basename $trackName`
-	#		echo "submitting chr grp $chrGrp on $trackName to queue for gatk unified genotyper"
-	#		sbatch -n 1 -N 1 --cpus-per-task $nCores -v GRPNAME=$grpName,CHRGRP=$chrGrp,WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStepA,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIRsplit.pbs
-	#		if [ $? -eq 0 ] ; then
-	#			touch $trackName.jointIR-group$grpName-InQueue
-	#		else
-	#			((qsubFails++))
-	#		fi
-	#		sleep 2
-	#	done
-	#fi
-	#sleep 2
 done
 
 if [ $qsubFails -eq 0 ] ; then
