@@ -86,7 +86,7 @@ do
                                 continue
                         fi						
 			echo "Starting reassignMappingQuality"
-			sbatch --export GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_reassignMapQual.pbs
+			sbatch --export GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_reassignMapQual.sh
 			if [ $? -eq 0 ] ; then
 				touch $rnaBam.reassignMapInQueue
 			else

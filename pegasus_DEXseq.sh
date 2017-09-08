@@ -147,7 +147,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for DEXseq..."
-                sbatch -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseq.pbs
+                sbatch -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseq.sh
                 if [ $? -eq 0 ] ; then
                        touch $DEXseqDir.DEXseqInQueue
                 else

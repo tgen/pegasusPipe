@@ -112,7 +112,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $usableName to queue for joint Uni Gen on Reduced Bams..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyper.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyper.sh
 	if [ $? -eq 0 ] ; then
 		touch $trackName.ugInQueue
 	else
@@ -147,7 +147,7 @@ done
 #					echo "### Uni Gen on Reduced Bams already passed, in queue, or failed for $mdBam"
 #				else
 #					echo "### Submitting for single bam Uni Gen on Reduced Bams: $mdBam"
-#					sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyperSingle.pbs
+#					sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyperSingle.sh
 #					if [ $? -eq 0 ] ; then
 #						touch $mdBam.ugInQueue
 #					else

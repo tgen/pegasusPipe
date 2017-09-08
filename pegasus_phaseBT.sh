@@ -125,7 +125,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.HC_All.snpEff.vcf to queue for phaseBT..."
-	sbatch --export GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${trackName}.HC_All.snpEff.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_phaseBT.pbs
+	sbatch --export GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${trackName}.HC_All.snpEff.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_phaseBT.sh
 	if [ $? -eq 0 ] ; then
 		touch $outTrackName.phaseBTInQueue
 	else

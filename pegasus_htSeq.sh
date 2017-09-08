@@ -91,7 +91,7 @@ do
 				continue
 			fi 
 			echo "### Submitting $accHitsSam to queue for HT Seq..."
-			sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeq.pbs
+			sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeq.sh
 			if [ $? -eq 0 ] ; then
 				touch $accHitsSam.htSeqInQueue
 			else
@@ -122,7 +122,7 @@ do
 			echo "### Submitting $alignedSam to queue for HT Seq..."
 			 if [[ $rnaStrand == "FIRST" ]] ; then                        
 				echo "##running stranded STAR case"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedHtSeqForStar.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedHtSeqForStar.sh
 				if [ $? -eq 0 ] ; then
 					touch $alignedSam.htSeqInQueue
 				else
@@ -131,7 +131,7 @@ do
 				sleep 2
 			elif  [[ $rnaStrand == "SECOND"  ]] ; then
                                 echo "##running stranded STAR case"
-                                sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_revStrandedHtSeqForStar.pbs
+                                sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_revStrandedHtSeqForStar.sh
                                 if [ $? -eq 0 ] ; then
                                         touch $alignedSam.htSeqInQueue
                                 else
@@ -141,7 +141,7 @@ do
 				
 			else
 				echo "##running unstranded STAR case"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeqForStar.pbs
+				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeqForStar.sh
 				if [ $? -eq 0 ] ; then
 					touch $alignedSam.htSeqInQueue
 				else

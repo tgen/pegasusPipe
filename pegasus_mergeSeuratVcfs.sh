@@ -97,7 +97,7 @@ do
 			#echo "thisVCF is $thisVCF"
 			fileList="$fileList I=$thisVCF"
 		done
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeVCFs.pbs
+		sbatch -n 1 -N 1 --cpus-per-task $nCores --export FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeVCFs.sh
 		if [ $? -eq 0 ] ; then
 			touch $mergedVCF.mergeVcfInQueue
 		else

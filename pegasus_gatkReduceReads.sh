@@ -84,7 +84,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue to reduce reads: $mdBamFile"
-	sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,REF=$ref,BAMFILE=$mdBamFile,NXT1=$nxtStep1,RUNDIR=$runDir,OUTPUTBAM=$rrBamFile,D=$d $pegasusPbsHome/pegasus_gatkReduceReads.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,REF=$ref,BAMFILE=$mdBamFile,NXT1=$nxtStep1,RUNDIR=$runDir,OUTPUTBAM=$rrBamFile,D=$d $pegasusPbsHome/pegasus_gatkReduceReads.sh
 	if [ $? -eq 0 ] ; then
 		touch $mdBamFile.rrInQueue
 	else

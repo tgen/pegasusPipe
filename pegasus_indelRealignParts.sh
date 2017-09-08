@@ -113,7 +113,7 @@ do
 								continue
 							fi
 							echo "### Submitting to indel realign to create $bamMiniName"
-							sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,INTS=$irIntMiniFile,IRBAMFILE=$irBamMiniFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamMiniName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_indelRealign.pbs
+							sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,INTS=$irIntMiniFile,IRBAMFILE=$irBamMiniFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamMiniName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_indelRealign.sh
 							if [ $? -eq 0 ] ; then
 								touch $bamMiniName.indelRealignInQueue
 							else

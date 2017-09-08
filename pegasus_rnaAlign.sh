@@ -231,7 +231,7 @@ do
 							echo "### submitting $ownDir to queue for STAR aligner... "
 							if [[ $rnaStrand == "FIRST" || $rnaStrand == "SECOND" ]] ; then
 								echo "##running stranded STAR case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_strandedStar.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_strandedStar.sh
 								if [ $? -eq 0 ] ; then
 									touch $ownDir.starInQueue
 								else
@@ -240,7 +240,7 @@ do
 								sleep 2
 							else
 								echo "##running unstranded STAR case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.pbs
+								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.sh
 								if [ $? -eq 0 ] ; then
 									touch $ownDir.starInQueue
 								else

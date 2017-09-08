@@ -148,7 +148,7 @@ do
 		continue
 	fi 
 	echo "### Submitting $trackName.HC_All.vcf to queue for deNovoGear..."
-	sbatch --export DENOVOPATH=$deNovoGearPath,TRACKNAME=$trackname,SAMTOOLSPATH=$samtoolsPath,BAMLIST="'$sampleList'",BAMFILE=$bamText,BCFTOOLSPATH=$bcfToolsPath,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${hcTrackName}.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deNovoGear.pbs
+	sbatch --export DENOVOPATH=$deNovoGearPath,TRACKNAME=$trackname,SAMTOOLSPATH=$samtoolsPath,BAMLIST="'$sampleList'",BAMFILE=$bamText,BCFTOOLSPATH=$bcfToolsPath,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${hcTrackName}.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deNovoGear.sh
 	if [ $? -eq 0 ] ; then
 		touch $outTrackName.deNovoGearInQueue
 	else

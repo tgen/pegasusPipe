@@ -113,7 +113,7 @@ do
 		mkdir $runDir/stats
 	fi
 	echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-	sbatch -n 1 -N 1 --cpus-per-task $nCores --export DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_IGLbedCov.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores --export DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_IGLbedCov.sh
 	if [ $? -eq 0 ] ; then
 		touch $rnaBam.IGLbedCovInQueue
 	else

@@ -91,7 +91,7 @@ do
 		continue
 	fi
 	echo "### Submitting to queue to mark duplicates: $bamName"
-	sbatch -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,BAMFILE=$bamName,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,RUNDIR=$runDir,OUTPUTBAM=$mdBamFile,D=$d $pegasusPbsHome/pegasus_markDups.pbs
+	sbatch -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,BAMFILE=$bamName,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,RUNDIR=$runDir,OUTPUTBAM=$mdBamFile,D=$d $pegasusPbsHome/pegasus_markDups.sh
 	if [ $? -eq 0 ] ; then
 		touch $bamName.mdInQueue
 	else

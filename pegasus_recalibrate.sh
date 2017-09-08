@@ -127,7 +127,7 @@ do
 						fi
 						d=`echo $runDir | cut -c 2-`
 						echo "### Submitting to recalibrate to create $rcBamFile"
-						sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_recalibrate.pbs
+						sbatch -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_recalibrate.sh
 						if [ $? -eq 0 ] ; then
 							touch $inputForNext.recalibrateInQueue
 						else

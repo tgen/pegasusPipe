@@ -87,7 +87,7 @@ do
                                 continue
                         fi
                         echo "Starting RNA recalibration"
-			sbatch --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_recalibrate.pbs
+			sbatch --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_recalibrate.sh
                         if [ $? -eq 0 ] ; then
                                 touch $rnaBam.recalibrateInQueue
                         else
