@@ -1,5 +1,4 @@
-##### Author: Ahmet Kurdoglu #####
-##### Parameterized PBS Script ####
+#!/usr/bin/env bash
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_runFastQC"
 #SBATCH --time=0-24:00:00

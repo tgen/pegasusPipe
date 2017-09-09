@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-##### Author: Ahmet Kurdoglu #####
-##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_circos"
 #SBATCH --time=0-96:00:00

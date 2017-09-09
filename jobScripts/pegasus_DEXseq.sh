@@ -1,5 +1,4 @@
-##### Author: Megan/Szabi #####
-##### Parameterized PBS Script ####
+#!/usr/bin/env bash
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_DEXseq"
 #SBATCH --time=0-60:00:00

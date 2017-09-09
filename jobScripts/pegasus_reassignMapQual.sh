@@ -1,5 +1,4 @@
-##### Author: Megan Russell #####
-##### Parameterized PBS Script ####
+#!/usr/bin/env bash
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_reassignMap"
 #SBATCH --time=0-48:00:00

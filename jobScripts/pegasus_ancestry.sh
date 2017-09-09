@@ -1,5 +1,4 @@
-##### Author: Megan #####
-##### Parameterized PBS Script ####
+#!/usr/bin/env bash
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_ancestry"
 #SBATCH --time=0-60:00:00

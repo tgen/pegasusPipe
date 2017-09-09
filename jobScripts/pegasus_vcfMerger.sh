@@ -1,5 +1,4 @@
-##### Author: Megan Russell #####
-##### Parameterized PBS Script ####
+#!/usr/bin/env bash
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_vcfMerger"
 #SBATCH --time=0-96:00:00

@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-##### Author: Ahmet Kurdoglu #####
-##### Parameterized PBS Script ####
 #PBS -S /bin/bash
 #SBATCH --job-name="pegasus_clonalCov"
 #SBATCH --time=0-48:00:00
