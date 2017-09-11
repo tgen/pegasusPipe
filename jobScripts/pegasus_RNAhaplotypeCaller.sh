@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_RNAhc"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -26,19 +22,20 @@ echo "### KNOWN: ${KNOWN}"
 echo "### BAMLIST: ${BAMLIST}"
 
 echo "### Haplotype caller started for multiple bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
--l INFO \
--R ${REF} \
--L ${CHRLIST}/Step${STEP}.list \
--nct 8 \
--T HaplotypeCaller \
--I ${BAMLIST} \
--D ${KNOWN} \
--dontUseSoftClippedBases \
--stand_call_conf 20 \
--stand_emit_conf 20 \
--mbq 10 \
--o ${TRK}_Step${STEP}.rnaHC.vcf > ${TRK}_Step${STEP}.RNAhcOut 2> ${TRK}_Step${STEP}.hapCal.perfOut
+java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+    -l INFO \
+    -R ${REF} \
+    -L ${CHRLIST}/Step${STEP}.list \
+    -nct 8 \
+    -T HaplotypeCaller \
+    -I ${BAMLIST} \
+    -D ${KNOWN} \
+    -dontUseSoftClippedBases \
+    -stand_call_conf 20 \
+    -stand_emit_conf 20 \
+    -mbq 10 \
+    -o ${TRK}_Step${STEP}.rnaHC.vcf > ${TRK}_Step${STEP}.RNAhcOut
+
 if [ $? -eq 0 ] ; then
 	echo "${STEP} Completed" >> ${TRK}_RNAhcStatus.txt
 	PROGRESS=`wc -l ${TRK}_RNAhcStatus.txt | awk '{print $1}'`
@@ -46,58 +43,35 @@ if [ $? -eq 0 ] ; then
 else	
 	mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcFail
 	rm -f ${TRK}_Step${STEP}.RNAhcInQueue
-	exit
+	exit 1
 fi
 
 vcfList=""
-#here we make a look to create the list of vcfs based on STEPCOUNT
+# Here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRK}_Step$i.rnaHC.vcf "
-        vcfList="$vcfList $thisVcf"
+    thisVcf="-V ${TRK}_Step$i.rnaHC.vcf "
+    vcfList="$vcfList $thisVcf"
 done
 
-#IF the progress count equals the step count merge to single vcf
+# IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
 	echo HapCaller_${STEP}.Done
-	#Concatenate VCF with GATK
- 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.rnaHC_All.vcf -assumeSorted
-	#java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.sting.tools.CatVariants \
-	#	-R ${REF} \
-	#	-V ${TRK}_Step1.rnaHC.vcf \
-	#	-V ${TRK}_Step2.rnaHC.vcf \
-	#	-V ${TRK}_Step3.rnaHC.vcf \
-	#	-V ${TRK}_Step4.rnaHC.vcf \
-	#	-V ${TRK}_Step5.rnaHC.vcf \
-	#	-V ${TRK}_Step6.rnaHC.vcf \
-	#	-V ${TRK}_Step7.rnaHC.vcf \
-	#	-V ${TRK}_Step8.rnaHC.vcf \
-	#	-V ${TRK}_Step9.rnaHC.vcf \
-	#	-V ${TRK}_Step10.rnaHC.vcf \
-	#	-V ${TRK}_Step11.rnaHC.vcf \
-	#	-V ${TRK}_Step12.rnaHC.vcf \
-	#	-V ${TRK}_Step13.rnaHC.vcf \
-	#	-V ${TRK}_Step14.rnaHC.vcf \
-	#	-V ${TRK}_Step15.rnaHC.vcf \
-	#	-V ${TRK}_Step16.rnaHC.vcf \
-	#	-V ${TRK}_Step17.rnaHC.vcf \
-	#	-V ${TRK}_Step18.rnaHC.vcf \
-	#	-V ${TRK}_Step19.rnaHC.vcf \
-	#	-V ${TRK}_Step20.rnaHC.vcf \
-	#	-V ${TRK}_Step21.rnaHC.vcf \
-	#	-V ${TRK}_Step22.rnaHC.vcf \
-	#	-V ${TRK}_Step23.rnaHC.vcf \
-	#	-V ${TRK}_Step24.rnaHC.vcf \
-	#	-out ${TRK}.rnaHC_All.vcf \
-	#	-assumeSorted
-		if [ $? -eq 0 ] ; then
-			touch ${TRK}.RNAhcPass
-			touch ${RUNDIR}/${NXT1}
-		else
-			touch ${TRK}.RNAhcFail
-		fi
-		mv ${TRK}_RNAhcStatus.txt ${TRK}_RNAhcStatus.txt.used
+	# Concatenate VCF with GATK
+ 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar \
+ 	    org.broadinstitute.gatk.tools.CatVariants \
+ 	    -R ${REF} \
+ 	    $vcfList -out \
+ 	    ${TRK}.rnaHC_All.vcf -assumeSorted
+    if [ $? -eq 0 ] ; then
+        touch ${TRK}.RNAhcPass
+        touch ${RUNDIR}/${NXT1}
+    else
+        touch ${TRK}.RNAhcFail
+    fi
+
+    mv ${TRK}_RNAhcStatus.txt ${TRK}_RNAhcStatus.txt.used
 else
 	echo
 	echo HapCaller_${STEP}.Done

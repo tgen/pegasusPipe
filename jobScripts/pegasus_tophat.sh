@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_tophat"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -40,16 +36,6 @@ beginTime=`date +%s`
 
 echo "Start of getting insert size section"
 
-#	echo "calculating combined read length"
-#	read1Length=`gunzip -c ${FASTQ1} | head -2 | tail -1 | wc -c`
-#	read2Length=`gunzip -c ${FASTQ2} | head -2 | tail -1 | wc -c`
-#	combinedLength=`echo "$read1Length + $read2Length - 2" | bc`
-#	echo "combined read length is $combinedLength"
-
-#	echo "calculating allowed mismatches"
-#	mmAllowed=`echo "$read1Length/25" | bc`
-#	echo "calculated mismatches to be: $mmAllowed"
-
 echo "getting first 2 million reads"
 gunzip -c ${FASTQ1} | head -n 8000000 > $fastq1tmp &
 gunzip -c ${FASTQ2} | head -n 8000000 > $fastq2tmp &
@@ -81,7 +67,14 @@ echo "bam size: $bsize"
 
 echo "getting insert size metrics with picard"
 module load R/2.14.1
-java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics INPUT=$tempBamPrefix.bam OUTPUT=$tempBamPrefix.bam.picInsertMetrics.txt HISTOGRAM_FILE=$tempBamPrefix.bam.picInsertMetrics.pdf VALIDATION_STRINGENCY=SILENT TMP_DIR=${DIR} LEVEL=ALL_READS 2>&1
+java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics \
+    INPUT=$tempBamPrefix.bam
+    OUTPUT=$tempBamPrefix.bam.picInsertMetrics.txt
+    HISTOGRAM_FILE=$tempBamPrefix.bam.picInsertMetrics.pdf
+    VALIDATION_STRINGENCY=SILENT
+    TMP_DIR=${DIR}
+    LEVEL=ALL_READS 2>&1
+
 echo "End of getting insert size section"
 
 echo "calculating combined read length"
@@ -106,14 +99,37 @@ ISODATE=`date --iso-8601`
 echo "TIME:$time starting tophat on ${FASTQ1}"
 if [ "${USEGTF}" == "no" ] ; then
 	echo "tophat with no gtf..."
-	#--rg-id ${RGID} --rg-date ${ISODATE} --rg-sample ${SAMPLE} --rg-platform ILLUMINA 
-	perf stat ${TOPHAT2PATH}/tophat2 --keep-fasta-order -p 8 -r ${INNERDIST} --mate-std-dev ${STDEV}  -N $mmAllowed --read-edit-dist $mmAllowed --read-gap-length ${mmAllowed} --max-insertion-length 3 --max-deletion-length 3 --b2-very-sensitive -o ${DIR} ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut 2> ${DIR}.tophat.perfOut
+	${TOPHAT2PATH}/tophat2 \
+	    --keep-fasta-order \
+	    -p 8 \
+	    -r ${INNERDIST} \
+	    --mate-std-dev ${STDEV} \
+	    -N $mmAllowed \
+	    --read-edit-dist $mmAllowed \
+	    --read-gap-length ${mmAllowed} \
+	    --max-insertion-length 3 \
+	    --max-deletion-length 3 \
+	    --b2-very-sensitive \
+	    -o ${DIR} ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
 
 else
 	echo "tophat with gtf"
-	#--rg-id ${RGID} --rg-date ${ISODATE} --rg-sample ${SAMPLE} --rg-platform ILLUMINA 
-	perf stat ${TOPHAT2PATH}/tophat2 --keep-fasta-order -p 8 -r ${INNERDIST} --mate-std-dev ${STDEV} -N $mmAllowed --read-edit-dist ${mmAllowed} --read-gap-length ${mmAllowed} --max-insertion-length 3 --max-deletion-length 3 --b2-very-sensitive -o ${DIR} --transcriptome-index=${TRANSINDEX} ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut 2> ${DIR}.tophat.perfOut
+	${TOPHAT2PATH}/tophat2 \
+	    --keep-fasta-order \
+	    -p 8 \
+	    -r ${INNERDIST} \
+	    --mate-std-dev ${STDEV} \
+	    -N $mmAllowed \
+	    --read-edit-dist ${mmAllowed} \
+	    --read-gap-length ${mmAllowed} \
+	    --max-insertion-length 3 \
+	    --max-deletion-length 3 \
+	    --b2-very-sensitive \
+	    -o ${DIR} \
+	    --transcriptome-index=${TRANSINDEX} \
+	    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
 fi
+
 if [ $? -eq 0 ] ; then
 	mv ${DIR}.thOut ${DIR}.thPass	
 	echo "success."
@@ -126,7 +142,7 @@ if [ $? -eq 0 ] ; then
 	echo "renaming done"
 	echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
 	${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
-	#${SAMTOOLSPATH}/samtools flagstat ${DIR}/$anotherName.accepted_hits.bam > ${DIR}/$anotherName.accepted_hits.bam.samStats
+
 	echo "bam indexing and flagstat finished"
 
 	echo "clean up, removing temp bam"
@@ -144,7 +160,9 @@ if [ $? -eq 0 ] ; then
 else
 	mv ${DIR}.thOut ${DIR}.thFail
 fi
+
 rm -f ${DIR}.thInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 

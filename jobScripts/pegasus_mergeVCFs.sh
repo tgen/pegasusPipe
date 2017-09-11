@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_mergeVCFs"
 #SBATCH --time=0-24:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
@@ -33,10 +29,8 @@ do
 	((vcfCount++))
 done
 if [ $? -ne 0 ] ; then #bad merge
-	#mv ${MERGEDVCF}.mergeVcfOut ${MERGEDVCF}.mergeVcfFail
 	touch ${MERGEDVCF}.mergeVcfFail
 else #good merge
-	#mv ${MERGEDVCF}.mergeVcfOut ${MERGEDVCF}.mergeVcfPass
 	touch ${MERGEDVCF}.mergeVcfPass
 	touch ${RUNDIR}/${NXT1}
 	touch ${RUNDIR}/${NXT2}

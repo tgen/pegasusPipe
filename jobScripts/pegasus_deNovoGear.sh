@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_deNovoGear"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -31,12 +28,9 @@ echo "### BAMFILE: ${BAMFILE}"
 echo "### denovogear started at $time."
 
 cd ${TRACKNAME}
-echo "perf stat ${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} --bam-list ${BAMFILE} | ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf - 2> ${OUTTRACKNAME}.denovogear.perfOut"
-perf stat ${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} ${BAMFILE} | ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf - 2> ${OUTTRACKNAME}.denovogear.perfOut
-#${BCFTOOLSPATH}/bcftools convert ${VCF} -Ou -o ${OUTTRACKNAME}.hc.bcf
-#if [ $? -eq 0 ] ; then
-	#echo "hc vcf converted to a bcf OK"
-	#perf stat ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf ${OUTTRACKNAME}.hc.bcf --output_vcf ${OUTTRACKNAME}.denovogear.vcf 2> ${OUTTRACKNAME}.denovogear.perfOut
+echo "${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} --bam-list ${BAMFILE} | ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf - "
+${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} ${BAMFILE} | ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf -
+
 if [ $? -eq 0 ] ; then
 	touch ${OUTTRACKNAME}.deNovoGearPass
 else

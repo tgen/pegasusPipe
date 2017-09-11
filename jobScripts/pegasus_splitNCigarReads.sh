@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_splitNCigar"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH -cpus-per-task 14
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -22,35 +18,29 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### RNABAM: ${RNABAM}"
 echo "### OUTBAM: ${OUTBAM}"
 
-#eecho "### GATK splitNCigarReads started at $time."
-#perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
-#-l INFO \
-#-R ${REF} \
-#-T SplitNCigarReads \
-#--filter_reads_with_N_cigar \
-#-I ${RNABAM} \
-#-o ${OUTBAM} > ${RNABAM}.splitNCigarOut 2> ${RNABAM}.splitNCigar.perfOut
 echo "### GATK splitNCigarReads started at $time."
-##All mapping qualities of 255 will be reassigned to 60 in the bam
-#perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx44g ${GATKPATH}/GenomeAnalysisTK.jar \
-perf stat java -Xmx40G -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${GATKPATH}/GenomeAnalysisTK.jar \
--l INFO \
--R ${REF} \
--T SplitNCigarReads \
--I ${RNABAM} \
--o ${OUTBAM} \
--rf ReassignOneMappingQuality \
--RMQF 255 \
--RMQT 60 \
--U ALLOW_N_CIGAR_READS > ${RNABAM}.splitNCigarOut 2> ${RNABAM}.splitNCigar.perfOut
+
+# All mapping qualities of 255 will be reassigned to 60 in the bam
+java -Xmx40G -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+    -l INFO \
+    -R ${REF} \
+    -T SplitNCigarReads \
+    -I ${RNABAM} \
+    -o ${OUTBAM} \
+    -rf ReassignOneMappingQuality \
+    -RMQF 255 \
+    -RMQT 60 \
+    -U ALLOW_N_CIGAR_READS > ${RNABAM}.splitNCigarOut
+
 if [ $? -eq 0 ] ; then
 	mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarPass
 	touch ${RUNDIR}/${NXT1}
 else	
 	mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarFail
 	rm -f ${RNABAM}.splitNCigarInQueue
-	exit
+	exit 1
 fi
+
 rm -f ${RNABAM}.splitNCigarInQueue
 
 endTime=`date +%s`

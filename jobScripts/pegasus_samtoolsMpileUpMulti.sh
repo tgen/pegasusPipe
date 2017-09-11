@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_samtoolsMpileUpMulti"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -33,42 +29,40 @@ echo "### GATKPATH: ${GATKPATH}"
 
 echo "### Samtools mPileUP started at $time."
 
-#perf stat ${SAMTOOLSPATH}/samtools mpileup -DsSOg -C 50 -F 0.01 -l ${CHRLIST}/Step${STEP}.bed -f ${REF} ${BAMFILE} | ${BCFTOOLSPATH}/bcftools view -> ${TRACKNAME}_Step${STEP}.mpileup.vcf 2> ${TRACKNAME}_Step${STEP}.samtoolsMpileUp.perfOut
-perf stat ${SAMTOOLSPATH}/samtools mpileup -DsSOg -C 50 -F 0.01 -l ${CHRLIST}/Step${STEP}.bed -f ${REF} --bam-list ${BAMFILE} | ${BCFTOOLSPATH}/bcftools call -vmO v -o ${TRACKNAME}_Step${STEP}.mpileup.vcf 2> ${TRACKNAME}_Step${STEP}.samtoolsMpileUp.perfOut
+${SAMTOOLSPATH}/samtools mpileup -DsSOg -C 50 -F 0.01 -l ${CHRLIST}/Step${STEP}.bed -f ${REF} --bam-list ${BAMFILE} | ${BCFTOOLSPATH}/bcftools call -vmO v -o ${TRACKNAME}_Step${STEP}.mpileup.vcf
 if [ $? -eq 0 ] ; then
 	echo "${STEP} Completed" >> ${TRACKNAME}_spStatus.txt
-        PROGRESS=`wc -l ${TRACKNAME}_spStatus.txt | awk '{print $1}'`
+    PROGRESS=`wc -l ${TRACKNAME}_spStatus.txt | awk '{print $1}'`
 	touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
 else	
 	touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpFail
 	rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue
-        exit
+    exit 1
 fi
 
 vcfList=""
 #here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRACKNAME}_Step$i.mpileup.vcf "
-        vcfList="$vcfList $thisVcf"
+    thisVcf="-V ${TRACKNAME}_Step$i.mpileup.vcf "
+    vcfList="$vcfList $thisVcf"
 done
 #IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-        echo mpileup_${STEP}.Done
+    echo mpileup_${STEP}.Done
 	#Concatenate VCF with GATK
 	echo "java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted"
 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted
-                if [ $? -eq 0 ] ; then
-                        touch ${TRACKNAME}.samtoolsMpileUpPass
-                        touch ${RUNDIR}/${NXT1}
-                else
-                        touch ${TRACKNAME}.samtoolsMpileUpFail
-                fi
-                mv ${TRACKNAME}_spStatus.txt ${TRACKNAME}_spStatus.txt.used
+    if [ $? -eq 0 ] ; then
+            touch ${TRACKNAME}.samtoolsMpileUpPass
+            touch ${RUNDIR}/${NXT1}
+    else
+            touch ${TRACKNAME}.samtoolsMpileUpFail
+    fi
+    mv ${TRACKNAME}_spStatus.txt ${TRACKNAME}_spStatus.txt.used
 else
-        echo
-        echo mpileup_${STEP}.Done
+    echo mpileup_${STEP}.Done
 fi
 
 rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue

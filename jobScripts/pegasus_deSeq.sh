@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_deSeq"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
  
 time=`date +%d-%m-%Y-%H-%M` 
 beginTime=`date +%s`
@@ -24,8 +21,8 @@ newName=`basename ${DIRNAME}`
 newName=${newName/.dsDir/}
 
 echo "### Starting DESeq3.R"
-echo "perf stat /packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST} 2> ${DIRNAME}.deSeq.perfOut"
-perf stat /packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST} 2> ${DIRNAME}.deSeq.perfOut
+echo "/packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}"
+/packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}
 if [ $? -eq 0 ] ; then
 	touch ${DIRNAME}.deSeqPass
 	#echo "running this cmd to rename: mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq_results.txt"

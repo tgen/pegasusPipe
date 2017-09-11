@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_vcfMergerAC"
 #SBATCH --time=0-16:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 beginTime=`date +%s`
 machine=`hostname`
 echo "### NODE: $machine"
@@ -165,14 +161,14 @@ echo "Finished Creating RNA Pileup"
 # Tabulate pileup with varscan - using VERY minimal criteria
 echo "Calculate RNA genotypes"
 echo ...
-perf stat java -jar ${VARSCAN}/VarScan.v2.3.7.jar mpileup2cns ${MERGERDIR}/${BASENAME}.RNA.pileup \
+java -jar ${VARSCAN}/VarScan.v2.3.7.jar mpileup2cns ${MERGERDIR}/${BASENAME}.RNA.pileup \
 	--min-coverage 1 \
 	--min-reads2 1 \
 	--min-var-freq 0.02 \
 	--min-freq-for-hom 0.9 \
 	--min-avg-qual 5 \
 	--strand-filter 0 \
-	--output-vcf > ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.vcf 2>  ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.perfOut
+	--output-vcf > ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.vcf
 if [ $? -ne 0 ] ; then
         echo "### vcf merger allele count failed at calc RNA genotypes stage"
         mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
@@ -185,7 +181,7 @@ cd $MERGERDIR
 cp ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.vcf varscan.vcf
 
 # Convert the VCF to at table
-perf stat java -jar ${SNPSIFT}/SnpSift.jar extractFields varscan.vcf CHROM POS REF ALT GEN[0].SDP GEN[0].RD GEN[0].AD > ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre.table 2> ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.table.perfOut
+java -jar ${SNPSIFT}/SnpSift.jar extractFields varscan.vcf CHROM POS REF ALT GEN[0].SDP GEN[0].RD GEN[0].AD > ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre.table
 if [ $? -ne 0 ] ; then
         echo "### vcf merger allele count failed at converting to a table stage"
         mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
@@ -202,20 +198,9 @@ cat ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre.table | cut -f1 | sed -e 's/^
 
 paste ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre8.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre7.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre6.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre5.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre4.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre3.table ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre2.table > ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.table
 
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre2.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre3.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre4.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre5.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre6.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre7.table
-#rm ${MERGERDIR}/${BASENAME}.RNA.calls.varscan.pre8.table
 
-echo
-echo
-echo "- Starting to extract calls"
-echo
-echo
+
+echo "Starting to extract calls"
 
 # Query each variant that was in the pileup for its varscan tabulation result
 for line in `cat ${MERGERDIR}/${BASENAME}.RNA.calls.ToQueryPileup`
@@ -315,26 +300,23 @@ if [ $? -ne 0 ] ; then
 fi
 echo "Finished Adding RNA Calls to VCF"
 
-#######
-######## RNA ALLELE COUNTS SPECIFIC REGIONS - Finished 
-########
-#
-#
-#
-## add dbNSFP annotaions
 
- perf stat java -jar ${SNPSIFT}/SnpSift.jar dbnsfp \
-                -v ${DBNSFP} \
-                -a \
-                -f Interpro_domain,Polyphen2_HVAR_pred,GERP++_NR,GERP++_RS,LRT_score,MutationTaster_score,MutationAssessor_score,FATHMM_score,Polyphen2_HVAR_score,SIFT_score,Polyphen2_HDIV_score \
-                ${BASENAME}.merge.sort.clean.f2t.ann.rna.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf 2> ${MERGERDIR}/${BASENAME}.dbnsfpannote.perfOut
-        if [ $? -ne 0 ] ; then
-                echo "### vcf merger failed at annotate with dbNSFP stage"
-                mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerFail
-                exit
-        fi
+# RNA ALLELE COUNTS SPECIFIC REGIONS - Finished
+# Add dbNSFP annotaions
 
-# add snpEFF annotations
+java -jar ${SNPSIFT}/SnpSift.jar dbnsfp \
+-v ${DBNSFP} \
+-a \
+-f Interpro_domain,Polyphen2_HVAR_pred,GERP++_NR,GERP++_RS,LRT_score,MutationTaster_score,MutationAssessor_score,FATHMM_score,Polyphen2_HVAR_score,SIFT_score,Polyphen2_HDIV_score \
+${BASENAME}.merge.sort.clean.f2t.ann.rna.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf
+
+if [ $? -ne 0 ] ; then
+        echo "### vcf merger failed at annotate with dbNSFP stage"
+        mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerFail
+        exit
+fi
+
+# Add snpEFF annotations
 java -Xmx4G -jar ${SNPEFFPATH}/snpEff.jar -canon -c ${SNPEFFPATH}/snpEff.config -v -lof ${DBVERSION} ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lofcan.vcf
 java -Xmx4G -jar ${SNPEFFPATH}/snpEff.jar -c ${SNPEFFPATH}/snpEff.config -v -lof ${DBVERSION} ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf > ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lof.vcf
 if [ $? -ne 0 ] ; then
@@ -351,12 +333,10 @@ mv ${MERGERDIR}/${BASENAME}.vcfMergerInQueue ${MERGERDIR}/${BASENAME}.vcfMergerF
 exit
 fi
 
-##clean up final vcfs to save back
+# Clean up final vcfs to save back
 mv ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lofcan.vcf ${MERGERDIR}/${BASENAME}.merged.canonicalOnly.rna.final.vcf
 mv ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lof.vcf ${MERGERDIR}/${BASENAME}.merged.allTranscripts.rna.final.vcf
 rm ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.vcf
-#rm ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.vcf
-#rm ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.vcf.idx
 rm ${MERGERDIR}/${BASENAME}.merge.sort.clean.vcf
 rm ${MERGERDIR}/${BASENAME}.merge.sort.vcf
 rm ${MERGERDIR}/${BASENAME}.RNA.calls.vcf

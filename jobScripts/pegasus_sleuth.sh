@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_sleuth"
 #SBATCH --time=0-60:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-##PBS -e /${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err
 
 module load R/3.2.1
 
@@ -27,19 +23,20 @@ configFile=${SLEUTHCONFIG}
 outData=${SLEUTHOUTFILE}
 objectData=${OBJECTDATA}
 
-perf stat Rscript --vanilla ${SLEUTHPATH} \
+Rscript --vanilla ${SLEUTHPATH} \
 	$base_Dir \
 	$configFile \
 	$outData \
-	$objectData 2> ${SLEUTHOUTDIR}.sleuth.perfOut
+	$objectData
+
 if [ $? -eq 0 ] ; then
-        touch ${SLEUTHOUTDIR}.sleuthPass
+    touch ${SLEUTHOUTDIR}.sleuthPass
 else
 	touch ${SLEUTHOUTDIR}.sleuthFail
 fi
 
-
 rm ${SLEUTHOUTDIR}.sleuthInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))

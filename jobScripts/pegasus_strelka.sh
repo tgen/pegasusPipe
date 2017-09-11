@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_strelka"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 beginTime=`date +%s`
 machine=`hostname`
 echo "### NODE: $machine"
@@ -24,7 +20,7 @@ cd ${WD}
 if [ $? -ne 0 ] ; then
 	touch ${WD}.strelkaFail
 	rm -f ${WD}.strelkaInQueue
-	exit
+	exit 1
 fi
 
 echo "### Step 2, copying config file here"
@@ -39,21 +35,23 @@ if [ ${ASSAY} == "Exome" ] ; then
 	echo "### Exome detected. Changing skipdepthfilter to 1"
 	sed -i 's/isSkipDepthFilters = 0/isSkipDepthFilters = 1/' config.ini
 fi
+
 echo "### Step 3, configure"
 ${STRELKAPATH}/bin/configureStrelkaWorkflow.pl \
 	--normal=${NORMAL} \
 	--tumor=${TUMOR} \
 	--ref=${REF} \
 	--config=config.ini --output-dir=./myAnalysis
+
 if [ $? -ne 0 ] ; then
 	touch ${WD}.strelkaFail
 	rm -f ${WD}.strelkaInQueue
-	exit
+	exit 1
 fi
 
 echo "### Step4, Run analysis"
 cd ./myAnalysis
-perf stat make -j8 > ${WD}.strelkaOut 2> ${WD}.strelka.perfOut
+make -j8 > ${WD}.strelkaOut
 if [ $? -eq 0 ] ; then
 	mv ${WD}.strelkaOut ${WD}.strelkaPass
 	mv ${WD}/myAnalysis/results/passed.somatic.snvs.vcf ${WD}/myAnalysis/results/$justName.strelka.passed.somatic.snvs.vcf
@@ -64,7 +62,9 @@ if [ $? -eq 0 ] ; then
 else
 	mv ${WD}.strelkaOut ${WD}.strelkaFail
 fi
+
 rm -f ${WD}.strelkaInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))

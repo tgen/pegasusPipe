@@ -1,13 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_MergeForJIR"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
-
 
 cd ${RUNDIR}
 time=`date +%d-%m-%Y-%H-%M`
@@ -34,24 +29,33 @@ onlyBaiFile=${onlyBamFile/.bam/.bai}
 mergedBai=${MERGEDBAM/.bam/.bai}
 newLocBai=${NEWLOC/.bam/.bai}
 
-if [ ${CNT} -eq 1 ] ; then #nothing really merged, only copied
+if [ ${CNT} -eq 1 ] ; then
+    #nothing really merged, only copied
 	echo "just copying $onlyBamFile to ${MERGEDBAM}" > ${MERGEDBAM}.mergeBamOut
 	cp $onlyBaiFile $mergedBai
-	perf stat cp $onlyBamFile ${MERGEDBAM} 2> ${MERGEDBAM}.mergeBam.perfOut
-	if [ $? -ne 0 ] ; then #bad cp
+	cp $onlyBamFile ${MERGEDBAM}
+	if [ $? -ne 0 ] ; then
 		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
-	else #good cp
+	else
 		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
 		echo "Automatically removed by merge bam step to save on space" > $onlyBamFile
 		touch ${RUNDIR}/${NXT1}
 	fi
-else #actually merged with picard
-	perf stat java -Xmx42g -jar ${PICARDPATH}/picard.jar MergeSamFiles ASSUME_SORTED=true USE_THREADING=true VALIDATION_STRINGENCY=SILENT TMP_DIR=/scratch/tgenjetstream/tmp OUTPUT=${MERGEDBAM} ${BAMLIST} 2> ${MERGEDBAM}.mergeBam.perfOut > ${MERGEDBAM}.mergeBamOut
-	if [ $? -ne 0 ] ; then #bad merge
+else
+    #actually merged with picard
+	java -Xmx42g -jar ${PICARDPATH}/picard.jar MergeSamFiles \
+	    ASSUME_SORTED=true \
+	    USE_THREADING=true \
+	    VALIDATION_STRINGENCY=SILENT \
+	    TMP_DIR=/scratch/tgenjetstream/tmp \
+	    OUTPUT=${MERGEDBAM} \
+	    ${BAMLIST} 2> ${MERGEDBAM}.mergeBam.perfOut > ${MERGEDBAM}.mergeBamOut
+
+	if [ $? -ne 0 ] ; then
 		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
-	else #good merge
+	else
 		echo "### Starting indexing of bam with samtools now that merge finished OK"
-		perf stat ${SAMTOOLSPATH}/samtools index ${MERGEDBAM} 2> ${MERGEDBAM}.samindex.perfOut
+		${SAMTOOLSPATH}/samtools index ${MERGEDBAM}
 		mv ${MERGEDBAM}.bai $mergedBai
 		echo "### Ended indexing of bam after merging."
 		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
@@ -66,12 +70,10 @@ else #actually merged with picard
 			echo "### Moved out of here to its own dir at $newLocBai" > $mergedBai
 			touch ${NEWLOC}.jointIRPass
 		fi
-		for bam in ${BAMLIST}
-		do
+		for bam in ${BAMLIST}; do
 			bamPath=`echo $bam | cut -d= -f2`
 			echo "Automatically removed by merge bam step to save on space" > $bamPath
 		done
-
 		touch ${RUNDIR}/${NXT1}
 		touch ${RUNDIR}/${NXT2}
 		touch ${RUNDIR}/${NXT3}
@@ -79,7 +81,9 @@ else #actually merged with picard
 		touch ${RUNDIR}/${NXT5}
 	fi
 fi
+
 rm ${MERGEDBAM}.mergeBamInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))

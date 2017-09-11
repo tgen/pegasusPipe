@@ -1,17 +1,14 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_mergeFQ"
 #SBATCH --time=0-24:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 time=`date +%d-%m-%Y-%H-%M` 
 beginTime=`date +%s`
 echo "merging of fastqs started at $time"
 machine=`hostname`
+
 echo "### NODE: $machine"
 echo "### FAST: ${FASTQLIST}"
 echo "### MERG: ${MERGEDFASTQ}"
@@ -27,18 +24,19 @@ echo "TIME:$time starting fastq merging to create ${MERGEDFASTQ}"
 if [ ${CNT} -eq 1 ] ; then
 	echo "only one thing to merge, commands are:"
 	echo "cp ${FASTQLIST} ${MERGEDFASTQ}"
-	perf stat cp ${FASTQLIST} ${MERGEDFASTQ} 2> ${MERGEDFASTQ}.mergeFastq.perfOut
+	cp ${FASTQLIST} ${MERGEDFASTQ}
 	if [ $? -ne 0 ] ; then #check if foreground finished OK
 		((failCount++))
 	fi
 else
 	echo "more than one thing to merge, commands are:"
 	echo "cat ${FASTQLIST} >> ${MERGEDFASTQ}"
-	perf stat cat ${FASTQLIST} >> ${MERGEDFASTQ} 2>> ${MERGEDFASTQ}.mergeFastq.perfOut
+	cat ${FASTQLIST} >> ${MERGEDFASTQ}
 	if [ $? -ne 0 ] ; then #check if background finished OK
 		((failCount++))
 	fi
 fi
+
 if [ $failCount -eq 0 ] ; then
 	touch ${MERGEDFASTQ}.mergeFastqPass
 	touch ${RUNDIR}/${NXT1}
@@ -49,7 +47,9 @@ if [ $failCount -eq 0 ] ; then
 else
 	touch ${MERGEDFASTQ}.mergeFastqFail
 fi
-rm ${MERGEDFASTQ}.mergeFastqInQueue 
+
+rm ${MERGEDFASTQ}.mergeFastqInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))

@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_seurat"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -25,20 +21,20 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### SEURATPATH: ${SEURATPATH}"
 
 echo "### Seurat caller started for bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
--T Seurat \
--l INFO \
--R ${REF} \
--I:dna_normal ${NORMAL} \
--I:dna_tumor ${TUMOR} \
---both_strands \
--L ${CHRLIST}/Step${STEP}.list \
---metrics \
---indels \
---allele_metrics \
--o ${TRK}_Step${STEP}.Seurat.vcf \
--go ${TRK}_Step${STEP}.perChr.Seurat.txt \
---pileup_info > ${TRK}_Step${STEP}.seuratOut 2> ${TRK}_Step${STEP}.seurat.perfOut
+java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
+    -T Seurat \
+    -l INFO \
+    -R ${REF} \
+    -I:dna_normal ${NORMAL} \
+    -I:dna_tumor ${TUMOR} \
+    --both_strands \
+    -L ${CHRLIST}/Step${STEP}.list \
+    --metrics \
+    --indels \
+    --allele_metrics \
+    -o ${TRK}_Step${STEP}.Seurat.vcf \
+    -go ${TRK}_Step${STEP}.perChr.Seurat.txt \
+    --pileup_info > ${TRK}_Step${STEP}.seuratOut
 
 if [ $? -eq 0 ] ; then
 	#Clean-up the produced VCF to exclude lines where the REF and ALT are identical
@@ -58,59 +54,33 @@ if [ $? -eq 0 ] ; then
 else	
 	mv ${TRK}_Step${STEP}.seuratOut ${TRK}_Step${STEP}.seuratFail
 	rm -f ${TRK}_Step${STEP}.seuratInQueue
-	exit
+	exit 1
 fi
+
 vcfList=""
 #here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRK}_Step$i.Seurat.vcf "
-        vcfList="$vcfList $thisVcf"
-
+    thisVcf="-V ${TRK}_Step$i.Seurat.vcf "
+    vcfList="$vcfList $thisVcf"
 done
+
 #IF the progress count equals the step count merge to single vcf
-if [ ${PROGRESS} -eq ${STEPCOUNT} ]
-then
+if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
 	echo SeuratCaller_${STEP}.Done
 	#Concatenate VCF with GATK
  	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.seurat.vcf -assumeSorted
- 	#java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.sting.tools.CatVariants \
-	#	-R ${REF} \
-	#	-V ${TRK}_Step1.Seurat.vcf \
-	#	-V ${TRK}_Step2.Seurat.vcf \
-	#	-V ${TRK}_Step3.Seurat.vcf \
-	#	-V ${TRK}_Step4.Seurat.vcf \
-	#	-V ${TRK}_Step5.Seurat.vcf \
-	#	-V ${TRK}_Step6.Seurat.vcf \
-	#	-V ${TRK}_Step7.Seurat.vcf \
-	#	-V ${TRK}_Step8.Seurat.vcf \
-	#	-V ${TRK}_Step9.Seurat.vcf \
-	#	-V ${TRK}_Step10.Seurat.vcf \
-	#	-V ${TRK}_Step11.Seurat.vcf \
-	#	-V ${TRK}_Step12.Seurat.vcf \
-	#	-V ${TRK}_Step13.Seurat.vcf \
-	#	-V ${TRK}_Step14.Seurat.vcf \
-	#	-V ${TRK}_Step15.Seurat.vcf \
-	#	-V ${TRK}_Step16.Seurat.vcf \
-	#	-V ${TRK}_Step17.Seurat.vcf \
-	#	-V ${TRK}_Step18.Seurat.vcf \
-	#	-V ${TRK}_Step19.Seurat.vcf \
-	#	-V ${TRK}_Step20.Seurat.vcf \
-	#	-V ${TRK}_Step21.Seurat.vcf \
-	#	-V ${TRK}_Step22.Seurat.vcf \
-	#	-V ${TRK}_Step23.Seurat.vcf \
-	#	-V ${TRK}_Step24.Seurat.vcf \
-	#	-out ${TRK}.seurat.vcf \
-	#	-assumeSorted
-		if [ $? -eq 0 ] ; then
-			touch ${TRK}.seuratPass
-			touch ${RUNDIR}/${NXT1}
-			touch ${RUNDIR}/${NXT2}
-			touch ${RUNDIR}/${NXT3}
-		else
-			touch ${TRK}.seuratFail
-		fi
-		mv ${TRK}_seuratStatus.txt ${TRK}_seuratStatus.txt.used
+
+    if [ $? -eq 0 ] ; then
+        touch ${TRK}.seuratPass
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+        touch ${RUNDIR}/${NXT3}
+    else
+        touch ${TRK}.seuratFail
+    fi
+
+    mv ${TRK}_seuratStatus.txt ${TRK}_seuratStatus.txt.used
 else
 	echo
 	echo SeuratCaller_${STEP}.Done

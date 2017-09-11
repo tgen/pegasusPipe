@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_reduceReads"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -19,11 +15,11 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### BAMFILE: ${BAMFILE}"
 
 echo "### Reduce reads started for bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
 -R ${REF} \
 -T ReduceReads \
 -I ${BAMFILE} \
--o ${OUTPUTBAM} > ${BAMFILE}.rrOut 2> ${BAMFILE}.reduceReads.perfOut
+-o ${OUTPUTBAM} > ${BAMFILE}.rrOut
 if [ $? -eq 0 ] ; then
 	mv ${BAMFILE}.rrOut ${BAMFILE}.rrPass
 	touch ${RUNDIR}/${NXT1}

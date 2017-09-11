@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_soapFuse"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -26,34 +22,23 @@ echo "TIME:$time starting soap fuse on ${FASTQ1}"
 base=`basename ${FASTQ1}`
 anotherName=${base/.R1.fastq.gz}
 
-perf stat ${SOAPFUSEPATH}/SOAPfuse-RUN.pl \
+${SOAPFUSEPATH}/SOAPfuse-RUN.pl \
 	-c ${SPCONFIG} \
 	-fd ${DIR} \
 	-l ${SLFILE} \
 	-o ${DIR} \
 	-fs 1 \
 	-es 9 \
-	-tp ${SAMPLE} > ${DIR}.soapFuseOut 2> ${DIR}.soapFuse.perfOut
+	-tp ${SAMPLE} > ${DIR}.soapFuseOut
+
 if [ $? -eq 0 ] ; then
 	echo "### Success."
-	#echo "### Renaming..."
-	#mv ${DIR}/accepted_hits.bam ${DIR}/$anotherName.accepted_hits.bam
-	#mv ${DIR}/unmapped.bam ${DIR}/$anotherName.unmapped.bam
-	#mv ${DIR}/junctions.bed ${DIR}/$anotherName.junctions.bed
-	#mv ${DIR}/insertions.bed ${DIR}/$anotherName.insertions.bed
-	#mv ${DIR}/deletions.bed ${DIR}/$anotherName.deletions.bed
-	#mv ${DIR}/fusions.out ${DIR}/$anotherName.fusions.out
-	#echo "### Renaming done"
-	#echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
-	#${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
-	#${SAMTOOLSPATH}/samtools flagstat ${DIR}/$anotherName.accepted_hits.bam > ${DIR}/$anotherName.accepted_hits.bam.samStats
-	#echo "bam indexing and flagstat finished"
-
 	mv ${DIR}.soapFuseOut ${DIR}.soapFusePass	
 	touch ${RUNDIR}/${NXT1}
 else
 	mv ${DIR}.soapFuseOut ${DIR}.soapFuseFail
 fi
+
 rm -f ${DIR}.soapFuseInQueue
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))

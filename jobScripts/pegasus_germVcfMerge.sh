@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_germVCFmerge"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -34,7 +31,7 @@ echo "### TRACKNAME: ${TRACKNAME}"
 
 echo "### Germline vcf merger started at $time."
 
-##Normalize each VCF
+# Normalize each VCF
 cat ${HCVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.HC.norm.vcf
 if [ $? -eq 0 ] ; then
 	echo "hcVcf was normalized correctly"
@@ -61,7 +58,7 @@ else
 fi
 
 ##Run the actual merging script
-perf stat java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	-T CombineVariants \
 	-R ${REF} \
 	--variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
@@ -69,7 +66,7 @@ perf stat java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	--variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
 	--genotypemergeoption UNIQUIFY \
 	--disable_auto_index_creation_and_locking_when_reading_rods \
-	--out ${TRACKNAME}.merged.vcf 2> ${TRACKNAME}.merger.perfOut
+	--out ${TRACKNAME}.merged.vcf
 if [ $? -eq 0 ] ; then
         echo "the 3 variant callers were merged successfully"
 	touch ${TRACKNAME}.vcfMergerPass

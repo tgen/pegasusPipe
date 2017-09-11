@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_cuffDiff"
 #SBATCH --time=0-240:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
@@ -27,7 +23,7 @@ cd ${DIRNAME}
 newName=`basename ${DIRNAME}`
 newName=${newName/_cdDir/}
 #update-check ${GTF} ${BAM1} ${BAM2}
-perf stat ${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} -L Control,Tumor ${GTF} ${BAM1} ${BAM2} 2> ${DIRNAME}.cuffDiff.perfOut > ${DIRNAME}.cuffDiffOut
+${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} -L Control,Tumor ${GTF} ${BAM1} ${BAM2} > ${DIRNAME}.cuffDiffOut
 if [ $? -eq 0 ] ; then
 	mv ${DIRNAME}/tss_groups.fpkm_tracking ${DIRNAME}/${newName}_tss_groups.fpkm_tracking
 	mv ${DIRNAME}/isoforms.fpkm_tracking ${DIRNAME}/${newName}_isoforms.fpkm_tracking

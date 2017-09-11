@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_germVCFmerge"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -30,23 +26,23 @@ echo "### VTPATH: $VTPATH"
 echo "### TRACKNAME: ${TRACKNAME}"
 
 echo "### Germline vcf merger started at $time."
-###########
 ${SAMTOOLSPATH}/samtools view -x BD -x BI ${BAM} | head
-############
+
 ##Run the actual merging script
-perf stat java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
 	-T CombineVariants \
 	-R ${REF} \
 	--variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
 	--variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
 	--variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
 	--genotypemergeoption UNIQUIFY \
-	--out ${TRACKNAME}.merged.vcf 2> ${TRACKNAME}.merger.perfOut
+	--out ${TRACKNAME}.merged.vcf
+
 if [ $? -eq 0 ] ; then
-        echo "the 3 variant callers were merged successfully"
+    echo "the 3 variant callers were merged successfully"
 	touch ${TRACKNAME}.vcfMergerPass
 else
-        touch ${TRACKNAME}.vcfMergerFail
+    touch ${TRACKNAME}.vcfMergerFail
 fi
 
 rm -f ${TRACKNAME}.vcfMergerInQueue

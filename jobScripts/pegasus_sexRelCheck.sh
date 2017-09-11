@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_sexRelCheck"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -27,7 +23,7 @@ module load python/3.4
 
 cd ${OUTTRACK}
 
-perf stat ${GREGORPATH}/gregor.py --vcf ${VCF} --plink2 ${PLINK2PATH} 2> ${OUTTRACKNAME}.sexRelCheck.perfOut
+${GREGORPATH}/gregor.py --vcf ${VCF} --plink2 ${PLINK2PATH}
 if [ $? -eq 0 ] ; then
 	touch ${OUTTRACKNAME}.sexRelCheckPass
 	mv ${VCF}.gregor2.txt ${OUTTRACKNAME}.gregor2.txt

@@ -1,11 +1,7 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_cnaExo"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 MCRPATH=/packages/MCR/7.14/v714
 
@@ -13,7 +9,6 @@ module load perl
 module load MCR/7.14
 module load R/3.0.0
 
-#####PBS -l nodes=1:ppn=8
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
@@ -57,8 +52,8 @@ hetDev=0.05          #   <<<< THIS CAN BE ADJUSTED - allowable deviation from re
 readDepth=`echo "${NHETDEPTH} * 3" | bc `
 
 echo "### Start run_ngsCNA.sh"
-echo "perf stat ${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET} 2> ${OFILE}.runNgsCna.perfOut"
-perf stat ${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET} 2> ${OFILE}.runNgsCna.perfOut 
+echo "${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET}"
+${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET}
 if [ $? -ne 0 ] ; then
 	echo "### CNA failed at run_ngsCNA.sh"
 	touch ${TRACKNAME}.cnaExomeFail

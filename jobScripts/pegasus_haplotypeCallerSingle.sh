@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_hcSin"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -22,7 +18,7 @@ echo "### KNOWN: ${KNOWN}"
 echo "### BAMLIST: ${BAMLIST}"
 
 echo "### Haplotype caller started for multiple bams at $time."
-perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 -l INFO \
 -R ${REF} \
 -T HaplotypeCaller \
@@ -31,7 +27,8 @@ perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx24g ${GATKP
 -I ${BAMLIST} \
 -D ${KNOWN} \
 -mbq 10 \
--o ${TRK}_Step${STEP}.HC.vcf > ${TRK}_Step${STEP}.hcOut 2> ${TRK}_Step${STEP}.hapCal.perfOut
+-o ${TRK}_Step${STEP}.HC.vcf > ${TRK}_Step${STEP}.hcOut
+
 if [ $? -eq 0 ] ; then
 	echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
 	PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
@@ -41,11 +38,12 @@ else
 	rm -f ${TRK}_Step${STEP}.hcInQueue
 	exit
 fi
+
 vcfList=""
 #here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRK}_Step$i.HC.vcf "
+    thisVcf="-V ${TRK}_Step$i.HC.vcf "
 	vcfList="$vcfList $thisVcf"
 done
                 
@@ -54,44 +52,15 @@ if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
 	echo HapCaller_${STEP}.Done
 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.HC_All.vcf -assumeSorted
-	#Concatenate VCF with GATK
- 	#java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
-	#	-R ${REF} \
-	#	-V ${TRK}_Step1.HC.vcf \
-	#	-V ${TRK}_Step2.HC.vcf \
-	#	-V ${TRK}_Step3.HC.vcf \
-	#	-V ${TRK}_Step4.HC.vcf \
-	#	-V ${TRK}_Step5.HC.vcf \
-	#	-V ${TRK}_Step6.HC.vcf \
-	#	-V ${TRK}_Step7.HC.vcf \
-	#	-V ${TRK}_Step8.HC.vcf \
-	#	-V ${TRK}_Step9.HC.vcf \
-	#	-V ${TRK}_Step10.HC.vcf \
-	#	-V ${TRK}_Step11.HC.vcf \
-	#	-V ${TRK}_Step12.HC.vcf \
-	#	-V ${TRK}_Step13.HC.vcf \
-	#	-V ${TRK}_Step14.HC.vcf \
-	#	-V ${TRK}_Step15.HC.vcf \
-	#	-V ${TRK}_Step16.HC.vcf \
-	#	-V ${TRK}_Step17.HC.vcf \
-	#	-V ${TRK}_Step18.HC.vcf \
-	#	-V ${TRK}_Step19.HC.vcf \
-	#	-V ${TRK}_Step20.HC.vcf \
-	#	-V ${TRK}_Step21.HC.vcf \
-	#	-V ${TRK}_Step22.HC.vcf \
-	#	-V ${TRK}_Step23.HC.vcf \
-	#	-V ${TRK}_Step24.HC.vcf \
-	#	-out ${TRK}.HC.vcf \
-	#	-assumeSorted
-		if [ $? -eq 0 ] ; then
-			touch ${TRK}.hcPass
-			touch ${RUNDIR}/${NXT1}
-                        touch ${RUNDIR}/${NXT2}
-                        touch ${RUNDIR}/${NXT3}
-		else
-			touch ${TRK}.hcFail
-		fi
-		mv ${TRK}_hcStatus.txt ${TRK}_hcStatus.txt.used
+    if [ $? -eq 0 ] ; then
+        touch ${TRK}.hcPass
+        touch ${RUNDIR}/${NXT1}
+                    touch ${RUNDIR}/${NXT2}
+                    touch ${RUNDIR}/${NXT3}
+    else
+        touch ${TRK}.hcFail
+    fi
+    mv ${TRK}_hcStatus.txt ${TRK}_hcStatus.txt.used
 else
 	echo
 	echo HapCaller_${STEP}.Done

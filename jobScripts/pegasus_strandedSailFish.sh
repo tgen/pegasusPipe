@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_strandSailFish"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -25,15 +21,19 @@ echo "### RUNDIR: ${RUNDIR}"
 
 echo "### Starting sail fish..."
 
-# Note: SLURM defaults to running jobs in the directory
-# where they are submitted, no need for $PBS_O_WORKDIR
-
 module load sailfish/0.6.3
 
 OUTPUT_DIR="${DIR}/full"
 OUTPUT_DIR_CCDS="${DIR}/ccds"
 
-perf stat sailfish quant -i ${SAILFISHINDEXDIR} --libtype "T=PE:O=><:S=SA" --mates1 <(zcat ${FASTQ1}) --mates2 <(zcat ${FASTQ2}) --out ${OUTPUT_DIR} --threads 12 --polya 2> ${DIR}.sailfish1.perfOut 
+sailfish quant \
+    -i ${SAILFISHINDEXDIR} \
+    --libtype "T=PE:O=><:S=SA" \
+    --mates1 <(zcat ${FASTQ1}) \
+    --mates2 <(zcat ${FASTQ2}) \
+    --out ${OUTPUT_DIR} \
+    --threads 12 \
+    --polya
 
 cd ${OUTPUT_DIR}
 
@@ -44,24 +44,34 @@ mv reads.count_info ${SAMPLE}.reads.count_info
 
 cd ..
 
-#### This is for the CCDS transcripts
-
+#This is for the CCDS transcripts
 #Use Process substitution to run with gzip compressed fastq
 #The libtype will need to be dynamic for Single End runs, or stranded runs.  Currently assumes Illumina PE, unstranded library
-sailfish quant -i ${SAILFISHCCDSINDEX} --libtype "T=PE:O=><:S=SA" --mates1 <(zcat ${FASTQ1}) --mates2 <(zcat ${FASTQ2}) --out ${OUTPUT_DIR_CCDS} --threads 12 --polya
+sailfish quant \
+    -i ${SAILFISHCCDSINDEX} \
+    --libtype "T=PE:O=><:S=SA" \
+    --mates1 <(zcat ${FASTQ1}) \
+    --mates2 <(zcat ${FASTQ2}) \
+    --out ${OUTPUT_DIR_CCDS} \
+    --threads 12 \
+    --polya
 
 cd ${OUTPUT_DIR_CCDS}
 
 #Rename and process output to generate gene level expression estimates
 mv quant_bias_corrected.sf ${SAMPLE}_sailfish_ccds_transcripts.expr
 mv reads.count_info ${SAMPLE}.reads.count_info
-${SAILFISHPATH}/TranscriptsToGenes.sh --exp-file ${SAMPLE}_sailfish_ccds_transcripts.expr --gtf-file ${CCDSGTF} --res-file ${SAMPLE}_sailfish_ccds_genes.expr 2> ${DIR}.sailfish2.perfOut 
+${SAILFISHPATH}/TranscriptsToGenes.sh \
+    --exp-file ${SAMPLE}_sailfish_ccds_transcripts.expr \
+    --gtf-file ${CCDSGTF} \
+    --res-file ${SAMPLE}_sailfish_ccds_genes.expr \
+
 if [ $? -eq 0 ] ; then
 	touch ${DIR}.sailFishPass
-	#touch ${RUNDIR}/${NXT1}
 else
 	touch ${DIR}.sailFishFail
 fi
+
 rm ${DIR}.sailFishInQueue
 
 endTime=`date +%s`
