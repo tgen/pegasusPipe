@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_circos"
 #SBATCH --time=0-96:00:00
 #SBATCH -N 1
@@ -7,8 +6,6 @@
 #SBATCH --cpus-per-task 4
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
 
 # TODO:
 # WHY are there hardcoded paths in here that point to the home of an

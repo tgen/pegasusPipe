@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_digarPost"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
  
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -29,13 +26,13 @@ echo "### DIGARPATH: ${DIGARPATH}"
 echo "TIME:$time starting digar post on ${DIGARDIR}"
 cd ${DIGARDIR}
 
-perf stat ${DIGARPATH}/digarPost.current.pl \
+${DIGARPATH}/digarPost.current.pl \
 	--gtf ${GTF} \
 	--ann ${ANN} \
 	--list ${GENEFILE} \
         --samPath ${SAMTOOLSPATH} \
         --path ${DIGARPATH} \
-	--dir ${DIGARDIR} 2> ${DIGARDIR}.digarPost.perfOut > ${DIGARDIR}.digarPostOut 2>&1
+	--dir ${DIGARDIR} > ${DIGARDIR}.digarPostOut 2>&1
 if [ $? -eq 0 ] ; then
 	#finished successfully
 	mv ${DIGARDIR}.digarPostOut ${DIGARDIR}.digarPostPass

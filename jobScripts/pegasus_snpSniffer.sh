@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_snpSniff"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M` 
 beginTime=`date +%s`
@@ -26,7 +22,8 @@ outName=${BAM/.bam}
 
 echo "### Starting snp sniffer on ${BAM}"
 echo "### Starting -genotype step"
-perf stat java -jar ${SNPSNIFFERPATH}/snpSnifferV5.jar -genotype ${REF} ${BAM} 2> ${BAM}.snpSniffGen.perfOut
+java -jar ${SNPSNIFFERPATH}/snpSnifferV5.jar -genotype ${REF} ${BAM}
+
 if [ $? -eq 0 ] ; then
 	touch ${BAM}.snpSniffPass
 	mv ${outName}_flt.vcf ${OUTVCF}
@@ -35,16 +32,9 @@ else
 	touch ${BAM}.snpSniffFail
 	rm ${BAM}.snpSniffInQueue
 fi
+
 echo "### Ending -genotype step"
-#echo "### Starting -add step"
-#perf stat java -jar ${SNPSNIFFERPATH}/snpSnifferV5.jar -add $vcf $dbIni 2> ${BAM}.snpSniffAdd.perfOut
-#if [ $? -ne 0 ] ; then
-#	echo "### Snp sniffer failed at add stage"
-#	touch ${BAM}.snpSniffFail
-#else
-#	touch ${BAM}.snpSniffPass
-#fi
-#echo "### Ending -add step"
+
 rm ${BAM}.snpSniffInQueue
 
 endTime=`date +%s`

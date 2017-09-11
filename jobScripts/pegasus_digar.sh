@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_digar"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
  
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -30,7 +27,7 @@ echo "### LISTOFGENES is: ${LISTOFGENES}"
 echo "TIME:$time starting digar on ${DIGARDIR}"
 cd ${DIGARDIR}
 
-perf stat ${DIGARPATH}/digarSteps.current.pl \
+${DIGARPATH}/digarSteps.current.pl \
 	--dir ${DIGARDIR} \
 	--left ${FASTQ1} \
 	--right ${FASTQ2} \
@@ -41,7 +38,7 @@ perf stat ${DIGARPATH}/digarSteps.current.pl \
 	--samPath ${SAMTOOLSPATH} \
 	--trinity ${TRINITYPATH} \
 	--path ${DIGARPATH} \
-	--mem ${BWAPATH} 2> ${DIGARDIR}/${SAMNAME}.digar.${GENENAME}.perfOut > ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut 2>&1
+	--mem ${BWAPATH} > ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut 2>&1
 if [ $? -eq 0 ] ; then
 	#finished successfully
 	mv ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarPass

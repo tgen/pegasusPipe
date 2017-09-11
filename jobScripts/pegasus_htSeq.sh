@@ -1,15 +1,11 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_htSeq"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
 
 module load python/2.7.3
-#module load HTSeq/0.5.3p9
 
 beginTime=`date +%s`
 time=`date +%d-%m-%Y-%H-%M`
@@ -25,20 +21,19 @@ base=`basename ${SAM}`
 anotherName=${base/.proj.Aligned.out.sam}
 DIR=$(dirname "${SAM}")
 
-perf stat htseq-count -q --format=bam --stranded=no --mode=union ${BAM} ${GTF} 2> ${SAM}.htseq.perfOut > ${DIR}/${anotherName}.htSeqCounts
+htseq-count -q --format=bam --stranded=no --mode=union ${BAM} ${GTF} > ${DIR}/${anotherName}.htSeqCounts
+
 if [ $? -eq 0 ] ; then
- 
-	touch ${SAM}.htSeqPass	
-	#touch ${RUNDIR}/${NXT1}
+	touch ${SAM}.htSeqPass
 else
 	mv ${SAM}.htSeqOut ${SAM}.htSeqFail
 fi
 rm -f ${SAM}.htSeqInQueue
+
 time=`date +%d-%m-%Y-%H-%M`
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))
 (( mins=$elapsed%3600/60 ))
 echo "RUNTIME:HTSEQ:$hours:$mins" > ${SAM}.htSeq.totalTime
-
 echo "TIME:$time finished htseq on ${BAM}"

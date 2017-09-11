@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_freebayes"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -25,10 +21,8 @@ echo "### FREEBAYESPATH: ${FREEBAYESPATH}"
 echo "### TRACKNAME: ${TRACKNAME}"
 echo "### CHRLIST: ${CHRLIST}"
 
-##REGION=`cat ${CHRLIST}/Step${STEP}.list`
-
 echo "### freebayes started at $time."
-perf stat ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf 2> ${TRACKNAME}_Step${STEP}.freebayes.perfOut
+${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
 if [ $? -eq 0 ] ; then
         echo "${STEP} Completed" >> ${TRACKNAME}_fbStatus.txt
         PROGRESS=`wc -l ${TRACKNAME}_fbStatus.txt | awk '{print $1}'`
@@ -39,17 +33,19 @@ else
 	exit
 fi
 vcfList=""
-#here we make a look to create the list of vcfs based on STEPCOUNT
+
+# Here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
         thisVcf="-V ${TRACKNAME}_Step$i.freebayes.vcf "
         vcfList="$vcfList $thisVcf"
 done
-#IF the progress count equals the step count merge to single vcf
+
+# IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
         echo Freebayes_${STEP}.Done
-	#Concatenate VCF with GATK
+	# Concatenate VCF with GATK
 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRACKNAME}.freebayes_All.vcf -assumeSorted
 		if [ $? -eq 0 ] ; then
                         touch ${TRACKNAME}.freebayesPass

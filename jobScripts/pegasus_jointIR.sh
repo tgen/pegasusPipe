@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_jointIR"
 #SBATCH --time=0-96:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -27,49 +24,48 @@ echo "### GATKPATH: ${GATKPATH}"
 
 cd ${WORKDIR}
 
-#if [ -f ${TRK}.intervals ] ; then
-#	echo "target creator is already complete"
-#else
-	echo "### Starting indel realigning of file ${BAMLIST}"
-	echo "### Step 1, target creator..."
-	test=0
-	if [ $test -eq 0 ] ; then
-	perf stat java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
-		-jar ${GATKPATH}/GenomeAnalysisTK.jar \
-		${BAMLIST} \
-		-R ${REF} \
-		-T RealignerTargetCreator \
-		-nt 16 \
-		--maxIntervalSize 350 \
-		-DBQ 1 \
-		-o ${INTS} \
-		--disable_auto_index_creation_and_locking_when_reading_rods \
-		-known ${INDELS} > ${TRK}.jointIROut 2> ${TRK}.realignTC.perfOut
-	if [ $? -ne 0 ] ; then
-		echo "### JIR failed at RealignerTargetCreator stage"
-		mv ${TRK}.jointIROut ${TRK}.jointIRFail
-		rm -f ${TRK}.jointIRInQueue
-		exit
-	
-	fi
-#fi
-	echo "### Starting step 2, indel realignment"
-	perf stat java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
-		-jar ${GATKPATH}/GenomeAnalysisTK.jar \
-		-T IndelRealigner \
-		${BAMLIST} \
-		-R ${REF} \
-		-DBQ 1 \
-		-targetIntervals ${INTS} \
-		--maxReadsInMemory 5000000 \
-		--maxConsensuses 24 \
-		--maxReadsForConsensuses 80 \
-		--maxReadsForRealignment 12000 \
-		--nWayOut .jr.bam \
-		-model KNOWNS_ONLY \
-		--disable_auto_index_creation_and_locking_when_reading_rods \
-		-known ${INDELS} >> ${TRK}.jointIROut 2> ${TRK}.indelRealign.perfOut
-	fi #end for test
+echo "### Starting indel realigning of file ${BAMLIST}"
+echo "### Step 1, target creator..."
+
+test=0
+if [ $test -eq 0 ] ; then
+java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
+    -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+    ${BAMLIST} \
+    -R ${REF} \
+    -T RealignerTargetCreator \
+    -nt 16 \
+    --maxIntervalSize 350 \
+    -DBQ 1 \
+    -o ${INTS} \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    -known ${INDELS} > ${TRK}.jointIROut
+
+if [ $? -ne 0 ] ; then
+    echo "### JIR failed at RealignerTargetCreator stage"
+    mv ${TRK}.jointIROut ${TRK}.jointIRFail
+    rm -f ${TRK}.jointIRInQueue
+    exit
+
+fi
+
+echo "### Starting step 2, indel realignment"
+java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
+    -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+    -T IndelRealigner \
+    ${BAMLIST} \
+    -R ${REF} \
+    -DBQ 1 \
+    -targetIntervals ${INTS} \
+    --maxReadsInMemory 5000000 \
+    --maxConsensuses 24 \
+    --maxReadsForConsensuses 80 \
+    --maxReadsForRealignment 12000 \
+    --nWayOut .jr.bam \
+    -model KNOWNS_ONLY \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    -known ${INDELS} >> ${TRK}.jointIROut
+
 
 if [ $? -eq 0 ] ; then
 	mv ${TRK}.jointIROut ${TRK}.jointIRPass

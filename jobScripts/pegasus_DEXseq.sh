@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_DEXseq"
 #SBATCH --time=0-60:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-##PBS -e /${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err
 
 module load R/3.2.1
 
@@ -28,18 +24,18 @@ configFile=${DEXSEQCONFIG}
 outData=${DEXSEQOUTFILE}
 objectData=${OBJECTDATA}
 
-##use DEXSeq R script to perform differential exon usage analysis.
+# Use DEXSeq R script to perform differential exon usage analysis.
 
-perf stat Rscript --vanilla ${DEXSEQPATH} \
+Rscript --vanilla ${DEXSEQPATH} \
 	${DEXSEQCONFIG} \
 	${DEXSEQGFF} \
 	${DEXSEQOUTFILE} \
-	${OBJECTDATA} 2> ${DEXSEQOUTDIR}.DEXseq.perfOut
-	if [ $? -eq 0 ] ; then
-		touch ${DEXSEQOUTDIR}.DEXseqPass
-	else
-		touch ${DEXSEQOUTDIR}.DEXseqFail
-	fi
+	${OBJECTDATA}
+if [ $? -eq 0 ] ; then
+    touch ${DEXSEQOUTDIR}.DEXseqPass
+else
+    touch ${DEXSEQOUTDIR}.DEXseqFail
+fi
 
 
 rm ${DEXSEQOUTDIR}.DEXseqInQueue

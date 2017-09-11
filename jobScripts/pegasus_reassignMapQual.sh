@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_reassignMap"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
@@ -7,9 +6,6 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -23,21 +19,23 @@ echo "### RNABAM: ${RNABAM}"
 echo "### OUTBAM: ${OUTBAM}"
 
 echo "### GATK reassign Mapping Quality started at $time."
-perf stat java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
--l INFO \
--R ${REF} \
--T PrintReads \
--rf ReassignMappingQuality \
--I ${RNABAM} \
--o ${OUTBAM} > ${RNABAM}.reassignMapOut 2> ${RNABAM}.reassignMap.perfOut
+java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+    -l INFO \
+    -R ${REF} \
+    -T PrintReads \
+    -rf ReassignMappingQuality \
+    -I ${RNABAM} \
+    -o ${OUTBAM} > ${RNABAM}.reassignMapOut
+
 if [ $? -eq 0 ] ; then
 	mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapPass
 	touch ${RUNDIR}/${NXT1}
 else	
 	mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapFail
 	rm -f ${RNABAM}.reassignMapInQueue
-	exit
+	exit 1
 fi
+
 rm -f ${RNABAM}.reassignMapInQueue
 
 endTime=`date +%s`

@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_FScuffQuant"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
+
  
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -30,7 +27,7 @@ cd ${DIRNAME}
 PARAMS=${PARAMS//\#/ }
 echo "### params is $params"
 if [ ${USEMASK} == "no" ] ; then
-	perf stat ${CUFFQUANTPATH}/cuffquant ${PARAMS} --frag-bias-correct ${REF} --library-type fr-secondstrand ${CUFFLINKGTF} ${BAM} 2> ${DIRNAME}.cuffQuant.perfOut > ${DIRNAME}.cuffQuantOut 2>&1
+	${CUFFQUANTPATH}/cuffquant ${PARAMS} --frag-bias-correct ${REF} --library-type fr-secondstrand ${CUFFLINKGTF} ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
         if [ $? -eq 0 ] ; then
                 newName=`basename ${BAM}`
                 newName=${newName/.proj.Aligned.out.sorted.md.bam}
@@ -40,7 +37,7 @@ if [ ${USEMASK} == "no" ] ; then
                 mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantFail
         fi
 else
-	perf stat ${CUFFQUANTPATH}/cuffquant ${PARAMS} --frag-bias-correct ${REF} --library-type fr-secondstrand --mask-file ${CUFFLINKMASK} ${CUFFLINKGTF} ${BAM} 2> ${DIRNAME}.cuffQuant.perfOut > ${DIRNAME}.cuffQuantOut 2>&1
+	${CUFFQUANTPATH}/cuffquant ${PARAMS} --frag-bias-correct ${REF} --library-type fr-secondstrand --mask-file ${CUFFLINKMASK} ${CUFFLINKGTF} ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
 	if [ $? -eq 0 ] ; then
 		newName=`basename ${BAM}`
 		newName=${newName/.proj.Aligned.out.sorted.md.bam}

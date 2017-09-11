@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_mutect"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
- 
+
 beginTime=`date +%s`
 machine=`hostname`
 echo "### NODE: $machine"
@@ -48,7 +44,7 @@ echo "### MUTECTPATH: ${MUTECTPATH}"
 	--coverage_file ${OUTPUT}_Step${STEP}_MuTect_Cov.wig \
 	--tumor_depth_file ${OUTPUT}_Step${STEP}_MuTect_TumorDepth.wig \
 	--normal_depth_file ${OUTPUT}_Step${STEP}_MuTect_NormalDepth.wig \
-	--vcf ${OUTPUT}_Step${STEP}_MuTect.vcf > ${OUTPUT}_Step${STEP}.mutectOut 2> ${OUTPUT}_Step${STEP}.mutect.perfOut
+	--vcf ${OUTPUT}_Step${STEP}_MuTect.vcf > ${OUTPUT}_Step${STEP}.mutectOut
 if [ $? -eq 0 ] ; then
 	echo "${STEP} Completed" >> ${OUTPUT}_MuTect_Status.txt
 	PROGRESS=`wc -l ${OUTPUT}_MuTect_Status.txt | awk '{print $1}'`
@@ -59,55 +55,33 @@ else
 	exit
 fi
 
-#vcfList=""
 #here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
         thisVcf="-V ${OUTPUT}_Step${i}_MuTect.vcf "
         vcfList="$vcfList $thisVcf"
 done
+
 #IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
 	echo MuTect_${STEP}.Done
+
 	#Concatenate VCF with GATK
-	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${OUTPUT}_MuTect_All.vcf -assumeSorted
-	#java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.sting.tools.CatVariants \
-	#	-R ${REF} \
-	#	-V ${OUTPUT}_Step1_MuTect.vcf \
-	#	-V ${OUTPUT}_Step2_MuTect.vcf \
-	#	-V ${OUTPUT}_Step3_MuTect.vcf \
-	#	-V ${OUTPUT}_Step4_MuTect.vcf \
-	#	-V ${OUTPUT}_Step5_MuTect.vcf \
-	#	-V ${OUTPUT}_Step6_MuTect.vcf \
-	#	-V ${OUTPUT}_Step7_MuTect.vcf \
-	#	-V ${OUTPUT}_Step8_MuTect.vcf \
-	#	-V ${OUTPUT}_Step9_MuTect.vcf \
-	#	-V ${OUTPUT}_Step10_MuTect.vcf \
-	#	-V ${OUTPUT}_Step11_MuTect.vcf \
-	#	-V ${OUTPUT}_Step12_MuTect.vcf \
-	#	-V ${OUTPUT}_Step13_MuTect.vcf \
-	#	-V ${OUTPUT}_Step14_MuTect.vcf \
-	#	-V ${OUTPUT}_Step15_MuTect.vcf \
-	#	-V ${OUTPUT}_Step16_MuTect.vcf \
-	#	-V ${OUTPUT}_Step17_MuTect.vcf \
-	#	-V ${OUTPUT}_Step18_MuTect.vcf \
-	#	-V ${OUTPUT}_Step19_MuTect.vcf \
-	#	-V ${OUTPUT}_Step20_MuTect.vcf \
-	#	-V ${OUTPUT}_Step21_MuTect.vcf \
-	#	-V ${OUTPUT}_Step22_MuTect.vcf \
-	#	-V ${OUTPUT}_Step23_MuTect.vcf \
-	#	-V ${OUTPUT}_Step24_MuTect.vcf \
-	#	-out ${OUTPUT}_MuTect_All.vcf \
-	#	-assumeSorted
-		if [ $? -eq 0 ] ; then
-			touch ${OUTPUT}.mutectPass
-			touch ${RUNDIR}/${NXT1}
-			touch ${RUNDIR}/${NXT2}
-		else
-			touch ${OUTPUT}.mutectFail
-		fi
-		mv ${OUTPUT}_MuTect_Status.txt ${OUTPUT}_MuTect_Status.txt.used
+	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants \
+	    -R ${REF} \
+	    $vcfList \
+	    -out ${OUTPUT}_MuTect_All.vcf \
+	    -assumeSorted
+
+    if [ $? -eq 0 ] ; then
+        touch ${OUTPUT}.mutectPass
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+    else
+        touch ${OUTPUT}.mutectFail
+    fi
+    mv ${OUTPUT}_MuTect_Status.txt ${OUTPUT}_MuTect_Status.txt.used
 else
 	echo
 	echo MuTect_${STEP}.Done                              

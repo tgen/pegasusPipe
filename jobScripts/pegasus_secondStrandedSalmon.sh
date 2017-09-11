@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_salmon"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -25,31 +21,28 @@ echo "### RUNDIR: ${RUNDIR}"
 echo "### Starting salmon..."
 
 module load salmon/0.6.0
-#module load salmon/0.5.0
 
 ##unstranded salmon
-
 mkdir -p ${DIR}/cDNA
 mkdir -p ${DIR}/gtf
 
-perf stat ${SALMONPATH}/salmon quant \
-        --index ${SALMON_INDEX_cDNA} \
-        --libType ISR \
-        --mates1 <(zcat ${FASTQ1}) \
-        --mates2 <(zcat ${FASTQ2}) \
-        --threads 16 \
-        --biasCorrect \
-        --geneMap ${GTF} \
-        --output ${DIR}/cDNA 2> ${DIR}.salmoncDNA.perfOut
+${SALMONPATH}/salmon quant \
+    --index ${SALMON_INDEX_cDNA} \
+    --libType ISR \
+    --mates1 <(zcat ${FASTQ1}) \
+    --mates2 <(zcat ${FASTQ2}) \
+    --threads 16 \
+    --biasCorrect \
+    --geneMap ${GTF} \
+    --output ${DIR}/cDNA
+
 if [ $? -eq 0 ] ; then
-        echo "salmon cDNA passed"
+    echo "salmon cDNA passed"
 	cd ${DIR}/cDNA
-	#mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
-	#mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
 	mv quant.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
 	mv quant.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
 
-	perf stat ${SALMONPATH}/salmon quant \
+	${SALMONPATH}/salmon quant \
 		--index ${SALMON_INDEX_GTF} \
 		--libType ISR \
 		--mates1 <(zcat ${FASTQ1}) \
@@ -57,12 +50,11 @@ if [ $? -eq 0 ] ; then
 		--threads 16 \
 		--biasCorrect \
 		--geneMap ${GTF} \
-		--output ${DIR}/gtf 2> ${DIR}.salmonGTF.perfOut
+		--output ${DIR}/gtf
+
 	if [ $? = 0 ] ; then
 		echo "Salmon GTF Passed"
 		cd ${DIR}/gtf
-		#mv quant_bias_corrected.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
-		#mv quant_bias_corrected.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
 		mv quant.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
 		mv quant.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
 		touch ${DIR}.salmonPass
@@ -74,6 +66,7 @@ else
 	echo "salmon cDNA failed"
 	touch ${DIR}.salmonFail
 fi
+
 rm ${DIR}.salmonInQueue
 
 endTime=`date +%s`

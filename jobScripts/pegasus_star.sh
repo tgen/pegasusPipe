@@ -1,13 +1,9 @@
 #!/usr/bin/env bash
-#PBS -S /bin/bash
 #SBATCH --job-name="pegasus_star"
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#PBS -j oe
-#SBATCH --output="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.out"
-#SBATCH --error="/${D}/oeFiles/${SLURM_JOB_NAME}_${SLURM_JOB_ID}.err"
-#
+
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
@@ -21,54 +17,52 @@ echo "### DIR=${DIR}"
 echo "### SAMTOOLSPATH=${SAMTOOLSPATH}"
 echo "### SAMNAME=${SAMNAME}"
 
-#base=`basename ${FASTQ1}`
-#anotherName2=${base/.proj.R1.fastq.gz}
-#anotherName=${base/.R1.fastq.gz}
-#tempBamPrefix=${FASTQ1/.R1.fastq.gz}
 anotherName2=${SAMNAME}
 anotherName=${SAMNAME}.proj
 cd ${DIR}
-##--outSAMattributes All \
+
 echo "TIME:$time starting star on ${FASTQ1}"
-perf stat ${STARPATH}/STAR --genomeDir ${STARREF} \
-			--runMode alignReads \
-			--limitOutSAMoneReadBytes 90000000 \
-			--readFilesCommand zcat \
-			--readFilesIn ${FASTQL1} ${FASTQL2} \
-			--outSAMtype SAM \
-			--outFilterType BySJout \
-			--outFilterMultimapNmax 10 \
-			--outFilterMismatchNmax 10 \
-			--outFilterMismatchNoverLmax 0.1 \
-			--alignIntronMin 20 \
-			--alignIntronMax 1000000 \
-			--alignMatesGapMax 1000000 \
-			--alignSJoverhangMin 8 \
-			--alignSJDBoverhangMin 1 \
-			--seedSearchStartLmax 30 \
-			--chimSegmentMin 15 \
-			--chimJunctionOverhangMin 15 \
-			--runThreadN 14 \
-			--genomeLoad NoSharedMemory \
-			--outSAMstrandField intronMotif \
-			--outSAMunmapped Within \
-			--outSAMmapqUnique 255 \
-			--outSAMattrRGline ${RGTAGLIST} \
-			--outSAMmode Full > ${DIR}.starOut 2> ${DIR}/${anotherName}.star.perfOut
+${STARPATH}/STAR --genomeDir ${STARREF} \
+    --runMode alignReads \
+    --limitOutSAMoneReadBytes 90000000 \
+    --readFilesCommand zcat \
+    --readFilesIn ${FASTQL1} ${FASTQL2} \
+    --outSAMtype SAM \
+    --outFilterType BySJout \
+    --outFilterMultimapNmax 10 \
+    --outFilterMismatchNmax 10 \
+    --outFilterMismatchNoverLmax 0.1 \
+    --alignIntronMin 20 \
+    --alignIntronMax 1000000 \
+    --alignMatesGapMax 1000000 \
+    --alignSJoverhangMin 8 \
+    --alignSJDBoverhangMin 1 \
+    --seedSearchStartLmax 30 \
+    --chimSegmentMin 15 \
+    --chimJunctionOverhangMin 15 \
+    --runThreadN 14 \
+    --genomeLoad NoSharedMemory \
+    --outSAMstrandField intronMotif \
+    --outSAMunmapped Within \
+    --outSAMmapqUnique 255 \
+    --outSAMattrRGline ${RGTAGLIST} \
+    --outSAMmode Full > ${DIR}.starOut
+
 if [ $? -eq 0 ] ; then
 	echo "### Success. Star finished OK."
+
 	#check output from next four commands
 	echo "### Starting sam to bam for Aligned and Chimeric sams"
-	perf stat ${SAMTOOLSPATH}/samtools view -bS Aligned.out.sam > Aligned.out.bam 2> ${DIR}/${anotherName}.sam2bam1.perfOut
-	perf stat ${SAMTOOLSPATH}/samtools view -bS Chimeric.out.sam > Chimeric.out.bam 2> ${DIR}/${anotherName}.sam2bam2.perfOut
+	${SAMTOOLSPATH}/samtools view -bS Aligned.out.sam > Aligned.out.bam
+	${SAMTOOLSPATH}/samtools view -bS Chimeric.out.sam > Chimeric.out.bam
 
 	echo "### Starting sorting for Aligned and Chimeric sams"
-	perf stat ${SAMTOOLSPATH}/samtools sort -@4 -m8G Aligned.out.bam Aligned.out.sorted 2> ${DIR}/${anotherName}.sortBam1.perfOut
-	perf stat ${SAMTOOLSPATH}/samtools sort -@4 -m8G Chimeric.out.bam Chimeric.out.sorted 2> ${DIR}/${anotherName}.sortBam2.perfOut
+	${SAMTOOLSPATH}/samtools sort -@4 -m8G Aligned.out.bam Aligned.out.sorted
+	${SAMTOOLSPATH}/samtools sort -@4 -m8G Chimeric.out.bam Chimeric.out.sorted
 
 	echo "### Starting bam indexing for Aligned and Chimeric bams"
-	perf stat ${SAMTOOLSPATH}/samtools index Aligned.out.sorted.bam 2> ${DIR}/${anotherName}.bamIndex1.perfOut
-	perf stat ${SAMTOOLSPATH}/samtools index Chimeric.out.sorted.bam 2> ${DIR}/${anotherName}.bamIndex2.perfOut
+	${SAMTOOLSPATH}/samtools index Aligned.out.sorted.bam
+	${SAMTOOLSPATH}/samtools index Chimeric.out.sorted.bam
 
 	echo "### Starting to move the files to their new name"
 	mv Aligned.out.sam ${anotherName}.Aligned.out.sam
@@ -102,7 +96,9 @@ else
 	echo "### Fail. Star failed."
 	mv ${DIR}.starOut ${DIR}.starFail
 fi
+
 rm -f ${DIR}.starInQueue
+
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))
 (( hours=$elapsed/3600 ))
