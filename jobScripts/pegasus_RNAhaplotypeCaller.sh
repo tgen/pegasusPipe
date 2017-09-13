@@ -22,7 +22,7 @@ echo "### KNOWN: ${KNOWN}"
 echo "### BAMLIST: ${BAMLIST}"
 
 echo "### Haplotype caller started for multiple bams at $time."
-java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -l INFO \
     -R ${REF} \
     -L ${CHRLIST}/Step${STEP}.list \

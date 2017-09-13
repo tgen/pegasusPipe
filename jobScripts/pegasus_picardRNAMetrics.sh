@@ -17,7 +17,7 @@ echo "### PICARDPATH: ${PICARDPATH}"
 
 echo "### Starting picard rna metrics"
 
-java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${PICARDPATH}/picard.jar CollectRnaSeqMetrics \
+java -Xmx15g -Djava.io.tmpdir=$TMPDIR -jar ${PICARDPATH}/picard.jar CollectRnaSeqMetrics \
 	REF_FLAT=${REFFLAT} \
 	REFERENCE_SEQUENCE=${REF} \
 	RIBOSOMAL_INTERVALS=${RIBINTS} \
@@ -25,7 +25,7 @@ java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar ${PICARDPATH}/pic
 	INPUT=${BAMFILE} \
 	OUTPUT=${BAMFILE}.picRNAMetrics \
 	CHART_OUTPUT=${BAMFILE}.picRNAMetrics.pdf \
-	TMP_DIR=/scratch/tgenjetstream/tmp/ \
+	TMP_DIR=$TMPDIR \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picRNAMetricsOut
 
 if [ $? -eq 0 ] ; then

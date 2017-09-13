@@ -24,7 +24,7 @@ java -Xmx15g -jar ${PICARDPATH}/picard.jar CalculateHsMetrics \
 	INPUT=${BAMFILE} \
 	OUTPUT=${BAMFILE}.picHSMetrics \
 	PER_TARGET_COVERAGE=${BAMFILE}.picStats.HsPerTargetCov \
-	TMP_DIR=/scratch/tgenjetstream/tmp/ \
+	TMP_DIR=$TMPDIR \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picHSMetricsOut
 
 if [ $? -eq 0 ] ; then

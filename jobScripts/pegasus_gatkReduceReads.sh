@@ -15,7 +15,7 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### BAMFILE: ${BAMFILE}"
 
 echo "### Reduce reads started for bams at $time."
-java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
 -R ${REF} \
 -T ReduceReads \
 -I ${BAMFILE} \
