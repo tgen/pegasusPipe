@@ -28,37 +28,37 @@ echo "TIME:$time starting digar on ${DIGARDIR}"
 cd ${DIGARDIR}
 
 ${DIGARPATH}/digarSteps.current.pl \
-	--dir ${DIGARDIR} \
-	--left ${FASTQ1} \
-	--right ${FASTQ2} \
-	--input ${GENENAME} \
-	--bam ${BAM} \
-	--genome ${REF} \
-	--ann ${ANN} \
-	--samPath ${SAMTOOLSPATH} \
-	--trinity ${TRINITYPATH} \
-	--path ${DIGARPATH} \
-	--mem ${BWAPATH} > ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut 2>&1
+    --dir ${DIGARDIR} \
+    --left ${FASTQ1} \
+    --right ${FASTQ2} \
+    --input ${GENENAME} \
+    --bam ${BAM} \
+    --genome ${REF} \
+    --ann ${ANN} \
+    --samPath ${SAMTOOLSPATH} \
+    --trinity ${TRINITYPATH} \
+    --path ${DIGARPATH} \
+    --mem ${BWAPATH} > ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut 2>&1
 if [ $? -eq 0 ] ; then
-	#finished successfully
-	mv ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarPass
-	echo "${GENENAME}:PASS" >> ${DIGARDIR}/geneDone.txt
-	genesDone=`cat ${DIGARDIR}/geneDone.txt | wc -l`
-	numGenesInList=`cat $LISTOFGENES | wc -l`
-	echo "genesDone = $genesDone"
-	echo "numGenesInList = $numGenesInList"
-	if [ $genesDone -eq $numGenesInList ] ; then
-		touch ${DIGARDIR}.digarPass
-		touch ${RUNDIR}/${NXT1}
-	fi
+    #finished successfully
+    mv ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarPass
+    echo "${GENENAME}:PASS" >> ${DIGARDIR}/geneDone.txt
+    genesDone=`cat ${DIGARDIR}/geneDone.txt | wc -l`
+    numGenesInList=`cat $LISTOFGENES | wc -l`
+    echo "genesDone = $genesDone"
+    echo "numGenesInList = $numGenesInList"
+    if [ $genesDone -eq $numGenesInList ] ; then
+        touch ${DIGARDIR}.digarPass
+        touch ${RUNDIR}/${NXT1}
+    fi
 else
-	mv ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarFailDIGAR
-	echo "${GENENAME}:FAIL" >> ${DIGARDIR}/geneDone.txt
-	genesDone=`cat ${DIGARDIR}/geneDone.txt | wc -l`
+    mv ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarOut ${DIGARDIR}/${SAMNAME}.${GENENAME}.digarFailDIGAR
+    echo "${GENENAME}:FAIL" >> ${DIGARDIR}/geneDone.txt
+    genesDone=`cat ${DIGARDIR}/geneDone.txt | wc -l`
         numGenesInList=`cat $LISTOFGENES | wc -l`
-	echo "genesDone = $genesDone"
+    echo "genesDone = $genesDone"
         echo "numGenesInList = $numGenesInList"
-	if [ $genesDone -eq $numGenesInList ] ; then
+    if [ $genesDone -eq $numGenesInList ] ; then
                 touch ${DIGARDIR}.digarPass
                 touch ${RUNDIR}/${NXT1}
         fi

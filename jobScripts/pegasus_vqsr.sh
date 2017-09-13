@@ -23,23 +23,23 @@ recalVCF=${VCF/.vcf/.vqsr.vcf}
 
 echo "### New vcf name will be $recalVCF"
 if [ "${ASSAY}" == "Genome" ] ; then
-	maxGaussian=2	
-	badVariant=0.20
+    maxGaussian=2
+    badVariant=0.20
 elif [ "${ASSAY}" == "Exome" ] ; then 
-	maxGaussian=4
-	badVariant=0.10
+    maxGaussian=4
+    badVariant=0.10
 else
-	echo "I should not be here. Assay type is: ${ASSAY}"
-	touch ${VCF}.vqsrFail
-	rm -f ${VCF}.vqsrInQueue
-	time=`date +%d-%m-%Y-%H-%M`
-	endTime=`date +%s`
-	elapsed=$(( $endTime - $beginTime ))
-	(( hours=$elapsed/3600 ))
-	(( mins=$elapsed%3600/60 ))
-	echo "RUNTIME:VQSR:$hours:$mins" > ${VCF}.vqsr.totalTime
-	echo "VQSR finished at $time."
-	exit 1
+    echo "I should not be here. Assay type is: ${ASSAY}"
+    touch ${VCF}.vqsrFail
+    rm -f ${VCF}.vqsrInQueue
+    time=`date +%d-%m-%Y-%H-%M`
+    endTime=`date +%s`
+    elapsed=$(( $endTime - $beginTime ))
+    (( hours=$elapsed/3600 ))
+    (( mins=$elapsed%3600/60 ))
+    echo "RUNTIME:VQSR:$hours:$mins" > ${VCF}.vqsr.totalTime
+    echo "VQSR finished at $time."
+    exit 1
 fi
 
 echo "### Dynamically set maxGaussian to $maxGaussian and percent bad variant to $badVariant because assay type was ${ASSAY}"
@@ -58,10 +58,10 @@ java -jar -Xmx4g ${GATKPATH}/GenomeAnalysisTK.jar \
     -rscriptFile ${RSCRIPT} > ${VCF}.vqsrOut
 
 if [ $? -ne 0 ] ; then
-	mv ${VCF}.vqsrOut ${VCF}.vqsrFail
-	echo "### vqsr failed at variantrecalibrator stage"
-	rm -f ${VCF}.vqsrInQueue
-	exit 1
+    mv ${VCF}.vqsrOut ${VCF}.vqsrFail
+    echo "### vqsr failed at variantrecalibrator stage"
+    rm -f ${VCF}.vqsrInQueue
+    exit 1
 fi
 
 java -jar -Xmx4g ${GATKPATH}/GenomeAnalysisTK.jar \
@@ -75,15 +75,15 @@ java -jar -Xmx4g ${GATKPATH}/GenomeAnalysisTK.jar \
     -o $recalVCF >> ${VCF}.vqsrOut
 
 if [ $? -eq 0 ] ; then
-	mv ${VCF}.vqsrOut ${VCF}.vqsrPass
-	touch ${RUNDIR}/${NXT1} > /dev/null
+    mv ${VCF}.vqsrOut ${VCF}.vqsrPass
+    touch ${RUNDIR}/${NXT1} > /dev/null
 else
-	echo "### vqsr failed at apply recalibration stage"
-	mv ${VCF}.vqsrOut ${VCF}.vqsrFail
-	#attention, fake passing this step in case of failure
-	mv ${VCF}.vqsrFail ${VCF}.vqsrPass
-	touch ${VCF}.vqsrPassISFAKE
-	cp ${VCF} $recalVCF
+    echo "### vqsr failed at apply recalibration stage"
+    mv ${VCF}.vqsrOut ${VCF}.vqsrFail
+    #attention, fake passing this step in case of failure
+    mv ${VCF}.vqsrFail ${VCF}.vqsrPass
+    touch ${VCF}.vqsrPassISFAKE
+    cp ${VCF} $recalVCF
 fi
 
 rm -f ${VCF}.vqsrInQueue

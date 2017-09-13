@@ -23,20 +23,20 @@ base=`basename ${FASTQ1}`
 anotherName=${base/.R1.fastq.gz}
 
 ${SOAPFUSEPATH}/SOAPfuse-RUN.pl \
-	-c ${SPCONFIG} \
-	-fd ${DIR} \
-	-l ${SLFILE} \
-	-o ${DIR} \
-	-fs 1 \
-	-es 9 \
-	-tp ${SAMPLE} > ${DIR}.soapFuseOut
+    -c ${SPCONFIG} \
+    -fd ${DIR} \
+    -l ${SLFILE} \
+    -o ${DIR} \
+    -fs 1 \
+    -es 9 \
+    -tp ${SAMPLE} > ${DIR}.soapFuseOut
 
 if [ $? -eq 0 ] ; then
-	echo "### Success."
-	mv ${DIR}.soapFuseOut ${DIR}.soapFusePass	
-	touch ${RUNDIR}/${NXT1}
+    echo "### Success."
+    mv ${DIR}.soapFuseOut ${DIR}.soapFusePass
+    touch ${RUNDIR}/${NXT1}
 else
-	mv ${DIR}.soapFuseOut ${DIR}.soapFuseFail
+    mv ${DIR}.soapFuseOut ${DIR}.soapFuseFail
 fi
 
 rm -f ${DIR}.soapFuseInQueue

@@ -15,28 +15,28 @@ echo "### PICARDPATH: ${PICARDPATH}"
 cd ${DIR}
 echo "### Starting picard gc bias metrics"
 java -Xmx15g -jar ${PICARDPATH}/picard.jar CollectGcBiasMetrics \
-	REFERENCE_SEQUENCE=${REF} \
-	INPUT=${BAMFILE} \
-	OUTPUT=${BAMFILE}.picGcBiasMetrics \
-	CHART_OUTPUT=${BAMFILE}.picGcBiasMetrics.pdf \
-	SUMMARY_OUTPUT=${BAMFILE}.picGcBiasMetrics.summary \
-	TMP_DIR=$TMPDIR \
-	ASSUME_SORTED=true \
-	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picGcBiasMetricsOut
+    REFERENCE_SEQUENCE=${REF} \
+    INPUT=${BAMFILE} \
+    OUTPUT=${BAMFILE}.picGcBiasMetrics \
+    CHART_OUTPUT=${BAMFILE}.picGcBiasMetrics.pdf \
+    SUMMARY_OUTPUT=${BAMFILE}.picGcBiasMetrics.summary \
+    TMP_DIR=$TMPDIR \
+    ASSUME_SORTED=true \
+    VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picGcBiasMetricsOut
 
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.picGcBiasMetricsOut ${BAMFILE}.picGcBiasMetricsPass
+    mv ${BAMFILE}.picGcBiasMetricsOut ${BAMFILE}.picGcBiasMetricsPass
 else
-	mv ${BAMFILE}.picGcBiasMetricsOut ${BAMFILE}.picGcBiasMetricsFail
+    mv ${BAMFILE}.picGcBiasMetricsOut ${BAMFILE}.picGcBiasMetricsFail
 fi
 
 rm -f ${BAMFILE}.picGcBiasMetricsInQueue
 
 # A little organizing
 if [ -d ${RUNDIR}/stats/ ] ; then
-	echo "### Moving files into stats folder"
-	mv ${BAMFILE}.picGcBiasMetrics ${RUNDIR}/stats/	
-	mv ${BAMFILE}.picGcBiasMetrics.* ${RUNDIR}/stats/	
+    echo "### Moving files into stats folder"
+    mv ${BAMFILE}.picGcBiasMetrics ${RUNDIR}/stats/
+    mv ${BAMFILE}.picGcBiasMetrics.* ${RUNDIR}/stats/
 fi
 
 endTime=`date +%s`

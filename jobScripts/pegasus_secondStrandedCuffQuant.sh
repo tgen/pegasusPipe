@@ -26,12 +26,12 @@ cd ${DIRNAME}
 PARAMS=${PARAMS//\#/ }
 echo "### params is $params"
 if [ ${USEMASK} == "no" ] ; then
-	${CUFFQUANTPATH}/cuffquant \
-	    ${PARAMS} \
-	    --frag-bias-correct ${REF} \
-	    --library-type fr-firststrand \
-	    ${CUFFLINKGTF} \
-	    ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
+    ${CUFFQUANTPATH}/cuffquant \
+        ${PARAMS} \
+        --frag-bias-correct ${REF} \
+        --library-type fr-firststrand \
+        ${CUFFLINKGTF} \
+        ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
     if [ $? -eq 0 ] ; then
         newName=`basename ${BAM}`
         newName=${newName/.proj.Aligned.out.sorted.md.bam}
@@ -41,20 +41,20 @@ if [ ${USEMASK} == "no" ] ; then
         mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantFail
     fi
 else
-	${CUFFQUANTPATH}/cuffquant \
-	    ${PARAMS} \
-	    --frag-bias-correct ${REF} \
-	    --library-type fr-firststrand \
-	    --mask-file ${CUFFLINKMASK} \
-	    ${CUFFLINKGTF} ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
-	if [ $? -eq 0 ] ; then
-		newName=`basename ${BAM}`
-		newName=${newName/.proj.Aligned.out.sorted.md.bam}
-		mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantPass	
-		mv ${DIRNAME}/abundances.cxb ${DIRNAME}/$newName.cuffQuant.abundances.cxb
-	else
-		mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantFail
-	fi
+    ${CUFFQUANTPATH}/cuffquant \
+        ${PARAMS} \
+        --frag-bias-correct ${REF} \
+        --library-type fr-firststrand \
+        --mask-file ${CUFFLINKMASK} \
+        ${CUFFLINKGTF} ${BAM} > ${DIRNAME}.cuffQuantOut 2>&1
+    if [ $? -eq 0 ] ; then
+        newName=`basename ${BAM}`
+        newName=${newName/.proj.Aligned.out.sorted.md.bam}
+        mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantPass
+        mv ${DIRNAME}/abundances.cxb ${DIRNAME}/$newName.cuffQuant.abundances.cxb
+    else
+        mv ${DIRNAME}.cuffQuantOut ${DIRNAME}.cuffQuantFail
+    fi
 fi
 
 rm -f ${DIRNAME}.cuffQuantInQueue

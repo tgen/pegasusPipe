@@ -28,12 +28,12 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -o ${OUTBAM} > ${RNABAM}.reassignMapOut
 
 if [ $? -eq 0 ] ; then
-	mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapFail
-	rm -f ${RNABAM}.reassignMapInQueue
-	exit 1
+    mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${RNABAM}.reassignMapOut ${RNABAM}.reassignMapFail
+    rm -f ${RNABAM}.reassignMapInQueue
+    exit 1
 fi
 
 rm -f ${RNABAM}.reassignMapInQueue

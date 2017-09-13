@@ -25,10 +25,10 @@ echo "### Now running htseq on SAM"
 htseq-count -q --stranded=no --mode=union ${SAM} ${GTF} > ${DIR}/${anotherName}.htSeqCounts
 
 if [ $? -eq 0 ] ; then
-	touch ${SAM}.htSeqPass	
-	echo "Deleted by htSeq to save on space at $time" > ${SAM}
+    touch ${SAM}.htSeqPass
+    echo "Deleted by htSeq to save on space at $time" > ${SAM}
 else
-	touch ${SAM}.htSeqFail
+    touch ${SAM}.htSeqFail
 fi
 rm -f ${SAM}.htSeqInQueue
 

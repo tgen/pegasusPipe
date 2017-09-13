@@ -30,19 +30,19 @@ echo "array above"
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -65,59 +65,59 @@ qsubFails=0
 ###
 for dnaPairLine in `cat $configFile | grep '^DNAPAIR='`
 do
-	echo "### DNA pair line is $dnaPairLine"
-	sampleNames=`echo $dnaPairLine | cut -d= -f2`
-	usableName=${sampleNames//,/-}
+    echo "### DNA pair line is $dnaPairLine"
+    sampleNames=`echo $dnaPairLine | cut -d= -f2`
+    usableName=${sampleNames//,/-}
 
-	pair1=`echo $sampleNames | cut -d, -f1`
-	pair2=`echo $sampleNames | cut -d, -f2`
+    pair1=`echo $sampleNames | cut -d, -f1`
+    pair2=`echo $sampleNames | cut -d, -f2`
 
-	trackName="$runDir/seurat/$usableName/$usableName"
-	mergedVCF=$trackName.seurat.vcf
-	if [[ -e $mergedVCF.mergeVcfPass || -e $mergedVCF.mergeVcfFail || -e $mergedVCF.mergeVcfInQueue ]] ; then
-		echo "Merge of seurat output already passed, failed or in queue"
-		continue
-	fi
-	missingGrp=0
-	for chrGrp in "${chrGroups[@]}"
-	do
-		grpName=`echo $chrGrp | cut -d: -f1`
-		outVCFname=$trackName-group$grpName.seuratOnJIR.vcf
-		if [ ! -e $outVCFname.seuratOnJIR-group$grpName-Pass ] ; then 
-			echo "missing this: $outVCFname.seuratOnJIR-group$grpName-Pass"
-			((missingGrp++))
-		fi 
-	done
-	if [ $missingGrp -eq 0 ] ; then
-		echo "All 6 groups must have passed"
-		fileList=""
-		for thisChr in "${chrs[@]}"
-		do
-			thisVCF=`ls $trackName-group*.seuratOnJIR.vcf-chr$thisChr`
-			#echo "thisVCF is $thisVCF"
-			fileList="$fileList I=$thisVCF"
-		done
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeVCFs.sh
-		if [ $? -eq 0 ] ; then
-			touch $mergedVCF.mergeVcfInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
+    trackName="$runDir/seurat/$usableName/$usableName"
+    mergedVCF=$trackName.seurat.vcf
+    if [[ -e $mergedVCF.mergeVcfPass || -e $mergedVCF.mergeVcfFail || -e $mergedVCF.mergeVcfInQueue ]] ; then
+        echo "Merge of seurat output already passed, failed or in queue"
+        continue
+    fi
+    missingGrp=0
+    for chrGrp in "${chrGroups[@]}"
+    do
+        grpName=`echo $chrGrp | cut -d: -f1`
+        outVCFname=$trackName-group$grpName.seuratOnJIR.vcf
+        if [ ! -e $outVCFname.seuratOnJIR-group$grpName-Pass ] ; then
+            echo "missing this: $outVCFname.seuratOnJIR-group$grpName-Pass"
+            ((missingGrp++))
+        fi
+    done
+    if [ $missingGrp -eq 0 ] ; then
+        echo "All 6 groups must have passed"
+        fileList=""
+        for thisChr in "${chrs[@]}"
+        do
+            thisVCF=`ls $trackName-group*.seuratOnJIR.vcf-chr$thisChr`
+            #echo "thisVCF is $thisVCF"
+            fileList="$fileList I=$thisVCF"
+        done
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_mergeVCFs.sh
+        if [ $? -eq 0 ] ; then
+            touch $mergedVCF.mergeVcfInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
 
-	else
-		echo "Not all chr groups have passed seurat"
-		((qsubFails++))
-	fi 
+    else
+        echo "Not all chr groups have passed seurat"
+        ((qsubFails++))
+    fi
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

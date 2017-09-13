@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -57,120 +57,120 @@ skipLines=1
 qsubFails=0
 
 if [ ! -d $runDir/stats ] ; then
-	mkdir -p $runDir/stats
+    mkdir -p $runDir/stats
 fi
 
 ###
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Must be genome or exome."
-		pcDir=$runDir/$kitName/$samName
-		inBam=$runDir/$kitName/$samName/$samName.proj.bam
-		mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-		if [[ ! -e $inBam.mdPass || ! -e $mdBam ]] ; then
-			echo "### Either mdPass or the bam itself is missing for $mdBam"
-			((qsubFails++))
-		else
-			if [[ -e $mdBam.picMultiMetricsPass || -e $mdBam.picMultiMetricsInQueue || -e $mdBam.picMultiMetricsFail ]] ; then
-				echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
-			else
-				echo "### Submitting for picard Multi Metrics: $mdBam"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
-				if [ $? -eq 0 ] ; then
-					touch $mdBam.picMultiMetricsInQueue
-				else
-					((qsubFails++))
-				fi
-				sleep 2
-			fi
-		fi
-		jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		if [ $jrRequested -gt 0 ] && [ $jirRequested != "no" ] ; then
-			echo "### Joint IR requested for $samName"
-			if [[ ! -e $jrBam.jointIRPass || ! -e $jrBam ]] ; then
-				echo "### Either jointIRPass or the bam itself is missing for $jrBam"
-				((qsubFails++))
-			else
-				if [[ -e $jrBam.picMultiMetricsPass || -e $jrBam.picMultiMetricsInQueue || -e $jrBam.picMultiMetricsFail ]] ; then
-					echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
-				else
-					echo "### Submitting for picard Multi Metrics: $jrBam"
-					sbatch -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
-					if [ $? -eq 0 ] ; then
-						touch $jrBam.picMultiMetricsInQueue
-					else
-						((qsubFails++))
-					fi
-					sleep 2
-				fi
-			fi
-		else
-			echo "### Joint IR is NOT requested for $samName"
-		fi
-	else
-		echo "### Assay ID is $assayID. Must be RNA."
-		case $rnaAligner in 
-		tophat) echo "### Tophat case"
-			rnaDir="$runDir/$kitName/$samName/$samName.topHatDir"
-			rnaBam="$rnaDir/$samName.proj.accepted_hits.md.bam"
-			rnaPass="$rnaDir/$samName.proj.accepted_hits.bam.rnaMarkDupPass"
-			;;
-		star) echo "### Star case"
-			rnaDir="$runDir/$kitName/$samName/$samName.starDir"
-			rnaBam="$rnaDir/$samName.proj.Aligned.out.sorted.md.bam"
-			rnaPass="$rnaDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
-			;;
-		anotherRNAaligner) echo "### Anoter RNA aligner"
-			;;
-		*) echo "### I should not be here"
-			;;
-		esac
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Must be genome or exome."
+        pcDir=$runDir/$kitName/$samName
+        inBam=$runDir/$kitName/$samName/$samName.proj.bam
+        mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+        if [[ ! -e $inBam.mdPass || ! -e $mdBam ]] ; then
+            echo "### Either mdPass or the bam itself is missing for $mdBam"
+            ((qsubFails++))
+        else
+            if [[ -e $mdBam.picMultiMetricsPass || -e $mdBam.picMultiMetricsInQueue || -e $mdBam.picMultiMetricsFail ]] ; then
+                echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
+            else
+                echo "### Submitting for picard Multi Metrics: $mdBam"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
+                if [ $? -eq 0 ] ; then
+                    touch $mdBam.picMultiMetricsInQueue
+                else
+                    ((qsubFails++))
+                fi
+                sleep 2
+            fi
+        fi
+        jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        if [ $jrRequested -gt 0 ] && [ $jirRequested != "no" ] ; then
+            echo "### Joint IR requested for $samName"
+            if [[ ! -e $jrBam.jointIRPass || ! -e $jrBam ]] ; then
+                echo "### Either jointIRPass or the bam itself is missing for $jrBam"
+                ((qsubFails++))
+            else
+                if [[ -e $jrBam.picMultiMetricsPass || -e $jrBam.picMultiMetricsInQueue || -e $jrBam.picMultiMetricsFail ]] ; then
+                    echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
+                else
+                    echo "### Submitting for picard Multi Metrics: $jrBam"
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
+                    if [ $? -eq 0 ] ; then
+                        touch $jrBam.picMultiMetricsInQueue
+                    else
+                        ((qsubFails++))
+                    fi
+                    sleep 2
+                fi
+            fi
+        else
+            echo "### Joint IR is NOT requested for $samName"
+        fi
+    else
+        echo "### Assay ID is $assayID. Must be RNA."
+        case $rnaAligner in
+        tophat) echo "### Tophat case"
+            rnaDir="$runDir/$kitName/$samName/$samName.topHatDir"
+            rnaBam="$rnaDir/$samName.proj.accepted_hits.md.bam"
+            rnaPass="$rnaDir/$samName.proj.accepted_hits.bam.rnaMarkDupPass"
+            ;;
+        star) echo "### Star case"
+            rnaDir="$runDir/$kitName/$samName/$samName.starDir"
+            rnaBam="$rnaDir/$samName.proj.Aligned.out.sorted.md.bam"
+            rnaPass="$rnaDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
+            ;;
+        anotherRNAaligner) echo "### Anoter RNA aligner"
+            ;;
+        *) echo "### I should not be here"
+            ;;
+        esac
 
-		echo "### My bam is $rnaBam"
-		if [ ! -e $rnaPass ] ; then
-			echo "### Looks like rna align is not done yet. $rnaPass doesnt exist yet"
-			((qsubFails++))
-			continue
-		fi
-		if [ ! -e $rnaBam ] ; then
-			echo "### Weird. Bam itself is missing: $rnaBam"
-			((qsubFails++))
-			continue
-		fi
+        echo "### My bam is $rnaBam"
+        if [ ! -e $rnaPass ] ; then
+            echo "### Looks like rna align is not done yet. $rnaPass doesnt exist yet"
+            ((qsubFails++))
+            continue
+        fi
+        if [ ! -e $rnaBam ] ; then
+            echo "### Weird. Bam itself is missing: $rnaBam"
+            ((qsubFails++))
+            continue
+        fi
 
-		if [[ -e $rnaBam.picMultiMetricsPass || -e $rnaBam.picMultiMetricsFail || -e $rnaBam.picMultiMetricsInQueue ]] ; then 
-			echo "### Picard RNA metric is already done, failed or inQueue"
-			continue
-		fi 
-		if [ ! -d $runDir/stats ] ; then
-			mkdir $runDir/stats
-		fi
-		echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
-		if [ $? -eq 0 ] ; then
-			touch $rnaBam.picMultiMetricsInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
-	fi
+        if [[ -e $rnaBam.picMultiMetricsPass || -e $rnaBam.picMultiMetricsFail || -e $rnaBam.picMultiMetricsInQueue ]] ; then
+            echo "### Picard RNA metric is already done, failed or inQueue"
+            continue
+        fi
+        if [ ! -d $runDir/stats ] ; then
+            mkdir $runDir/stats
+        fi
+        echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_picardMultiMetrics.sh
+        if [ $? -eq 0 ] ; then
+            touch $rnaBam.picMultiMetricsInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
+    fi
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

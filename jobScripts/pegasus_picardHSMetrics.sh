@@ -18,29 +18,29 @@ cd ${DIR}
 
 echo "### Starting picard rna metrics"
 java -Xmx15g -jar ${PICARDPATH}/picard.jar CalculateHsMetrics \
-	REFERENCE_SEQUENCE=${REF} \
-	BAIT_INTERVALS=${BAITS} \
-	TARGET_INTERVALS=${TARGETS} \
-	INPUT=${BAMFILE} \
-	OUTPUT=${BAMFILE}.picHSMetrics \
-	PER_TARGET_COVERAGE=${BAMFILE}.picStats.HsPerTargetCov \
-	TMP_DIR=$TMPDIR \
-	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picHSMetricsOut
+    REFERENCE_SEQUENCE=${REF} \
+    BAIT_INTERVALS=${BAITS} \
+    TARGET_INTERVALS=${TARGETS} \
+    INPUT=${BAMFILE} \
+    OUTPUT=${BAMFILE}.picHSMetrics \
+    PER_TARGET_COVERAGE=${BAMFILE}.picStats.HsPerTargetCov \
+    TMP_DIR=$TMPDIR \
+    VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picHSMetricsOut
 
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsPass
+    mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsPass
 else
-	mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsFail
+    mv ${BAMFILE}.picHSMetricsOut ${BAMFILE}.picHSMetricsFail
 fi
 
 rm -f ${BAMFILE}.picHSMetricsInQueue
 
 # A little organizing
 if [ -d ${RUNDIR}/stats/ ] ; then
-	echo "moving files into stats folder"
-	mv ${BAMFILE}.picHSMetrics ${RUNDIR}/stats/	
-	mv ${BAMFILE}.picHSMetrics.pdf ${RUNDIR}/stats/	
-	mv ${BAMFILE}.picStats.HsPerTargetCov ${RUNDIR}/stats/
+    echo "moving files into stats folder"
+    mv ${BAMFILE}.picHSMetrics ${RUNDIR}/stats/
+    mv ${BAMFILE}.picHSMetrics.pdf ${RUNDIR}/stats/
+    mv ${BAMFILE}.picStats.HsPerTargetCov ${RUNDIR}/stats/
 fi
 
 endTime=`date +%s`

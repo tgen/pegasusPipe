@@ -32,9 +32,9 @@ echo "${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} --bam-list ${BAMFILE} | ${DEN
 ${SAMTOOLSPATH}/samtools mpileup -gDf ${REF} ${BAMFILE} | ${DENOVOPATH}/denovogear dnm auto --ped ${PED} --bcf -
 
 if [ $? -eq 0 ] ; then
-	touch ${OUTTRACKNAME}.deNovoGearPass
+    touch ${OUTTRACKNAME}.deNovoGearPass
 else
-	touch ${OUTTRACKNAME}.deNovoGearFail
+    touch ${OUTTRACKNAME}.deNovoGearFail
 fi
 
 rm -f ${OUTTRACKNAME}.deNovoGearInQueue

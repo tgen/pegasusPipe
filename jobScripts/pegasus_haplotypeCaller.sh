@@ -32,13 +32,13 @@ ${BAMLIST} \
 -o ${TRK}_Step${STEP}.HC.vcf > ${TRK}_Step${STEP}.hcOut
 
 if [ $? -eq 0 ] ; then
-	echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
-	PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
-	mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcPass
-else	
-	mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcFail
-	rm -f ${TRK}_Step${STEP}.hcInQueue
-	exit
+    echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
+    PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
+    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcPass
+else
+    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcFail
+    rm -f ${TRK}_Step${STEP}.hcInQueue
+    exit
 fi
 
 vcfList=""
@@ -52,11 +52,11 @@ done
 # IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-	echo "PROGRESS: ${PROGRESS} equals STEPCOUNT: ${STEPCOUNT}"
-	echo HapCaller_${STEP}.Done
+    echo "PROGRESS: ${PROGRESS} equals STEPCOUNT: ${STEPCOUNT}"
+    echo HapCaller_${STEP}.Done
 
-	# Concatenate VCF with GATK
- 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.HC_All.vcf -assumeSorted
+    # Concatenate VCF with GATK
+     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.HC_All.vcf -assumeSorted
 
     if [ $? -eq 0 ] ; then
         touch ${TRK}.hcPass
@@ -69,8 +69,8 @@ then
     mv ${TRK}_hcStatus.txt ${TRK}_hcStatus.txt.used
 
 else
-	echo
-	echo HapCaller_${STEP}.Done
+    echo
+    echo HapCaller_${STEP}.Done
 fi
 
 rm -f ${TRK}_Step${STEP}.hcInQueue

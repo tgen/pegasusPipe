@@ -41,12 +41,12 @@ ${BCFTOOLSPATH}/bcftools call \
     -o ${TRACKNAME}_Step${STEP}.mpileup.vcf
 
 if [ $? -eq 0 ] ; then
-	echo "${STEP} Completed" >> ${TRACKNAME}_spStatus.txt
+    echo "${STEP} Completed" >> ${TRACKNAME}_spStatus.txt
         PROGRESS=`wc -l ${TRACKNAME}_spStatus.txt | awk '{print $1}'`
-	touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
-else	
-	touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpFail
-	rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue
+    touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
+else
+    touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpFail
+    rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue
     exit 1
 fi
 
@@ -61,9 +61,9 @@ done
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
     echo mpileup_${STEP}.Done
-	#Concatenate VCF with GATK
-	echo "java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted"
-	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted
+    #Concatenate VCF with GATK
+    echo "java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted"
+    java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants --reference ${REF} $vcfList -out ${TRACKNAME}.mpileup_All.vcf -assumeSorted
     if [ $? -eq 0 ] ; then
         touch ${TRACKNAME}.samtoolsMpileUpPass
         touch ${RUNDIR}/${NXT1}

@@ -24,10 +24,10 @@ echo "### DEXSEQCOUNTOUT: ${DEXSEQCOUNTOUT}"
 
 python ${DEXSEQCOUNTPATH} -p yes -a 10 -f bam -r pos -s no ${DEXSEQGFF} ${RNABAM} ${DEXSEQOUT}.dexSeqCounts.txt
 if [ $? -eq 0 ] ; then
-	touch ${RUNDIR}/${NXT1}
-	touch ${DEXSEQOUT}.DEXseqCountPass
+    touch ${RUNDIR}/${NXT1}
+    touch ${DEXSEQOUT}.DEXseqCountPass
 else
-	touch ${DEXSEQOUT}.DEXseqCountFail
+    touch ${DEXSEQOUT}.DEXseqCountFail
 fi
 
 rm ${DEXSEQOUT}.DEXseqCountInQueue

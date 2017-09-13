@@ -19,16 +19,16 @@ echo "### BWAPATH: ${BWAPATH}"
 echo "### BWA mem started for ${FASTQ1} at $time"
 ${BWAPATH}/bwa mem -R ${RGTAG} -M -t8 ${REF} ${FASTQ1} ${FASTQ2} | ${SAMTOOLSPATH}/samtools view -S -h -b -t ${FAI} - | ${SAMTOOLSPATH}/samtools sort - ${BAMPRE}
 if [ $? -eq 0 ] ; then
-	${SAMTOOLSPATH}/samtools index ${BAMPRE}.bam
-	if [ $? -eq 0 ] ; then
-		touch ${RUNDIR}/${NXT1}
-		touch ${RUNDIR}/${NXT2}
-		touch ${BAMPRE}.bam.dnaAlignPass
-	else
-		touch ${BAMPRE}.bam.dnaAlignFail
-	fi
+    ${SAMTOOLSPATH}/samtools index ${BAMPRE}.bam
+    if [ $? -eq 0 ] ; then
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+        touch ${BAMPRE}.bam.dnaAlignPass
+    else
+        touch ${BAMPRE}.bam.dnaAlignFail
+    fi
 else
-	touch ${BAMPRE}.bam.dnaAlignFail
+    touch ${BAMPRE}.bam.dnaAlignFail
 fi
 rm ${BAMPRE}.bam.dnaAlignInQueue
 

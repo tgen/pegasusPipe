@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -64,96 +64,96 @@ skipLines=1
 qsubFails=0
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	if [ $snpSniff != "yes" ] ; then
-		echo "snpSniff not requested for this recipe"
-		continue
-	fi
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [[ "$assayID" == "Exome" || "$assayID" == "Genome" ]] ; then
-		echo "### Assay ID is $assayID. Must be genome or exome."
-		pcDir=$runDir/$kitName/$samName
-		mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-		jrPas=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
-		mdPas=$runDir/$kitName/$samName/$samName.proj.bam.mdPass
-		finalOut=$runDir/$kitName/$samName/$samName.snpSniffer.vcf
-		jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		if [ $jrRequested -gt 0 ] ; then
-			echo "### Will call snpSniffer on the jr bam because JR was requested for:  $samName"
-			pasFile=$jrPas
-			bamFile=$jrBam
-		else
-			echo "### Will call snpSniffer on the md bam because JR was requested for:  $samName"
-			pasFile=$mdPas
-			bamFile=$mdBam
+    if [ $snpSniff != "yes" ] ; then
+        echo "snpSniff not requested for this recipe"
+        continue
+    fi
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [[ "$assayID" == "Exome" || "$assayID" == "Genome" ]] ; then
+        echo "### Assay ID is $assayID. Must be genome or exome."
+        pcDir=$runDir/$kitName/$samName
+        mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+        jrPas=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
+        mdPas=$runDir/$kitName/$samName/$samName.proj.bam.mdPass
+        finalOut=$runDir/$kitName/$samName/$samName.snpSniffer.vcf
+        jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        if [ $jrRequested -gt 0 ] ; then
+            echo "### Will call snpSniffer on the jr bam because JR was requested for:  $samName"
+            pasFile=$jrPas
+            bamFile=$jrBam
+        else
+            echo "### Will call snpSniffer on the md bam because JR was requested for:  $samName"
+            pasFile=$mdPas
+            bamFile=$mdBam
 
-		fi
-		if [ ! -e $pasFile ] ; then
-			echo "### Looks like bam is not ready for snpSniffer. Missing file $pasFile"
-			((qsubFails++))
-		else
-			if [[ -e $bamFile.snpSniffInQueue || -e $bamFile.snpSniffFail || -e $bamFile.snpSniffPass ]] ; then
-				echo "### Looks like snp sniff is alread in queue, failed, or passed"
-			else
-				echo "### Submitting for snpSniffer: $bamFile"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
-				if [ $? -eq 0 ] ; then
-					touch $bamFile.snpSniffInQueue
-				else
-					((qsubFails++))
-				fi
-				sleep 2
-			fi
-		fi
-	elif [ "$assayID" == "RNA" ] ; then
-		echo "### Assay ID is $assayID. Must be RNA."
-		case $rnaAligner in 
-		tophat) echo "tophat case"
-			pasFile="$runDir/$kitName/$samName/$samName.topHatDir/$samName.proj.accepted_hits.bam.rnaMarkDupPass"
-			bamFile="$runDir/$kitName/$samName/$samName.topHatDir/$samName.proj.accepted_hits.bam"
-			;;
-		star) echo "star case"
-			pasFile="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
-			bamFile="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
-			;;
-		anotherRNAaligner) echo "example RNA aligner"
-			;;
-		*) echo "I should not be here"
-			;;
-		esac 
-		if [ ! -e $pasFile ] ; then 
-			echo "### Looks like rna mark dup is not done yet. Missing $pasFile"
-			((qsubFails++))
-		else
-			if [[ -e $bamFile.snpSniffInQueue || -e $bamFile.snpSniffFail || -e $bamFile.snpSniffPass ]] ; then
-				echo "### Looks like snp sniff is alread in queue, failed, or passed"
-			else
-				finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
-				echo "### Submitting for snpSniffer: $bamFile"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
-				if [ $? -eq 0 ] ; then
-					touch $bamFile.snpSniffInQueue
-				else
-					((qsubFails++))
-				fi
-			fi
-		fi
-	else
-		echo "### Assay ID is $assayID"
-	fi
+        fi
+        if [ ! -e $pasFile ] ; then
+            echo "### Looks like bam is not ready for snpSniffer. Missing file $pasFile"
+            ((qsubFails++))
+        else
+            if [[ -e $bamFile.snpSniffInQueue || -e $bamFile.snpSniffFail || -e $bamFile.snpSniffPass ]] ; then
+                echo "### Looks like snp sniff is alread in queue, failed, or passed"
+            else
+                echo "### Submitting for snpSniffer: $bamFile"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
+                if [ $? -eq 0 ] ; then
+                    touch $bamFile.snpSniffInQueue
+                else
+                    ((qsubFails++))
+                fi
+                sleep 2
+            fi
+        fi
+    elif [ "$assayID" == "RNA" ] ; then
+        echo "### Assay ID is $assayID. Must be RNA."
+        case $rnaAligner in
+        tophat) echo "tophat case"
+            pasFile="$runDir/$kitName/$samName/$samName.topHatDir/$samName.proj.accepted_hits.bam.rnaMarkDupPass"
+            bamFile="$runDir/$kitName/$samName/$samName.topHatDir/$samName.proj.accepted_hits.bam"
+            ;;
+        star) echo "star case"
+            pasFile="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
+            bamFile="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
+            ;;
+        anotherRNAaligner) echo "example RNA aligner"
+            ;;
+        *) echo "I should not be here"
+            ;;
+        esac
+        if [ ! -e $pasFile ] ; then
+            echo "### Looks like rna mark dup is not done yet. Missing $pasFile"
+            ((qsubFails++))
+        else
+            if [[ -e $bamFile.snpSniffInQueue || -e $bamFile.snpSniffFail || -e $bamFile.snpSniffPass ]] ; then
+                echo "### Looks like snp sniff is alread in queue, failed, or passed"
+            else
+                finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
+                echo "### Submitting for snpSniffer: $bamFile"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
+                if [ $? -eq 0 ] ; then
+                    touch $bamFile.snpSniffInQueue
+                else
+                    ((qsubFails++))
+                fi
+            fi
+        fi
+    else
+        echo "### Assay ID is $assayID"
+    fi
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

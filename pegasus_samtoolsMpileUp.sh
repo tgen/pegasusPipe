@@ -23,19 +23,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -78,8 +78,8 @@ do
         if [ ! -d $mpDir ] ; then
                 mkdir $mpDir
         fi
-	bamText="$mpDir/${usableName}_bams.txt"
-	echo -n "" > $bamText
+    bamText="$mpDir/${usableName}_bams.txt"
+    echo -n "" > $bamText
         for eachSample in ${sampleNames//,/ }
         do
                 ((sampleCount++))
@@ -87,24 +87,24 @@ do
                 sampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$eachSample"'"'`
                 kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
                 samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-               	
-		if [ "${jirRequested}" == "no" ] ; then	
 
-			eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        if [ "${jirRequested}" == "no" ] ; then
+
+            eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.bam
                         eachSamplePass=$runDir/$kitName/$samName/$samName.proj.bam.mdPass
 
-		else	
-			eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-                	eachSamplePass=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
+        else
+            eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+                    eachSamplePass=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
                 fi
-		if [[ ! -e $eachSampleBam || ! -e $eachSamplePass ]] ; then
+        if [[ ! -e $eachSampleBam || ! -e $eachSamplePass ]] ; then
                         echo "### Can't find the bam or the pass"
                         echo "### BAM: $eachSampleBam"
                         echo "### PAS: $eachSamplePass"
                         ((missingSampleCount++))
                 else
                         echo "$eachSampleBam" >> $bamText
-			#sampleList="$eachSampleBam $sampleList"
+            #sampleList="$eachSampleBam $sampleList"
                 fi
         done
         if [ $missingSampleCount -eq 0 ] ; then
@@ -122,7 +122,7 @@ do
         trackName="$runDir/mpileup/$usableName/$usableName"
         STEP=0
         #STEP_COUNT=24
-	echo "getting step count from the number of bed files in $chrListBed..."
+    echo "getting step count from the number of bed files in $chrListBed..."
         STEP_COUNT=`ls $chrListBed/*bed | wc -l`
         echo "### Submitting to queue to run mpileup on $wd"
         while [ ${STEP} -lt $STEP_COUNT ]
@@ -133,7 +133,7 @@ do
                         continue
                 fi
                         echo Starting mpileup Step${STEP}
-			sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUpMulti.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUpMulti.sh
                         if [ $? -eq 0 ] ; then
                                 touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
                         else
@@ -145,85 +145,85 @@ done
 
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	trgtGrep=$kitName"_T"
-	targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
-	echo "### TARGETS: $targets"
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    trgtGrep=$kitName"_T"
+    targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
+    echo "### TARGETS: $targets"
 
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Must be genome or exome."
-		pcDir=$runDir/$kitName/$samName
-		inBam=$runDir/$kitName/$samName/$samName.proj.bam
-		mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-		jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		if [ $jrRequested -gt 0 ] ; then
-			echo "### samtoolsMpileUp will not operate on a single bam because Joint IR is requested for $samName"
-			echo "setting to JIRbam"
-			bamFile=${jrBam}
-			bamFilePass=${jrBam}.jointIRPass
-		else
-			
-			echo "### samtoolsMpileUp will run on single bam because Joint IR is NOT requested for $samName"
-			echo "setting to mdBAM"
-			bamFile=${mdBam}
-			bamFilePass=$inBam.mdPass
-#		fi
-			if [[ ! -e $bamFilePass || ! -e $bamFile ]] ; then
-				echo "### Either mdPass or the bam itself is missing for $bamFile"
-				((qsubFails++))
-			else
-				STEP=0
-				STEP_COUNT=`ls $chrListBed/*bed | wc -l`
-				##echo "### Submitting to queue to run freebayes on $wd"
-				while [ ${STEP} -lt $STEP_COUNT ]
-				do
-					(( STEP++ ))
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Must be genome or exome."
+        pcDir=$runDir/$kitName/$samName
+        inBam=$runDir/$kitName/$samName/$samName.proj.bam
+        mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+        jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        if [ $jrRequested -gt 0 ] ; then
+            echo "### samtoolsMpileUp will not operate on a single bam because Joint IR is requested for $samName"
+            echo "setting to JIRbam"
+            bamFile=${jrBam}
+            bamFilePass=${jrBam}.jointIRPass
+        else
 
-					echo "### Submitting to queue to run samtoolsMpileUp on $wd"
-					#trackName=$runDir/$kitName/$samName/$samName
-					mpDir="$runDir/mpileup"
-					if [ ! -d $mpDir ] ; then
-						mkdir $mpDir
-					fi
-					mkdir -p $mpDir/$samName
-					workDir="$mpDir/$samName"
-					trackName="$runDir/mpileup/$samName/$samName"
+            echo "### samtoolsMpileUp will run on single bam because Joint IR is NOT requested for $samName"
+            echo "setting to mdBAM"
+            bamFile=${mdBam}
+            bamFilePass=$inBam.mdPass
+#        fi
+            if [[ ! -e $bamFilePass || ! -e $bamFile ]] ; then
+                echo "### Either mdPass or the bam itself is missing for $bamFile"
+                ((qsubFails++))
+            else
+                STEP=0
+                STEP_COUNT=`ls $chrListBed/*bed | wc -l`
+                ##echo "### Submitting to queue to run freebayes on $wd"
+                while [ ${STEP} -lt $STEP_COUNT ]
+                do
+                    (( STEP++ ))
 
-					if [[ -e ${trackName}_Step${STEP}.samtoolsMpileUpInQueue || -e ${trackName}_Step${STEP}.samtoolsMpileUpPass || -e ${trackName}_Step${STEP}.samtoolsMpileUpFail ]] ; then
-						echo "### samtoolsMpileUp is already done, failed, or inqueue for ${bamFile}"
-						continue
-					fi
+                    echo "### Submitting to queue to run samtoolsMpileUp on $wd"
+                    #trackName=$runDir/$kitName/$samName/$samName
+                    mpDir="$runDir/mpileup"
+                    if [ ! -d $mpDir ] ; then
+                        mkdir $mpDir
+                    fi
+                    mkdir -p $mpDir/$samName
+                    workDir="$mpDir/$samName"
+                    trackName="$runDir/mpileup/$samName/$samName"
 
-					echo Starting samtoolsMpileUp for ${bamFile}
-					sbatch --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUp.sh
-					if [ $? -eq 0 ] ; then
-						touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
-					else
-						((qsubFails++))
-					fi
+                    if [[ -e ${trackName}_Step${STEP}.samtoolsMpileUpInQueue || -e ${trackName}_Step${STEP}.samtoolsMpileUpPass || -e ${trackName}_Step${STEP}.samtoolsMpileUpFail ]] ; then
+                        echo "### samtoolsMpileUp is already done, failed, or inqueue for ${bamFile}"
+                        continue
+                    fi
 
-					sleep 2
-				done
-			fi
-		fi
-	else
-		echo "### Assay ID is $assayID. Must be RNA."
-		#code for calling AS metrics on tophat bams here
-	fi
+                    echo Starting samtoolsMpileUp for ${bamFile}
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUp.sh
+                    if [ $? -eq 0 ] ; then
+                        touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
+                    else
+                        ((qsubFails++))
+                    fi
+
+                    sleep 2
+                done
+            fi
+        fi
+    else
+        echo "### Assay ID is $assayID. Must be RNA."
+        #code for calling AS metrics on tophat bams here
+    fi
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

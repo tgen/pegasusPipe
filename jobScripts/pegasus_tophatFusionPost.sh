@@ -29,23 +29,23 @@ ${TOPHAT2PATH}/tophat-fusion-post \
     ${INDEXBASE} > ${DIR}.thFPostOut
 
 if [ $? -eq 0 ] ; then
-	echo "success."
-	echo "renaming..."
-	mv ${DIR}/tophatfusion_out/fusion_seq.fa ${DIR}/tophatfusion_out/$newName.fusion_seq.fa
-	mv ${DIR}/tophatfusion_out/fusion_seq.bwtout ${DIR}/tophatfusion_out/$newName.thFusion.fusion_seq.bwtout
-	mv ${DIR}/tophatfusion_out/fusion_seq.map ${DIR}/tophatfusion_out/$newName.thFusion.fusion_seq.map
-	mv ${DIR}/tophatfusion_out/potential_fusion.txt ${DIR}/tophatfusion_out/$newName.thFusion.potential_fusion.txt
-	mv ${DIR}/tophatfusion_out/result.txt ${DIR}/tophatfusion_out/$newName.thFusion.result.txt
-	mv ${DIR}/tophatfusion_out/result.html ${DIR}/tophatfusion_out/$newName.thFusion.result.html
-	echo "renaming done."
+    echo "success."
+    echo "renaming..."
+    mv ${DIR}/tophatfusion_out/fusion_seq.fa ${DIR}/tophatfusion_out/$newName.fusion_seq.fa
+    mv ${DIR}/tophatfusion_out/fusion_seq.bwtout ${DIR}/tophatfusion_out/$newName.thFusion.fusion_seq.bwtout
+    mv ${DIR}/tophatfusion_out/fusion_seq.map ${DIR}/tophatfusion_out/$newName.thFusion.fusion_seq.map
+    mv ${DIR}/tophatfusion_out/potential_fusion.txt ${DIR}/tophatfusion_out/$newName.thFusion.potential_fusion.txt
+    mv ${DIR}/tophatfusion_out/result.txt ${DIR}/tophatfusion_out/$newName.thFusion.result.txt
+    mv ${DIR}/tophatfusion_out/result.html ${DIR}/tophatfusion_out/$newName.thFusion.result.html
+    echo "renaming done."
 
-	cd ${DIR}/tophatfusion_out/
-	${THFUSION2VCFPATH}/tophatFusion2vcf.sh ${DIR}/tophatfusion_out/$newName.thFusion.result.txt $newName ${REF}
-	cd -
+    cd ${DIR}/tophatfusion_out/
+    ${THFUSION2VCFPATH}/tophatFusion2vcf.sh ${DIR}/tophatfusion_out/$newName.thFusion.result.txt $newName ${REF}
+    cd -
 
-	mv ${DIR}.thFPostOut ${DIR}.thFPostPass	
+    mv ${DIR}.thFPostOut ${DIR}.thFPostPass
 else
-	mv ${DIR}.thFPostOut ${DIR}.thFPostFail
+    mv ${DIR}.thFPostOut ${DIR}.thFPostFail
 fi
 
 rm -f ${DIR}.thFPostInQueue

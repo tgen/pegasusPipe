@@ -34,42 +34,42 @@ echo "### Germline vcf merger started at $time."
 # Normalize each VCF
 cat ${HCVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.HC.norm.vcf
 if [ $? -eq 0 ] ; then
-	echo "hcVcf was normalized correctly"
+    echo "hcVcf was normalized correctly"
 else
-	touch ${TRACKNAME}.vcfMergerFail
-	rm -f ${TRACKNAME}.vcfMergerInQueue
-	exit
+    touch ${TRACKNAME}.vcfMergerFail
+    rm -f ${TRACKNAME}.vcfMergerInQueue
+    exit
 fi
 cat ${FBVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.freebayes.norm.vcf
 if [ $? -eq 0 ] ; then
         echo "fbVcf was normalized correctly"
 else
         touch ${TRACKNAME}.vcfMergerFail
-	rm -f ${TRACKNAME}.vcfMergerInQueue
-	exit	
+    rm -f ${TRACKNAME}.vcfMergerInQueue
+    exit
 fi
 cat ${MPVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.mpileup.norm.vcf
 if [ $? -eq 0 ] ; then
         echo "mpVcf was normalized correctly"
 else
         touch ${TRACKNAME}.vcfMergerFail
-	rm -f ${TRACKNAME}.vcfMergerInQueue
-	exit
+    rm -f ${TRACKNAME}.vcfMergerInQueue
+    exit
 fi
 
 ##Run the actual merging script
 java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
-	-T CombineVariants \
-	-R ${REF} \
-	--variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
-	--variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
-	--variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
-	--genotypemergeoption UNIQUIFY \
-	--disable_auto_index_creation_and_locking_when_reading_rods \
-	--out ${TRACKNAME}.merged.vcf
+    -T CombineVariants \
+    -R ${REF} \
+    --variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
+    --variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
+    --variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
+    --genotypemergeoption UNIQUIFY \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    --out ${TRACKNAME}.merged.vcf
 if [ $? -eq 0 ] ; then
         echo "the 3 variant callers were merged successfully"
-	touch ${TRACKNAME}.vcfMergerPass
+    touch ${TRACKNAME}.vcfMergerPass
 else
         touch ${TRACKNAME}.vcfMergerFail
 fi

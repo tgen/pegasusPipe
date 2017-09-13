@@ -23,13 +23,13 @@ echo "### Starting Kallisto quant cDNA"
 
 # cDNA
 kallisto quant \
-	--index=${KALLISTO_INDEX_CDNA} \
-	--output-dir=${DIR}/cDNA \
-	--bias \
-	--bootstrap-samples=100 \
-	--threads=14 \
-	--seed=42 \
-	${FASTQL}
+    --index=${KALLISTO_INDEX_CDNA} \
+    --output-dir=${DIR}/cDNA \
+    --bias \
+    --bootstrap-samples=100 \
+    --threads=14 \
+    --seed=42 \
+    ${FASTQL}
 
 if [ $? -eq 0 ] ; then
     echo "kallisto cDNA Passed"
@@ -37,16 +37,16 @@ else
     echo "kallisto cDNA Failed"
     touch ${DIR}.kallistoFail
 fi
-	
+
 # GTF
 kallisto quant \
-	--index=${KALLISTO_INDEX_GTF} \
-	--output-dir=${DIR}/GTF \
-	--bias \
-	--bootstrap-samples=100 \
-	--threads=14 \
-	--seed=42 \
-	${FASTQL}
+    --index=${KALLISTO_INDEX_GTF} \
+    --output-dir=${DIR}/GTF \
+    --bias \
+    --bootstrap-samples=100 \
+    --threads=14 \
+    --seed=42 \
+    ${FASTQL}
 
 if [ $? -eq 0 ] ; then
     echo "kallisto GTF Passed"

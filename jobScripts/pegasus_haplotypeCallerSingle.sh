@@ -30,13 +30,13 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 -o ${TRK}_Step${STEP}.HC.vcf > ${TRK}_Step${STEP}.hcOut
 
 if [ $? -eq 0 ] ; then
-	echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
-	PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
-	mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcPass
-else	
-	mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcFail
-	rm -f ${TRK}_Step${STEP}.hcInQueue
-	exit
+    echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
+    PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
+    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcPass
+else
+    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcFail
+    rm -f ${TRK}_Step${STEP}.hcInQueue
+    exit
 fi
 
 vcfList=""
@@ -44,14 +44,14 @@ vcfList=""
 for i in `seq 1 ${STEPCOUNT}`;
 do
     thisVcf="-V ${TRK}_Step$i.HC.vcf "
-	vcfList="$vcfList $thisVcf"
+    vcfList="$vcfList $thisVcf"
 done
                 
 #IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-	echo HapCaller_${STEP}.Done
-	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.HC_All.vcf -assumeSorted
+    echo HapCaller_${STEP}.Done
+    java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.HC_All.vcf -assumeSorted
     if [ $? -eq 0 ] ; then
         touch ${TRK}.hcPass
         touch ${RUNDIR}/${NXT1}
@@ -62,8 +62,8 @@ then
     fi
     mv ${TRK}_hcStatus.txt ${TRK}_hcStatus.txt.used
 else
-	echo
-	echo HapCaller_${STEP}.Done
+    echo
+    echo HapCaller_${STEP}.Done
 fi
 rm -f ${TRK}_Step${STEP}.hcInQueue
 

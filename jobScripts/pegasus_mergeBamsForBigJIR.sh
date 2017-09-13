@@ -31,55 +31,55 @@ newLocBai=${NEWLOC/.bam/.bai}
 
 if [ ${CNT} -eq 1 ] ; then
     #nothing really merged, only copied
-	echo "just copying $onlyBamFile to ${MERGEDBAM}" > ${MERGEDBAM}.mergeBamOut
-	cp $onlyBaiFile $mergedBai
-	cp $onlyBamFile ${MERGEDBAM}
-	if [ $? -ne 0 ] ; then
-		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
-	else
-		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
-		echo "Automatically removed by merge bam step to save on space" > $onlyBamFile
-		touch ${RUNDIR}/${NXT1}
-	fi
+    echo "just copying $onlyBamFile to ${MERGEDBAM}" > ${MERGEDBAM}.mergeBamOut
+    cp $onlyBaiFile $mergedBai
+    cp $onlyBamFile ${MERGEDBAM}
+    if [ $? -ne 0 ] ; then
+        mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
+    else
+        mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
+        echo "Automatically removed by merge bam step to save on space" > $onlyBamFile
+        touch ${RUNDIR}/${NXT1}
+    fi
 else
     #actually merged with picard
-	java -Xmx42g -jar ${PICARDPATH}/picard.jar MergeSamFiles \
-	    ASSUME_SORTED=true \
-	    USE_THREADING=true \
-	    VALIDATION_STRINGENCY=SILENT \
-	    TMP_DIR=/scratch/tgenjetstream/tmp \
-	    OUTPUT=${MERGEDBAM} \
-	    ${BAMLIST} 2> ${MERGEDBAM}.mergeBam.perfOut > ${MERGEDBAM}.mergeBamOut
+    java -Xmx42g -jar ${PICARDPATH}/picard.jar MergeSamFiles \
+        ASSUME_SORTED=true \
+        USE_THREADING=true \
+        VALIDATION_STRINGENCY=SILENT \
+        TMP_DIR=/scratch/tgenjetstream/tmp \
+        OUTPUT=${MERGEDBAM} \
+        ${BAMLIST} 2> ${MERGEDBAM}.mergeBam.perfOut > ${MERGEDBAM}.mergeBamOut
 
-	if [ $? -ne 0 ] ; then
-		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
-	else
-		echo "### Starting indexing of bam with samtools now that merge finished OK"
-		${SAMTOOLSPATH}/samtools index ${MERGEDBAM}
-		mv ${MERGEDBAM}.bai $mergedBai
-		echo "### Ended indexing of bam after merging."
-		mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
-		echo "### Moving ${MERGEDBAM}"
-		if [ -e ${NEWLOC} ] ; then
-			echo "### ${NEWLOC} already exists on target, possibly from another joint IR"
-		else
-			echo "### ${NEWLOC} does not exist on target, copying now..."
-			cp ${MERGEDBAM} ${NEWLOC}
-			cp $mergedBai $newLocBai
-			echo "### Moved out of here to its own dir at ${NEWLOC}" > ${MERGEDBAM}
-			echo "### Moved out of here to its own dir at $newLocBai" > $mergedBai
-			touch ${NEWLOC}.jointIRPass
-		fi
-		for bam in ${BAMLIST}; do
-			bamPath=`echo $bam | cut -d= -f2`
-			echo "Automatically removed by merge bam step to save on space" > $bamPath
-		done
-		touch ${RUNDIR}/${NXT1}
-		touch ${RUNDIR}/${NXT2}
-		touch ${RUNDIR}/${NXT3}
-		touch ${RUNDIR}/${NXT4}
-		touch ${RUNDIR}/${NXT5}
-	fi
+    if [ $? -ne 0 ] ; then
+        mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamFail
+    else
+        echo "### Starting indexing of bam with samtools now that merge finished OK"
+        ${SAMTOOLSPATH}/samtools index ${MERGEDBAM}
+        mv ${MERGEDBAM}.bai $mergedBai
+        echo "### Ended indexing of bam after merging."
+        mv ${MERGEDBAM}.mergeBamOut ${MERGEDBAM}.mergeBamPass
+        echo "### Moving ${MERGEDBAM}"
+        if [ -e ${NEWLOC} ] ; then
+            echo "### ${NEWLOC} already exists on target, possibly from another joint IR"
+        else
+            echo "### ${NEWLOC} does not exist on target, copying now..."
+            cp ${MERGEDBAM} ${NEWLOC}
+            cp $mergedBai $newLocBai
+            echo "### Moved out of here to its own dir at ${NEWLOC}" > ${MERGEDBAM}
+            echo "### Moved out of here to its own dir at $newLocBai" > $mergedBai
+            touch ${NEWLOC}.jointIRPass
+        fi
+        for bam in ${BAMLIST}; do
+            bamPath=`echo $bam | cut -d= -f2`
+            echo "Automatically removed by merge bam step to save on space" > $bamPath
+        done
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+        touch ${RUNDIR}/${NXT3}
+        touch ${RUNDIR}/${NXT4}
+        touch ${RUNDIR}/${NXT5}
+    fi
 fi
 
 rm ${MERGEDBAM}.mergeBamInQueue

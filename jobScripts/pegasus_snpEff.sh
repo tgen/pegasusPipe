@@ -21,43 +21,43 @@ snpEffTxt=${OUT/.vcf/.snpEff.txt}
 summaryOut=${OUT/.vcf/.snpEff.summary_html}
 
 java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
-	-v \
-	-i vcf \
-	-o txt \
-	-noLog \
-	-s ${summaryOut} \
-	-c ${SNPEFFPATH}/snpEff.config \
-	${DBVERSION} \
-	${VCF} > $snpEffTxt
+    -v \
+    -i vcf \
+    -o txt \
+    -noLog \
+    -s ${summaryOut} \
+    -c ${SNPEFFPATH}/snpEff.config \
+    ${DBVERSION} \
+    ${VCF} > $snpEffTxt
 
 java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
-	-v \
-	-i vcf \
-	-o vcf \
-	-noLog \
-	-s ${summaryOut} \
-	-c ${SNPEFFPATH}/snpEff.config \
-	${DBVERSION} \
-	${VCF} > $snpEffInt
+    -v \
+    -i vcf \
+    -o vcf \
+    -noLog \
+    -s ${summaryOut} \
+    -c ${SNPEFFPATH}/snpEff.config \
+    ${DBVERSION} \
+    ${VCF} > $snpEffInt
 
 if [ $? -ne 0 ] ; then
-	echo "snpEff first part failed." >> ${VCF}.snpEffOut
-	mv ${VCF}.snpEffOut ${VCF}.snpEffFail
+    echo "snpEff first part failed." >> ${VCF}.snpEffOut
+    mv ${VCF}.snpEffOut ${VCF}.snpEffFail
 else
-	echo "snpEff first part complete." >> ${VCF}.snpEffOut
-	echo "snpEff second part (snpSift) starting." >> ${VCF}.snpEffOut
-	java -Xmx6g -jar ${SNPEFFPATH}/SnpSift.jar annotate \
-	    ${DBSNP} \
-	    $snpEffInt > $snpEffOut
-	if [ $? -eq 0 ] ; then
-		echo "snpEff second part (snpSift) complete." >> ${VCF}.snpEffOut
-		mv ${VCF}.snpEffOut ${VCF}.snpEffPass
-		touch ${RUNDIR}/${NXT1}
-	else
-		echo "snpEff second part (snpSift) failed." >> ${VCF}.snpEffOut
-		mv ${VCF}.snpEffOut ${VCF}.snpEffFail
-		rm -f $snpEffOut
-	fi
+    echo "snpEff first part complete." >> ${VCF}.snpEffOut
+    echo "snpEff second part (snpSift) starting." >> ${VCF}.snpEffOut
+    java -Xmx6g -jar ${SNPEFFPATH}/SnpSift.jar annotate \
+        ${DBSNP} \
+        $snpEffInt > $snpEffOut
+    if [ $? -eq 0 ] ; then
+        echo "snpEff second part (snpSift) complete." >> ${VCF}.snpEffOut
+        mv ${VCF}.snpEffOut ${VCF}.snpEffPass
+        touch ${RUNDIR}/${NXT1}
+    else
+        echo "snpEff second part (snpSift) failed." >> ${VCF}.snpEffOut
+        mv ${VCF}.snpEffOut ${VCF}.snpEffFail
+        rm -f $snpEffOut
+    fi
 fi
 
 rm -f $snpEffInt

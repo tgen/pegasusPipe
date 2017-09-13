@@ -28,35 +28,35 @@ ${TRNPATH}/tgen_somaticSV.pl \
     O=${OUTFILE} \
     S=${SAMPATH}/samtools > ${OUTFILE}.trnOut
 else
-	if [ "${ASSAY}" == "Genome" ] ; then
-	echo "Running as a Genome trn"
-	${TRNPATH}/tgen_somaticSV.pl \
-		T=${TUMOR} \
-		R=${NORMAL} \
-		O=${OUTFILE} \
-		G=${GTF} \
-		S=${SAMPATH}/samtools > ${OUTFILE}.trnOut
+    if [ "${ASSAY}" == "Genome" ] ; then
+    echo "Running as a Genome trn"
+    ${TRNPATH}/tgen_somaticSV.pl \
+        T=${TUMOR} \
+        R=${NORMAL} \
+        O=${OUTFILE} \
+        G=${GTF} \
+        S=${SAMPATH}/samtools > ${OUTFILE}.trnOut
 
-	elif [ "${ASSAY}" == "Exome" ] ; then 
-	echo "Running as Exome trn"
-	${TRNPATH}/tgen_somaticSV.pl \
-		T=${TUMOR} \
-		R=${NORMAL} \
-		O=${OUTFILE} \
-		G=${GTF} \
-		F=${BEDFILE} \
-		S=${SAMPATH}/samtools > ${OUTFILE}.trnOut
-	else
-		echo "### I should not be here"
-		exit 1
-	fi
+    elif [ "${ASSAY}" == "Exome" ] ; then
+    echo "Running as Exome trn"
+    ${TRNPATH}/tgen_somaticSV.pl \
+        T=${TUMOR} \
+        R=${NORMAL} \
+        O=${OUTFILE} \
+        G=${GTF} \
+        F=${BEDFILE} \
+        S=${SAMPATH}/samtools > ${OUTFILE}.trnOut
+    else
+        echo "### I should not be here"
+        exit 1
+    fi
 fi
 
 if [ $? -eq 0 ] ; then
-	mv ${OUTFILE}.trnOut ${OUTFILE}.trnPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${OUTFILE}.trnOut ${OUTFILE}.trnFail
+    mv ${OUTFILE}.trnOut ${OUTFILE}.trnPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${OUTFILE}.trnOut ${OUTFILE}.trnFail
 fi
 
 rm -f ${OUTFILE}.trnInQueue

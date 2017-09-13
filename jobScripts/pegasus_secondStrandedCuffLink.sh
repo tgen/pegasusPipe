@@ -44,18 +44,18 @@ if [ ${USEMASK} == "no" ] ; then
             mv ${DIRNAME}.cuffLinkOut ${DIRNAME}.cuffLinkFail
     fi
 else
-	${CUFFLINKSPATH}/cufflinks ${PARAMS} --library-type fr-firststrand --frag-bias-correct ${REF} --GTF ${CUFFLINKGTF} -M ${CUFFLINKMASK} ${BAM} > ${DIRNAME}.cuffLinkOut 2>&1
-	if [ $? -eq 0 ] ; then
-		newName=`basename ${BAM}`
-		newName=${newName/.proj.Aligned.out.sorted.md.bam}
-		mv ${DIRNAME}.cuffLinkOut ${DIRNAME}.cuffLinkPass
-		mv ${DIRNAME}/transcripts.gtf ${DIRNAME}/$newName.cufflinks.transcripts.gtf
-		mv ${DIRNAME}/skipped.gtf ${DIRNAME}/$newName.cufflinks.skipped.gtf
-		mv ${DIRNAME}/genes.fpkm_tracking ${DIRNAME}/$newName.cufflinks.genes.fpkm_tracking
-		mv ${DIRNAME}/isoforms.fpkm_tracking ${DIRNAME}/$newName.cufflinks.isoforms.fpkm_tracking
-	else
-		mv ${DIRNAME}.cuffLinkOut ${DIRNAME}.cuffLinkFail
-	fi
+    ${CUFFLINKSPATH}/cufflinks ${PARAMS} --library-type fr-firststrand --frag-bias-correct ${REF} --GTF ${CUFFLINKGTF} -M ${CUFFLINKMASK} ${BAM} > ${DIRNAME}.cuffLinkOut 2>&1
+    if [ $? -eq 0 ] ; then
+        newName=`basename ${BAM}`
+        newName=${newName/.proj.Aligned.out.sorted.md.bam}
+        mv ${DIRNAME}.cuffLinkOut ${DIRNAME}.cuffLinkPass
+        mv ${DIRNAME}/transcripts.gtf ${DIRNAME}/$newName.cufflinks.transcripts.gtf
+        mv ${DIRNAME}/skipped.gtf ${DIRNAME}/$newName.cufflinks.skipped.gtf
+        mv ${DIRNAME}/genes.fpkm_tracking ${DIRNAME}/$newName.cufflinks.genes.fpkm_tracking
+        mv ${DIRNAME}/isoforms.fpkm_tracking ${DIRNAME}/$newName.cufflinks.isoforms.fpkm_tracking
+    else
+        mv ${DIRNAME}.cuffLinkOut ${DIRNAME}.cuffLinkFail
+    fi
 fi
 
 rm -f ${DIRNAME}.cuffLinkInQueue

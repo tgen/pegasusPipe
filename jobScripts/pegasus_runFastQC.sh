@@ -21,18 +21,18 @@ newName=${fqName/.fastq.gz/}
 ${FASTQCPATH}/fastqc ${FQ}
 
 if [ $? -eq 0 ] ; then
-	touch ${FQ}.fastqcPass
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_quality.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_sequence_length_distribution.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_sequence_quality.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_sequence_gc_content.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_sequence_content.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_n_content.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_gc_content.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_kmer_profiles.png
-	mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_duplication_levels.png
+    touch ${FQ}.fastqcPass
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_quality.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_sequence_length_distribution.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_sequence_quality.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_sequence_gc_content.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_sequence_content.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_n_content.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_per_base_gc_content.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_kmer_profiles.png
+    mv $qcDir/Images/per_base_quality.png $qcDir/Images/${newName}_duplication_levels.png
 else
-	touch ${FQ}.fastqcFail
+    touch ${FQ}.fastqcFail
 fi
 
 rm -f ${FQ}.fastqcInQueue

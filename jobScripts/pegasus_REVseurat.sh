@@ -40,24 +40,24 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
     --pileup_info > ${TRK}_Step${STEP}.REVseuratOut
 
 if [ $? -eq 0 ] ; then
-	#Clean-up the produced VCF to exclude lines where the REF and ALT are identical
-	grep "#" ${TRK}_Step${STEP}.Seurat.vcf > ${TRK}_Step${STEP}.Seurat.header
-	grep -v "#" ${TRK}_Step${STEP}.Seurat.vcf | awk '{if($4 != $5) print $0}' > ${TRK}_Step${STEP}.Seurat.calls
+    #Clean-up the produced VCF to exclude lines where the REF and ALT are identical
+    grep "#" ${TRK}_Step${STEP}.Seurat.vcf > ${TRK}_Step${STEP}.Seurat.header
+    grep -v "#" ${TRK}_Step${STEP}.Seurat.vcf | awk '{if($4 != $5) print $0}' > ${TRK}_Step${STEP}.Seurat.calls
 
-	cat ${TRK}_Step${STEP}.Seurat.header ${TRK}_Step${STEP}.Seurat.calls > ${TRK}_Step${STEP}.Seurat.vcf
+    cat ${TRK}_Step${STEP}.Seurat.header ${TRK}_Step${STEP}.Seurat.calls > ${TRK}_Step${STEP}.Seurat.vcf
 
-	#Clean-up directory to remove temp files
-	rm ${TRK}_Step${STEP}.Seurat.header 
-	rm ${TRK}_Step${STEP}.Seurat.calls
+    #Clean-up directory to remove temp files
+    rm ${TRK}_Step${STEP}.Seurat.header
+    rm ${TRK}_Step${STEP}.Seurat.calls
 
-	echo "${STEP} Completed" >> ${TRK}_REVseuratStatus.txt
-	PROGRESS=`wc -l ${TRK}_REVseuratStatus.txt | awk '{print $1}'`
-	mv ${TRK}_Step${STEP}.REVseuratOut ${TRK}_Step${STEP}.REVseuratPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${TRK}_Step${STEP}.REVseuratOut ${TRK}_Step${STEP}.REVseuratFail
-	rm -f ${TRK}_Step${STEP}.REVseuratInQueue
-	exit 1
+    echo "${STEP} Completed" >> ${TRK}_REVseuratStatus.txt
+    PROGRESS=`wc -l ${TRK}_REVseuratStatus.txt | awk '{print $1}'`
+    mv ${TRK}_Step${STEP}.REVseuratOut ${TRK}_Step${STEP}.REVseuratPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${TRK}_Step${STEP}.REVseuratOut ${TRK}_Step${STEP}.REVseuratFail
+    rm -f ${TRK}_Step${STEP}.REVseuratInQueue
+    exit 1
 fi
 
 # Here we make a look to create the list of vcfs based on STEPCOUNT
@@ -71,9 +71,9 @@ done
 # IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-	echo SeuratCaller_${STEP}.Done
-	#Concatenate VCF with GATK
- 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.REVseurat.vcf -assumeSorted
+    echo SeuratCaller_${STEP}.Done
+    #Concatenate VCF with GATK
+     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.REVseurat.vcf -assumeSorted
 
     if [ $? -eq 0 ] ; then
         touch ${TRK}.REVseuratPass
@@ -84,8 +84,8 @@ then
     fi
     mv ${TRK}_REVseuratStatus.txt ${TRK}_REVseuratStatus.txt.used
 else
-	echo
-	echo SeuratCaller_${STEP}.Done
+    echo
+    echo SeuratCaller_${STEP}.Done
 fi
 
 rm -f ${TRK}_Step${STEP}.REVseuratInQueue

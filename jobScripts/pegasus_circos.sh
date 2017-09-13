@@ -18,7 +18,7 @@ beginTime=`date +%s`
 machine=`hostname`
 
 echo "starting circos on this machine: $machine for $outDir"
-	
+
 echo "###OUTFILE is: ${OUTFILE}"
 echo "###OUTDIR is: ${OUTDIR}"
 echo "###SEURATVCF is ${SEURATVCF}"

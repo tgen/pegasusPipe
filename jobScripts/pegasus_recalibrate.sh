@@ -32,10 +32,10 @@ java -Xmx44g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -o ${BAMFILE}.recal_data.grp > ${BAMFILE}.recalibrateOut
 
 if [ $? -ne 0 ] ; then
-	mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibrateFail
-	echo "recal failed at base recalibrator"
-	rm -f ${BAMFILE}.recalibrateInQueue
-	exit 1
+    mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibrateFail
+    echo "recal failed at base recalibrator"
+    rm -f ${BAMFILE}.recalibrateInQueue
+    exit 1
 fi
 
 echo "gatk base recalibration print reads stage started"
@@ -50,11 +50,11 @@ java -Xmx44g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -BQSR ${BAMFILE}.recal_data.grp >> ${BAMFILE}.recalibrateOut
 
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibratePass
-	echo "Automatically removed by recalibration step to save on space" > ${BAMFILE}
-	touch ${RUNDIR}/${NXT1}
+    mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibratePass
+    echo "Automatically removed by recalibration step to save on space" > ${BAMFILE}
+    touch ${RUNDIR}/${NXT1}
 else
-	mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibrateFail
+    mv ${BAMFILE}.recalibrateOut ${BAMFILE}.recalibrateFail
 fi
 
 rm -f ${BAMFILE}.recalibrateInQueue

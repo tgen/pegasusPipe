@@ -21,14 +21,14 @@ echo "FASTQL: ${FASTQL}"
 echo "### Starting Kallisto quant cDNA"
 
 kallisto quant \
-	--index=${KALLISTO_INDEX_CDNA} \
-	--output-dir=${DIR}/cDNA \
-	--bias \
-	--rf-stranded \
-	--bootstrap-samples=100 \
-	--threads=14 \
-	--seed=42 \
-	${FASTQL} 2> ${DIR}.kallistoCDNA.perfOut
+    --index=${KALLISTO_INDEX_CDNA} \
+    --output-dir=${DIR}/cDNA \
+    --bias \
+    --rf-stranded \
+    --bootstrap-samples=100 \
+    --threads=14 \
+    --seed=42 \
+    ${FASTQL} 2> ${DIR}.kallistoCDNA.perfOut
 
 if [ $? -eq 0 ] ; then
     echo "kallisto cDNA Passed"
@@ -39,14 +39,14 @@ fi
 
 
 kallisto quant \
-	--index=${KALLISTO_INDEX_GTF} \
-	--output-dir=${DIR}/GTF \
-	--bias \
-	--bootstrap-samples=100 \
-	--rf-stranded \
-	--threads=14 \
-	--seed=42 \
-	${FASTQL} 2> ${DIR}.kallistoGTF.perfOut
+    --index=${KALLISTO_INDEX_GTF} \
+    --output-dir=${DIR}/GTF \
+    --bias \
+    --bootstrap-samples=100 \
+    --rf-stranded \
+    --threads=14 \
+    --seed=42 \
+    ${FASTQL} 2> ${DIR}.kallistoGTF.perfOut
 
 if [ $? -eq 0 ] ; then
     echo "kallisto GTF Passed"

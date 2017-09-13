@@ -31,10 +31,10 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -o ${TRK}.UG.vcf > ${TRK}.ugOut
 
 if [ $? -eq 0 ] ; then
-	mv ${TRK}.ugOut ${TRK}.ugPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${TRK}.ugOut ${TRK}.ugFail
+    mv ${TRK}.ugOut ${TRK}.ugPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${TRK}.ugOut ${TRK}.ugFail
 fi
 
 rm -f ${TRK}.ugInQueue
