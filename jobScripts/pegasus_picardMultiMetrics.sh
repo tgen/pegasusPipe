@@ -14,7 +14,7 @@ echo "### PICARDPATH: ${PICARDPATH}"
 
 cd ${DIR}
 echo "### Starting picard multi metrics"
-java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -Xmx15g -jar ${PICARDPATH}/picard.jar CollectMultipleMetrics \
+java -Djava.io.tmpdir=$TMPDIR -Xmx15g -jar ${PICARDPATH}/picard.jar CollectMultipleMetrics \
 	INPUT=${BAMFILE} \
 	REFERENCE_SEQUENCE=${REF} \
 	PROGRAM=CollectInsertSizeMetrics \
@@ -22,7 +22,7 @@ java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -Xmx15g -jar ${PICARDPATH}/pic
 	PROGRAM=QualityScoreDistribution \
 	PROGRAM=MeanQualityByCycle \
 	OUTPUT=${BAMFILE}.picMultiMetrics \
-	TMP_DIR=/scratch/tgenjetstream/tmp/ \
+	TMP_DIR=$TMPDIR \
 	ASSUME_SORTED=true \
 	VALIDATION_STRINGENCY=SILENT > ${BAMFILE}.picMultiMetricsOut
 

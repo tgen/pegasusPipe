@@ -29,7 +29,7 @@ echo "### Step 1, target creator..."
 
 test=0
 if [ $test -eq 0 ] ; then
-java -Xmx15g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
+java -Xmx15g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     ${BAMLIST} \
     -R ${REF} \
@@ -50,7 +50,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 echo "### Starting step 2, indel realignment"
-java -Xmx44g -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ \
+java -Xmx44g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -T IndelRealigner \
     ${BAMLIST} \

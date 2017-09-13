@@ -21,7 +21,7 @@ echo "### PED: ${PED}"
 echo "### OUTTRACKNAME: ${OUTTRACKNAME}"
 
 echo "### Phase by transmission started at $time."
-java -Djava.io.tmpdir=/scratch/tgenjetstream/tmp/ -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -R ${REF} \
     -T PhaseByTransmission \
     -V ${VCF} \
