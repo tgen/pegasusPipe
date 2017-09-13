@@ -27,8 +27,6 @@ cd ${WORKDIR}
 echo "### Starting indel realigning of file ${BAMLIST}"
 echo "### Step 1, target creator..."
 
-test=0
-if [ $test -eq 0 ] ; then
 java -Xmx15g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     ${BAMLIST} \
