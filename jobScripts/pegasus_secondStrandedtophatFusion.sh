@@ -83,43 +83,43 @@ echo "###End of getting insert size section"
 PATH=${BOWTIE1PATH}:$PATH
 
 ${THFUSIONPATH}/tophat2 \
-	-p 16 \
-	-N 3 \
-	--library-type fr-firststrand \
-	--read-edit-dist 3 \
-	--fusion-search \
-	--bowtie1 \
-	--no-coverage-search \
-	-r ${INNERDIST} \
-	--mate-std-dev ${STDEV} \
-	--fusion-min-dist 100000 \
-	--max-intron-length 100000 \
-	--keep-fasta-order \
-	--fusion-anchor-length 20 \
-	--fusion-ignore-chromosomes MT \
-	-o ${DIR} \
-	${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thFusionOut
+    -p 16 \
+    -N 3 \
+    --library-type fr-firststrand \
+    --read-edit-dist 3 \
+    --fusion-search \
+    --bowtie1 \
+    --no-coverage-search \
+    -r ${INNERDIST} \
+    --mate-std-dev ${STDEV} \
+    --fusion-min-dist 100000 \
+    --max-intron-length 100000 \
+    --keep-fasta-order \
+    --fusion-anchor-length 20 \
+    --fusion-ignore-chromosomes MT \
+    -o ${DIR} \
+    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thFusionOut
 
 if [ $? -eq 0 ] ; then
-	echo "success."
-	echo "renaming..."
-	mv ${DIR}/accepted_hits.bam ${DIR}/$anotherName.accepted_hits.bam
-	mv ${DIR}/unmapped.bam ${DIR}/$anotherName.unmapped.bam
-	mv ${DIR}/junctions.bed ${DIR}/$anotherName.junctions.bed
-	mv ${DIR}/insertions.bed ${DIR}/$anotherName.insertions.bed
-	mv ${DIR}/deletions.bed ${DIR}/$anotherName.deletions.bed
-	mv ${DIR}/fusions.out ${DIR}/$anotherName.fusions.out
-	mv ${DIR}/$tempBamPrefix.bam ${DIR}/$tempBamPrefix.bam.2MilReads
-	echo "renaming done"
-	echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
-	${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
-	${SAMTOOLSPATH}/samtools flagstat ${DIR}/$anotherName.accepted_hits.bam > ${DIR}/$anotherName.accepted_hits.bam.samStats
-	echo "bam indexing and flagstat finished"
+    echo "success."
+    echo "renaming..."
+    mv ${DIR}/accepted_hits.bam ${DIR}/$anotherName.accepted_hits.bam
+    mv ${DIR}/unmapped.bam ${DIR}/$anotherName.unmapped.bam
+    mv ${DIR}/junctions.bed ${DIR}/$anotherName.junctions.bed
+    mv ${DIR}/insertions.bed ${DIR}/$anotherName.insertions.bed
+    mv ${DIR}/deletions.bed ${DIR}/$anotherName.deletions.bed
+    mv ${DIR}/fusions.out ${DIR}/$anotherName.fusions.out
+    mv ${DIR}/$tempBamPrefix.bam ${DIR}/$tempBamPrefix.bam.2MilReads
+    echo "renaming done"
+    echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
+    ${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
+    ${SAMTOOLSPATH}/samtools flagstat ${DIR}/$anotherName.accepted_hits.bam > ${DIR}/$anotherName.accepted_hits.bam.samStats
+    echo "bam indexing and flagstat finished"
 
-	mv ${DIR}.thFusionOut ${DIR}.thFusionPass	
-	touch ${RUNDIR}/${NXT1}
+    mv ${DIR}.thFusionOut ${DIR}.thFusionPass
+    touch ${RUNDIR}/${NXT1}
 else
-	mv ${DIR}.thFusionOut ${DIR}.thFusionFail
+    mv ${DIR}.thFusionOut ${DIR}.thFusionFail
 fi
 
 rm -f ${DIR}.thFusionInQueue

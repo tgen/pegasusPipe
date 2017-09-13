@@ -18,18 +18,18 @@ ${SAMTOOLSPATH}/samtools idxstats ${BAMFILE} > ${BAMFILE}.idxStats
 ${SAMTOOLSPATH}/samtools flagstat ${BAMFILE} > ${BAMFILE}.samStats
 
 if [ $? -eq 0 ] ; then
-	touch ${BAMFILE}.samtoolsStatsPass
+    touch ${BAMFILE}.samtoolsStatsPass
 else
-	touch ${BAMFILE}.samtoolsStatsFail
+    touch ${BAMFILE}.samtoolsStatsFail
 fi
 
 rm -f ${BAMFILE}.samtoolsStatsInQueue
 
 #a little organizing
 if [ -d ${RUNDIR}/stats/ ] ; then
-	echo "moving files into stats folder"
-	mv ${BAMFILE}.idxStats ${RUNDIR}/stats/	
-	mv ${BAMFILE}.samStats ${RUNDIR}/stats/	
+    echo "moving files into stats folder"
+    mv ${BAMFILE}.idxStats ${RUNDIR}/stats/
+    mv ${BAMFILE}.samStats ${RUNDIR}/stats/
 fi
 
 endTime=`date +%s`

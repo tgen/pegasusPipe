@@ -63,9 +63,9 @@ mv quant_bias_corrected.sf ${SAMPLE}_sailfish_ccds_transcripts.expr
 mv reads.count_info ${SAMPLE}.reads.count_info
 ${SAILFISHPATH}/TranscriptsToGenes.sh --exp-file ${SAMPLE}_sailfish_ccds_transcripts.expr --gtf-file ${CCDSGTF} --res-file ${SAMPLE}_sailfish_ccds_genes.expr
 if [ $? -eq 0 ] ; then
-	touch ${DIR}.sailFishPass
+    touch ${DIR}.sailFishPass
 else
-	touch ${DIR}.sailFishFail
+    touch ${DIR}.sailFishFail
 fi
 
 rm ${DIR}.sailFishInQueue

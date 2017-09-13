@@ -41,13 +41,13 @@ cd ${MYPATH}
 ##parse merged VCF
 THETDEPTHINT=${THETDEPTH%.*}
 if [ ${THETDEPTHINT} -gt 49 ] ; then
-	THETDEPTHCALC=50 
+    THETDEPTHCALC=50
 else
-	#send low coverage email
-	echo -e "Coverage for your sample: ${RUNDIR} was lower than 50.  Copy number will use HS metrics calculated target mean for read depth on filtering SNPS" | mail -s "Pegasus Pipeline: Copy Number Alert" tgenjetstream@tgen.org
-	#touch file of low cov
-	touch ${TRACKNAME}.cnaLOWCOVERAGEALERT.txt
-	THETDEPTHCALC=${THETDEPTH}
+    #send low coverage email
+    echo -e "Coverage for your sample: ${RUNDIR} was lower than 50.  Copy number will use HS metrics calculated target mean for read depth on filtering SNPS" | mail -s "Pegasus Pipeline: Copy Number Alert" tgenjetstream@tgen.org
+    #touch file of low cov
+    touch ${TRACKNAME}.cnaLOWCOVERAGEALERT.txt
+    THETDEPTHCALC=${THETDEPTH}
 fi
 echo "### THETDEPTHCALC: ${THETDEPTHCALC}"
 
@@ -77,17 +77,17 @@ echo "### Start run_ngsCNA.sh"
 echo "${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET}"
 ${CNAPATH}/pegasusCNA/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${NHETDEPTH} ${THETDEPTH} ${hetDev} ${CNAEXOMETARGET}
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at run_ngsCNA.sh"
-	touch ${TRACKNAME}.cnaExomeFail
-	rm -f ${TRACKNAME}.cnaExomeInQueue
-	exit
+    echo "### CNA failed at run_ngsCNA.sh"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit
 else
-	echo "### Renaming cnaStats files"
-	nFileName=`basename ${NORMALDAT}`
-	tFileName=`basename ${TUMORDAT}`
-	mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.exo.cnaStats
-	mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.exo.cnaStats
-	echo "### Renaming/moving cnaStats file is done."
+    echo "### Renaming cnaStats files"
+    nFileName=`basename ${NORMALDAT}`
+    tFileName=`basename ${TUMORDAT}`
+    mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.exo.cnaStats
+    mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.exo.cnaStats
+    echo "### Renaming/moving cnaStats file is done."
 fi
 echo "### End run_ngsCNA.sh"
 
@@ -95,28 +95,28 @@ echo "### End run_ngsCNA.sh"
 echo "### Start runDNAcopyExome.R"
 Rscript --vanilla ${CNAPATH}/runDNAcopyExomeV2.R ${OFILE}.cna.tsv ${OFILE}.seg
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at runDNAcopyExome.R"
-	touch ${TRACKNAME}.cnaExomeFail
-	rm -f ${TRACKNAME}.cnaExomeInQueue
-	exit
+    echo "### CNA failed at runDNAcopyExome.R"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit
 fi
 
 echo "### End runDNAcopyExome.R"
 ##plotting
 
-Rscript --vanilla ${CNAPATH}/plotCGH_EXOME.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}	
+Rscript --vanilla ${CNAPATH}/plotCGH_EXOME.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}
 
 if [ -f ${OFILE}.hets.tsv ] ; then
-	echo "### Running plots with hets"
-	Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
-	if [ $? -ne 0 ] ; then
-		echo "### CNA failed at plotCGHwithHets.R"
-		touch ${TRACKNAME}.cnaExomeFail
-		rm -f ${TRACKNAME}.cnaExomeInQueue
-		exit
-	fi
+    echo "### Running plots with hets"
+    Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
+    if [ $? -ne 0 ] ; then
+        echo "### CNA failed at plotCGHwithHets.R"
+        touch ${TRACKNAME}.cnaExomeFail
+        rm -f ${TRACKNAME}.cnaExomeInQueue
+        exit
+    fi
 
-	echo "### End running plots with hets"
+    echo "### End running plots with hets"
 fi
 
 ##BAF segmentation and figure
@@ -156,10 +156,10 @@ DELTHRESH=-0.99    #   <<<< THIS CAN BE ADJUSTED - Deletion Threshold - log2 fol
 echo "### Start annotSeg.pl"
 ${CNAPATH}/annotSeg.pl ${GTF} ${OFILE}.cna.seg ${DUPTHRESH} ${DELTHRESH}
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at annotSeg.pl"
-	touch ${TRACKNAME}.cnaExomeFail
-	rm -f ${TRACKNAME}.cnaExomeInQueue
-	exit
+    echo "### CNA failed at annotSeg.pl"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit
 fi
 echo "### End annotSeg.pl"
 

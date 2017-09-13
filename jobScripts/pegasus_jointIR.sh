@@ -68,42 +68,42 @@ java -Xmx44g -Djava.io.tmpdir=$TMPDIR \
 
 
 if [ $? -eq 0 ] ; then
-	mv ${TRK}.jointIROut ${TRK}.jointIRPass
-	echo "### Starting jr.bam moving"
-	for item in ${BAMLIST} 
-	do
-		if [ "$item" == "-I" ] ; then
-			continue
-		fi
-		itemDir=`dirname $item`
-		bamName=`basename $item`
-		newName=${bamName/.proj.md.bam/.proj.md.jr.bam}
-		newBai=${newName/.md.jr.bam/.md.jr.bai}
-		hereName=${WORKDIR}/$newName
-		hereBai=${hereName/.md.jr.bam/.md.jr.bai}
-		echo "### Moving $hereName"
-		if [ -e $itemDir/$newName ] ; then
-			echo "### Already exists on target, possibly from another joint IR"
-		else
-			echo "### Does not exist on target, copying now..."
-			mv $hereName $itemDir/$newName
-			mv $hereBai $itemDir/$newbai
-			echo "### Moved out of here to its own dir at $itemDir" > $hereName
-			echo "### Moved out of here to its own dir at $itemDir" > $hereBai
-			touch $itemDir/$newName.jointIRPass
-		fi
-	done
-	echo "### Done jr.bam moving"
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
-	touch ${RUNDIR}/${NXT5}
-	touch ${RUNDIR}/${NXT6}
-	touch ${RUNDIR}/${NXT7}
-	touch ${RUNDIR}/${NXT8}
+    mv ${TRK}.jointIROut ${TRK}.jointIRPass
+    echo "### Starting jr.bam moving"
+    for item in ${BAMLIST}
+    do
+        if [ "$item" == "-I" ] ; then
+            continue
+        fi
+        itemDir=`dirname $item`
+        bamName=`basename $item`
+        newName=${bamName/.proj.md.bam/.proj.md.jr.bam}
+        newBai=${newName/.md.jr.bam/.md.jr.bai}
+        hereName=${WORKDIR}/$newName
+        hereBai=${hereName/.md.jr.bam/.md.jr.bai}
+        echo "### Moving $hereName"
+        if [ -e $itemDir/$newName ] ; then
+            echo "### Already exists on target, possibly from another joint IR"
+        else
+            echo "### Does not exist on target, copying now..."
+            mv $hereName $itemDir/$newName
+            mv $hereBai $itemDir/$newbai
+            echo "### Moved out of here to its own dir at $itemDir" > $hereName
+            echo "### Moved out of here to its own dir at $itemDir" > $hereBai
+            touch $itemDir/$newName.jointIRPass
+        fi
+    done
+    echo "### Done jr.bam moving"
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
+    touch ${RUNDIR}/${NXT5}
+    touch ${RUNDIR}/${NXT6}
+    touch ${RUNDIR}/${NXT7}
+    touch ${RUNDIR}/${NXT8}
 else
-	mv ${TRK}.jointIROut ${TRK}.jointIRFail
+    mv ${TRK}.jointIROut ${TRK}.jointIRFail
 fi
 
 rm -f ${TRK}.jointIRInQueue

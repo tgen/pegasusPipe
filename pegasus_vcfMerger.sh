@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -91,43 +91,43 @@ qsubFails=0
 ###first check all these vcfs are complete/passed
 for dnaPairLine in `cat $configFile | grep '^DNAPAIR='`
 do
-	rnaBam=""
-	echo "### DNA pair line is $dnaPairLine for seurat stuff"
-	sampleNames=`echo $dnaPairLine | cut -d= -f2`
-	alleleCount=`cat $configFile | grep '^TRIPLET4ALLELECOUNT=' | grep ${sampleNames} | head -1`
-	if [ -z "$alleleCount" ] ; then
-		echo "allele count not requested for this DNAPAIR"
-	else
-		rnaSample=`echo $alleleCount | cut -d, -f3`
-		echo "rnaSample: $rnaSample"
-		rnaBam=`find $runDir -name "${rnaSample}.proj.Aligned.out.sorted.md.bam" | head -1`
-		echo "rnaBam: $rnaBam"
-		if [ -z "$rnaBam" ] ; then
-			echo "Couldn't find the RNABAM for $rnaSample"
-			continue
-		fi
-		echo "allele count is requested for $sampleNames"
-		echo "the matchng rnaSample is $rnaSample"
-	fi
+    rnaBam=""
+    echo "### DNA pair line is $dnaPairLine for seurat stuff"
+    sampleNames=`echo $dnaPairLine | cut -d= -f2`
+    alleleCount=`cat $configFile | grep '^TRIPLET4ALLELECOUNT=' | grep ${sampleNames} | head -1`
+    if [ -z "$alleleCount" ] ; then
+        echo "allele count not requested for this DNAPAIR"
+    else
+        rnaSample=`echo $alleleCount | cut -d, -f3`
+        echo "rnaSample: $rnaSample"
+        rnaBam=`find $runDir -name "${rnaSample}.proj.Aligned.out.sorted.md.bam" | head -1`
+        echo "rnaBam: $rnaBam"
+        if [ -z "$rnaBam" ] ; then
+            echo "Couldn't find the RNABAM for $rnaSample"
+            continue
+        fi
+        echo "allele count is requested for $sampleNames"
+        echo "the matchng rnaSample is $rnaSample"
+    fi
 
-	for eachSample in ${sampleNames//,/ }
-	do
-		((sampleCount++))
-		#echo "eachsample: $eachSample"
-		sampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$eachSample"'"'`
-		kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-		samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-		assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	done
-	control=`echo $dnaPairLine | cut -d= -f2 | cut -d, -f1`
-	tumor=`echo $dnaPairLine | cut -d, -f2`
-	echo "control = $control tumor = $tumor"
-	usableName=${sampleNames//,/-}
-	sampleCount=0
-	missingSampleCount=0
-	sampleList=""
-	
-	echo "$kitName"
+    for eachSample in ${sampleNames//,/ }
+    do
+        ((sampleCount++))
+        #echo "eachsample: $eachSample"
+        sampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$eachSample"'"'`
+        kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+        samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+        assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    done
+    control=`echo $dnaPairLine | cut -d= -f2 | cut -d, -f1`
+    tumor=`echo $dnaPairLine | cut -d, -f2`
+    echo "control = $control tumor = $tumor"
+    usableName=${sampleNames//,/-}
+    sampleCount=0
+    missingSampleCount=0
+    sampleList=""
+
+    echo "$kitName"
         if [[ "$kitName" == "TSE61" ]] ; then
                 bedFile="/home/tgenref/pipeline_v0.3/annotations/exome_capture/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
         elif [[ "$kitName" == *S5U ]] || [[ "$kitName" == *S5X ]] ; then
@@ -150,76 +150,76 @@ do
         elif [[ "$kitName" == *S6X ]] ; then
                 #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_TargetsPadded25.txt"
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *SXP ]] ; then
+    elif [[ "$kitName" == *SXP ]] ; then
                 #bedFile="/home/tgenref/pecan/annotations/exome_capture/prostateStrexome/prostateStrexome.targetsPadded25.txt"
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusUTR/Agilent_SureSelect_V6R2_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed" 
-	elif [[ "$kitName" == *S4X ]] ; then
+    elif [[ "$kitName" == *S4X ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v4_noUTR/Agilent_V4_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
         elif [[ "$kitName" == *SC2 ]] ; then
                 bedFile="/home/tgenref/annotations/dog/canfam3/vcfMergerBed/agilent_canine_exonV2_targets.padded100.bed"
         elif [[ "$kitName" == *S6A ]] ; then
-		bedFile="/home/tgenref/pecan/annotations/exome_capture/StrAD/StrAD_targets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/StrAD/StrAD_targets_intersect_sorted_padded100.bed"
         elif [[ "$kitName" == *S4U ]] ; then
-		bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *E62 ]] ; then
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *E62 ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/illumina_nextera_expanded/NexteraExpandedExome_hs37d5_Targets_PicardPadded100.bed"
-	elif [[ "$kitName" == *STP ]] ; then
+    elif [[ "$kitName" == *STP ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *ST2 ]] ; then
+    elif [[ "$kitName" == *ST2 ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *S2U ]] ; then
+    elif [[ "$kitName" == *S2U ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *V6C ]] ; then
+    elif [[ "$kitName" == *V6C ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusCOSMIC/Agilent_SureSelect_V6R2_plusCOSMIC_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *CCC ]] ; then
+    elif [[ "$kitName" == *CCC ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_ClearSeq_Beta_ComprehensiveCancer/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-	elif [[ "$kitName" == *CR2 ]] ; then
+    elif [[ "$kitName" == *CR2 ]] ; then
                 bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_CREv2_cliRes/Agilent_SureSelect_CREv2_cliRes_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
         fi
 
-	#bedFileGrep=$kitName"_CNABED"
+    #bedFileGrep=$kitName"_CNABED"
         #bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
         echo "### BED FILE= $bedFile"
-	
-	echo "first checking for seurat snpeff vcf"
-	seuratTrackName="$runDir/seurat/$usableName/$usableName"
-	if [ ! -e $seuratTrackName.seurat.vcf.snpEffPass ] ; then
-		echo "### Seurat snpEffPass doesnt exist yet: $seuratTrackName.seurat.vcf.snpEffPass"
-		((qsubFails++))
-		exit
-	fi
-	echo "checking for strelka snpeff vcfs"	
-	strelkaTrackName="$runDir/strelka/$usableName"
-	vcfPre="$runDir/strelka/$usableName/myAnalysis/results/$usableName"
-	if [[ ! -e $vcfPre.strelka.all.somatic.snvs.vcf.snpEffPass || ! -e $vcfPre.strelka.passed.somatic.snvs.vcf.snpEffPass || ! -e $vcfPre.strelka.passed.somatic.indels.vcf.snpEffPass || ! -e $vcfPre.strelka.all.somatic.indels.vcf.snpEffPass ]] ; then 
-		echo "### strelka snpEff doesn't exist for one of the 4 strelka vcfs"
-		((qsubFails++))
-                exit
-	fi
-	echo "now checking for mutect vcfs"
-	mutectTrackName="$runDir/mutect/$usableName/$usableName"
-	vcf="${mutectTrackName}_MuTect_All.vcf"
-	if [ ! -e $vcf.snpEffPass  ] ; then
-		echo "### mutect snpEff pass doesnt exist yet: $mutectTrackName.mutectPass"
-		((qsubFails++))
-		continue
-	else
 
-		mergerDir="$runDir/vcfMerger/$usableName"
-		mkdir -p $mergerDir
-		seuratVcf="$seuratTrackName.seurat.vcf"
-		mutectVcf="${mutectTrackName}_MuTect_All.vcf"
-		strelkaIndelVcf="$vcfPre.strelka.passed.somatic.indels.vcf"
-		strelkaSnvVcf="$vcfPre.strelka.passed.somatic.snvs.vcf"
-		seurat_basename=`basename ${seuratVcf} ".seurat.vcf"`
-		
-		if [[ -e ${mergerDir}/${seurat_basename}.vcfMergerPass || -e ${mergerDir}/${seurat_basename}.vcfMergerInQueue || -e ${mergerDir}/${seurat_basename}.vcfMergerFail ]] ; then
-			echo "### This vcf merger pair already passed, failed, or inQueue."
-			continue
-		fi
+    echo "first checking for seurat snpeff vcf"
+    seuratTrackName="$runDir/seurat/$usableName/$usableName"
+    if [ ! -e $seuratTrackName.seurat.vcf.snpEffPass ] ; then
+        echo "### Seurat snpEffPass doesnt exist yet: $seuratTrackName.seurat.vcf.snpEffPass"
+        ((qsubFails++))
+        exit
+    fi
+    echo "checking for strelka snpeff vcfs"
+    strelkaTrackName="$runDir/strelka/$usableName"
+    vcfPre="$runDir/strelka/$usableName/myAnalysis/results/$usableName"
+    if [[ ! -e $vcfPre.strelka.all.somatic.snvs.vcf.snpEffPass || ! -e $vcfPre.strelka.passed.somatic.snvs.vcf.snpEffPass || ! -e $vcfPre.strelka.passed.somatic.indels.vcf.snpEffPass || ! -e $vcfPre.strelka.all.somatic.indels.vcf.snpEffPass ]] ; then
+        echo "### strelka snpEff doesn't exist for one of the 4 strelka vcfs"
+        ((qsubFails++))
+                exit
+    fi
+    echo "now checking for mutect vcfs"
+    mutectTrackName="$runDir/mutect/$usableName/$usableName"
+    vcf="${mutectTrackName}_MuTect_All.vcf"
+    if [ ! -e $vcf.snpEffPass  ] ; then
+        echo "### mutect snpEff pass doesnt exist yet: $mutectTrackName.mutectPass"
+        ((qsubFails++))
+        continue
+    else
+
+        mergerDir="$runDir/vcfMerger/$usableName"
+        mkdir -p $mergerDir
+        seuratVcf="$seuratTrackName.seurat.vcf"
+        mutectVcf="${mutectTrackName}_MuTect_All.vcf"
+        strelkaIndelVcf="$vcfPre.strelka.passed.somatic.indels.vcf"
+        strelkaSnvVcf="$vcfPre.strelka.passed.somatic.snvs.vcf"
+        seurat_basename=`basename ${seuratVcf} ".seurat.vcf"`
+
+        if [[ -e ${mergerDir}/${seurat_basename}.vcfMergerPass || -e ${mergerDir}/${seurat_basename}.vcfMergerInQueue || -e ${mergerDir}/${seurat_basename}.vcfMergerFail ]] ; then
+            echo "### This vcf merger pair already passed, failed, or inQueue."
+            continue
+        fi
                 echo "### Submitting vcfs to queue for vcf merger..."
                 echo "qsub -A $debit -l nodes=1:ppn=8 -v MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,TUMOR=$tumor,CONTROL=$control,SNPSIFT=$snpSift,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_vcfMerger.sh"
-                sbatch --export RECIPE=$recipe,PICARDPATH=$picardPath,EXAC=$EXAC,COSMICC=$COSMICC,COSMICNC=$COSMICNC,DBSNP_SNV_BED=$DBSNP_SNV_BED,DBSNP_DIV_BED=$DBSNP_DIV_BED,MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,CONTROL=$control,TUMOR=$tumor,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_vcfMerger.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export RECIPE=$recipe,PICARDPATH=$picardPath,EXAC=$EXAC,COSMICC=$COSMICC,COSMICNC=$COSMICNC,DBSNP_SNV_BED=$DBSNP_SNV_BED,DBSNP_DIV_BED=$DBSNP_DIV_BED,MATCHEDNORMAL=$matchedNormal,SNPEFFPATH=$snpeffPath,CONTROL=$control,TUMOR=$tumor,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,SEURAT_VCF=$seuratVcf,MUTECT_VCF=$mutectVcf,STRELKA_SNV_VCF=$strelkaSnvVcf,STRELKA_INDEL_VCF=$strelkaIndelVcf,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_vcfMerger.sh
                 if [ $? -eq 0 ] ; then
                         touch ${mergerDir}/${seurat_basename}.vcfMergerInQueue
                 else
@@ -230,11 +230,11 @@ do
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

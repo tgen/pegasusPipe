@@ -26,11 +26,11 @@ ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed -
 if [ $? -eq 0 ] ; then
         echo "${STEP} Completed" >> ${TRACKNAME}_fbStatus.txt
         PROGRESS=`wc -l ${TRACKNAME}_fbStatus.txt | awk '{print $1}'`
-	touch ${TRACKNAME}_Step${STEP}.freebayesPass
-else	
-	touch ${TRACKNAME}_Step${STEP}.freebayesFail
-	rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue
-	exit
+    touch ${TRACKNAME}_Step${STEP}.freebayesPass
+else
+    touch ${TRACKNAME}_Step${STEP}.freebayesFail
+    rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue
+    exit
 fi
 vcfList=""
 
@@ -45,9 +45,9 @@ done
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
         echo Freebayes_${STEP}.Done
-	# Concatenate VCF with GATK
-	java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRACKNAME}.freebayes_All.vcf -assumeSorted
-		if [ $? -eq 0 ] ; then
+    # Concatenate VCF with GATK
+    java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRACKNAME}.freebayes_All.vcf -assumeSorted
+        if [ $? -eq 0 ] ; then
                         touch ${TRACKNAME}.freebayesPass
                         touch ${RUNDIR}/${NXT1}
                         touch ${RUNDIR}/${NXT2}
@@ -56,7 +56,7 @@ then
                 fi
                 mv ${TRACKNAME}_fbStatus.txt ${TRACKNAME}_fbStatus.txt.used
 else
-	echo
+    echo
         echo HapCaller_${STEP}.Done
 fi
 

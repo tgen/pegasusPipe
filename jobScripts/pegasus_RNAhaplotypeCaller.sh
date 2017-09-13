@@ -37,13 +37,13 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -o ${TRK}_Step${STEP}.rnaHC.vcf > ${TRK}_Step${STEP}.RNAhcOut
 
 if [ $? -eq 0 ] ; then
-	echo "${STEP} Completed" >> ${TRK}_RNAhcStatus.txt
-	PROGRESS=`wc -l ${TRK}_RNAhcStatus.txt | awk '{print $1}'`
-	mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcPass
-else	
-	mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcFail
-	rm -f ${TRK}_Step${STEP}.RNAhcInQueue
-	exit 1
+    echo "${STEP} Completed" >> ${TRK}_RNAhcStatus.txt
+    PROGRESS=`wc -l ${TRK}_RNAhcStatus.txt | awk '{print $1}'`
+    mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcPass
+else
+    mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcFail
+    rm -f ${TRK}_Step${STEP}.RNAhcInQueue
+    exit 1
 fi
 
 vcfList=""
@@ -57,13 +57,13 @@ done
 # IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-	echo HapCaller_${STEP}.Done
-	# Concatenate VCF with GATK
- 	java -cp ${GATKPATH}/GenomeAnalysisTK.jar \
- 	    org.broadinstitute.gatk.tools.CatVariants \
- 	    -R ${REF} \
- 	    $vcfList -out \
- 	    ${TRK}.rnaHC_All.vcf -assumeSorted
+    echo HapCaller_${STEP}.Done
+    # Concatenate VCF with GATK
+     java -cp ${GATKPATH}/GenomeAnalysisTK.jar \
+         org.broadinstitute.gatk.tools.CatVariants \
+         -R ${REF} \
+         $vcfList -out \
+         ${TRK}.rnaHC_All.vcf -assumeSorted
     if [ $? -eq 0 ] ; then
         touch ${TRK}.RNAhcPass
         touch ${RUNDIR}/${NXT1}
@@ -73,8 +73,8 @@ then
 
     mv ${TRK}_RNAhcStatus.txt ${TRK}_RNAhcStatus.txt.used
 else
-	echo
-	echo HapCaller_${STEP}.Done
+    echo
+    echo HapCaller_${STEP}.Done
 fi
 
 rm -f ${TRK}_Step${STEP}.RNAhcInQueue

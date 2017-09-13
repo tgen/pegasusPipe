@@ -45,21 +45,21 @@ f2size=`stat -c%s $fastq2tmp`
 echo "created temp fastq files with size: $f1size, $f2size"
 
 if [ "${DNAALIGNER}" == "bwamem" ] ; then
-	echo "aligning with BWA mem"
-	${BWAPATH}/bwa mem -M -t8 ${REFPRETOPHAT} $fastq1tmp $fastq2tmp | ${SAMTOOLSPATH}/samtools view -S -h -b -t ${FAI} - | ${SAMTOOLSPATH}/samtools sort - $tempBamPrefix
-	echo "BWA mem is done"
+    echo "aligning with BWA mem"
+    ${BWAPATH}/bwa mem -M -t8 ${REFPRETOPHAT} $fastq1tmp $fastq2tmp | ${SAMTOOLSPATH}/samtools view -S -h -b -t ${FAI} - | ${SAMTOOLSPATH}/samtools sort - $tempBamPrefix
+    echo "BWA mem is done"
 else
-	echo "aligning with BWA regular"
-	${BWAPATH}/bwa aln -t6 ${REF} $fastq1tmp > $fastq1tmp.sai &
-	${BWAPATH}/bwa aln -t6 ${REF} $fastq2tmp > $fastq2tmp.sai &
-	wait
-	s1size=`stat -c%s $fastq1tmp.sai`
-	s2size=`stat -c%s $fastq2tmp.sai`
-	echo "aligning with BWA is done: created sai files with size: $s1size, $s2size"
+    echo "aligning with BWA regular"
+    ${BWAPATH}/bwa aln -t6 ${REF} $fastq1tmp > $fastq1tmp.sai &
+    ${BWAPATH}/bwa aln -t6 ${REF} $fastq2tmp > $fastq2tmp.sai &
+    wait
+    s1size=`stat -c%s $fastq1tmp.sai`
+    s2size=`stat -c%s $fastq2tmp.sai`
+    echo "aligning with BWA is done: created sai files with size: $s1size, $s2size"
 
-	echo "starting bwa sampe"
-	${BWAPATH}/bwa sampe -P ${REF} $fastq1tmp.sai $fastq2tmp.sai ${FASTQ1} ${FASTQ2} | ${SAMTOOLSPATH}/samtools view -S -h -b - | ${SAMTOOLSPATH}/samtools sort - $tempBamPrefix
-	echo "bwa sampe ended"
+    echo "starting bwa sampe"
+    ${BWAPATH}/bwa sampe -P ${REF} $fastq1tmp.sai $fastq2tmp.sai ${FASTQ1} ${FASTQ2} | ${SAMTOOLSPATH}/samtools view -S -h -b - | ${SAMTOOLSPATH}/samtools sort - $tempBamPrefix
+    echo "bwa sampe ended"
 fi
 
 bsize=`stat -c%s $tempBamPrefix.bam`
@@ -98,67 +98,67 @@ echo "End of getting insert size section"
 ISODATE=`date --iso-8601`
 echo "TIME:$time starting tophat on ${FASTQ1}"
 if [ "${USEGTF}" == "no" ] ; then
-	echo "tophat with no gtf..."
-	${TOPHAT2PATH}/tophat2 \
-	    --keep-fasta-order \
-	    -p 8 \
-	    -r ${INNERDIST} \
-	    --mate-std-dev ${STDEV} \
-	    -N $mmAllowed \
-	    --read-edit-dist $mmAllowed \
-	    --read-gap-length ${mmAllowed} \
-	    --max-insertion-length 3 \
-	    --max-deletion-length 3 \
-	    --b2-very-sensitive \
-	    -o ${DIR} ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
+    echo "tophat with no gtf..."
+    ${TOPHAT2PATH}/tophat2 \
+        --keep-fasta-order \
+        -p 8 \
+        -r ${INNERDIST} \
+        --mate-std-dev ${STDEV} \
+        -N $mmAllowed \
+        --read-edit-dist $mmAllowed \
+        --read-gap-length ${mmAllowed} \
+        --max-insertion-length 3 \
+        --max-deletion-length 3 \
+        --b2-very-sensitive \
+        -o ${DIR} ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
 
 else
-	echo "tophat with gtf"
-	${TOPHAT2PATH}/tophat2 \
-	    --keep-fasta-order \
-	    -p 8 \
-	    -r ${INNERDIST} \
-	    --mate-std-dev ${STDEV} \
-	    -N $mmAllowed \
-	    --read-edit-dist ${mmAllowed} \
-	    --read-gap-length ${mmAllowed} \
-	    --max-insertion-length 3 \
-	    --max-deletion-length 3 \
-	    --b2-very-sensitive \
-	    -o ${DIR} \
-	    --transcriptome-index=${TRANSINDEX} \
-	    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
+    echo "tophat with gtf"
+    ${TOPHAT2PATH}/tophat2 \
+        --keep-fasta-order \
+        -p 8 \
+        -r ${INNERDIST} \
+        --mate-std-dev ${STDEV} \
+        -N $mmAllowed \
+        --read-edit-dist ${mmAllowed} \
+        --read-gap-length ${mmAllowed} \
+        --max-insertion-length 3 \
+        --max-deletion-length 3 \
+        --b2-very-sensitive \
+        -o ${DIR} \
+        --transcriptome-index=${TRANSINDEX} \
+        ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thOut
 fi
 
 if [ $? -eq 0 ] ; then
-	mv ${DIR}.thOut ${DIR}.thPass	
-	echo "success."
-	echo "renaming..."
-	mv ${DIR}/accepted_hits.bam ${DIR}/$anotherName.accepted_hits.bam
-	mv ${DIR}/unmapped.bam ${DIR}/$anotherName.unmapped.bam
-	mv ${DIR}/junctions.bed ${DIR}/$anotherName.junctions.bed
-	mv ${DIR}/insertions.bed ${DIR}/$anotherName.insertions.bed
-	mv ${DIR}/deletions.bed ${DIR}/$anotherName.deletions.bed
-	echo "renaming done"
-	echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
-	${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
+    mv ${DIR}.thOut ${DIR}.thPass
+    echo "success."
+    echo "renaming..."
+    mv ${DIR}/accepted_hits.bam ${DIR}/$anotherName.accepted_hits.bam
+    mv ${DIR}/unmapped.bam ${DIR}/$anotherName.unmapped.bam
+    mv ${DIR}/junctions.bed ${DIR}/$anotherName.junctions.bed
+    mv ${DIR}/insertions.bed ${DIR}/$anotherName.insertions.bed
+    mv ${DIR}/deletions.bed ${DIR}/$anotherName.deletions.bed
+    echo "renaming done"
+    echo "Now making bam index and flagstat for ${DIR}/accepted_hits.bam"
+    ${SAMTOOLSPATH}/samtools index ${DIR}/$anotherName.accepted_hits.bam
 
-	echo "bam indexing and flagstat finished"
+    echo "bam indexing and flagstat finished"
 
-	echo "clean up, removing temp bam"
-	rm -f $tempBamPrefix.bam
+    echo "clean up, removing temp bam"
+    rm -f $tempBamPrefix.bam
 
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
-	touch ${RUNDIR}/${NXT6}
-	touch ${RUNDIR}/${NXT7}
-	touch ${RUNDIR}/${NXT8}
-	touch ${RUNDIR}/${NXT9}
-	touch ${RUNDIR}/${NXT10}
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
+    touch ${RUNDIR}/${NXT6}
+    touch ${RUNDIR}/${NXT7}
+    touch ${RUNDIR}/${NXT8}
+    touch ${RUNDIR}/${NXT9}
+    touch ${RUNDIR}/${NXT10}
 else
-	mv ${DIR}.thOut ${DIR}.thFail
+    mv ${DIR}.thOut ${DIR}.thFail
 fi
 
 rm -f ${DIR}.thInQueue

@@ -22,20 +22,22 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
+
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
+
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
@@ -59,63 +61,61 @@ skipLines=1
 qsubFails=0
 
 if [ "$species" != "HUMAN" ] ; then
-
-	echo "The ancestry script only works on HUMAN samples"
-	echo "This species is $species"
-	echo "Will exit this script"
-	exit
+    echo "The ancestry script only works on HUMAN samples"
+    echo "This species is $species"
+    echo "Will exit this script"
+    exit 0
 fi
 
-for sampleLine in `cat $configFile | grep ^SAMPLE=`
-do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	trgtGrep=$kitName"_T"
-	targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
-	echo "### TARGETS: $targets"
+for sampleLine in `cat $configFile | grep ^SAMPLE=`; do
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    trgtGrep=$kitName"_T"
+    targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
+    echo "### TARGETS: $targets"
 
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" != "RNA" ] ; then
-		trackName="$runDir/ancestry/$samName/$samName"
-		bamFile="$runDir/$kitName/$samName/$samName.proj.md.bam"
-		bamFilePass="$runDir/$kitName/$samName/$samName.proj.bam.mdPass"
-		if [[ ! -e $bamFilePass || ! -e $bamFile ]] ; then
-			echo "### Either mdPass or the bam itself is missing for $bamFile"
-			((qsubFails++))
-		else
-
-			if [[ -e ${trackName}.ancestryInQueue || -e ${trackName}.ancestryPass || -e ${trackName}.ancestryFail ]] ; then
-				echo "### ancestry is already done, failed, or inqueue for ${bamFile}"
-				continue
-			fi
-			ancestryDir="$runDir/ancestry/$samName"
-			if [ ! -d $ancestryDir ] ; then
-               			mkdir -p $ancestryDir
-        		fi
-			echo "Starting ancestry for ${bamFile}"
-			sbatch --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_ancestry.sh
-			if [ $? -eq 0 ] ; then
-				touch ${trackName}.ancestryInQueue
-			else
-				((qsubFails++))
-				sleep 2
-			fi
-		fi
-	else
-		echo "### Assay ID is $assayID. This is for DNA only."
-		#code for calling AS metrics on tophat bams here
-	fi
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" != "RNA" ] ; then
+        trackName="$runDir/ancestry/$samName/$samName"
+        bamFile="$runDir/$kitName/$samName/$samName.proj.md.bam"
+        bamFilePass="$runDir/$kitName/$samName/$samName.proj.bam.mdPass"
+        if [[ ! -e $bamFilePass || ! -e $bamFile ]] ; then
+            echo "### Either mdPass or the bam itself is missing for $bamFile"
+            ((qsubFails++))
+        else
+            if [[ -e ${trackName}.ancestryInQueue || -e ${trackName}.ancestryPass || -e ${trackName}.ancestryFail ]] ; then
+                echo "### ancestry is already done, failed, or inqueue for ${bamFile}"
+                continue
+            fi
+            ancestryDir="$runDir/ancestry/$samName"
+            if [ ! -d $ancestryDir ] ; then
+                mkdir -p $ancestryDir
+            fi
+            echo "Starting ancestry for ${bamFile}"
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_ancestry.sh
+            if [ $? -eq 0 ] ; then
+                touch ${trackName}.ancestryInQueue
+            else
+                ((qsubFails++))
+            fi
+        fi
+    else
+        echo "### Assay ID is $assayID. This is for DNA only."
+        #code for calling AS metrics on tophat bams here
+    fi
 done
+
 if [ $qsubFails -eq 0 ] ; then
-#all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    #all jobs submitted succesffully, remove this dir from messages
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
-#qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    #qsub failed at some point, this runDir must stay in messages
+    echo "### Failure in qsub. Not touching $thisStep"
+    exit 1
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

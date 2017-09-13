@@ -21,10 +21,10 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
 -I ${BAMFILE} \
 -o ${OUTPUTBAM} > ${BAMFILE}.rrOut
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.rrOut ${BAMFILE}.rrPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${BAMFILE}.rrOut ${BAMFILE}.rrFail
+    mv ${BAMFILE}.rrOut ${BAMFILE}.rrPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${BAMFILE}.rrOut ${BAMFILE}.rrFail
 fi
 rm -f ${BAMFILE}.rrInQueue
 

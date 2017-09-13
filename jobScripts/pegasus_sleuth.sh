@@ -24,15 +24,15 @@ outData=${SLEUTHOUTFILE}
 objectData=${OBJECTDATA}
 
 Rscript --vanilla ${SLEUTHPATH} \
-	$base_Dir \
-	$configFile \
-	$outData \
-	$objectData
+    $base_Dir \
+    $configFile \
+    $outData \
+    $objectData
 
 if [ $? -eq 0 ] ; then
     touch ${SLEUTHOUTDIR}.sleuthPass
 else
-	touch ${SLEUTHOUTDIR}.sleuthFail
+    touch ${SLEUTHOUTDIR}.sleuthFail
 fi
 
 rm ${SLEUTHOUTDIR}.sleuthInQueue

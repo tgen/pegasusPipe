@@ -20,16 +20,16 @@ echo "### Starting igl bed cov"
 
 ${SAMTOOLSPATH}/samtools view -b ${BAMFILE} | ${BEDTOOLSPATH}/bedtools coverage -split -counts -abam stdin -b ${IGLLISTBED} > ${BAMFILE}.bedToolsIglCount.txt
 if [ $? -eq 0 ] ; then
-	touch ${BAMFILE}.IGLbedCovPass
+    touch ${BAMFILE}.IGLbedCovPass
 else
-	touch ${BAMFILE}.IGLbedCovFail
+    touch ${BAMFILE}.IGLbedCovFail
 fi
 rm -f ${BAMFILE}.IGLbedCovInQueue
 
 # A little organizing
 if [ -d ${RUNDIR}/stats/ ] ; then
-	echo "### Moving files into stats folder"
-	mv ${BAMFILE}.bedToolsIglCount.txt ${RUNDIR}/stats/
+    echo "### Moving files into stats folder"
+    mv ${BAMFILE}.bedToolsIglCount.txt ${RUNDIR}/stats/
 fi
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))

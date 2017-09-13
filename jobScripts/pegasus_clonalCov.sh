@@ -21,15 +21,15 @@ echo "### SAMPATH: ${SAMPATH}"
 echo "Starting clonal coverage for ${BAMFILE} at $time."
 
 ${CPATH}/tgen_CloneCov.v0092.pl \
-	I=${BAMFILE} \
-	O=${OUTFILE} \
-	M=RG: \
-	S=${SAMPATH}/samtools > ${BAMFILE}.clonalCovOut
+    I=${BAMFILE} \
+    O=${OUTFILE} \
+    M=RG: \
+    S=${SAMPATH}/samtools > ${BAMFILE}.clonalCovOut
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.clonalCovOut ${BAMFILE}.clonalCovPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${BAMFILE}.clonalCovOut ${BAMFILE}.clonalCovFail
+    mv ${BAMFILE}.clonalCovOut ${BAMFILE}.clonalCovPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${BAMFILE}.clonalCovOut ${BAMFILE}.clonalCovFail
 fi
 rm -f ${BAMFILE}.clonalCovInQueue
 endTime=`date +%s`

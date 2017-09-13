@@ -19,22 +19,22 @@ echo "### TIME:$time starting to merge vcfs to create ${MERGEDVCF}"
 vcfCount=1
 for line in `echo ${FILELIST}`
 do
-	thisVCF=${line/I=/}
-	echo "$vcfCount: $thisVCF"
-	if [ $vcfCount -eq 1 ] ; then
-		cat $thisVCF > ${MERGEDVCF}
-	else
-		cat $thisVCF | grep -v "^#" >> ${MERGEDVCF} 
-	fi
-	((vcfCount++))
+    thisVCF=${line/I=/}
+    echo "$vcfCount: $thisVCF"
+    if [ $vcfCount -eq 1 ] ; then
+        cat $thisVCF > ${MERGEDVCF}
+    else
+        cat $thisVCF | grep -v "^#" >> ${MERGEDVCF}
+    fi
+    ((vcfCount++))
 done
 if [ $? -ne 0 ] ; then #bad merge
-	touch ${MERGEDVCF}.mergeVcfFail
+    touch ${MERGEDVCF}.mergeVcfFail
 else #good merge
-	touch ${MERGEDVCF}.mergeVcfPass
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
+    touch ${MERGEDVCF}.mergeVcfPass
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
 fi
 rm ${MERGEDVCF}.mergeVcfInQueue
 endTime=`date +%s`

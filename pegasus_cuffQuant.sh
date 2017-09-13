@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -62,105 +62,105 @@ qsubFails=0
 ###
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	if [ $cuffQuant != "yes" ] ; then
-		echo "### CuffQuant not requested for this recipe"
-		continue
-	fi
-	echo "### Sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
-	
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Skipping."
-		continue
-	fi
+    if [ $cuffQuant != "yes" ] ; then
+        echo "### CuffQuant not requested for this recipe"
+        continue
+    fi
+    echo "### Sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
 
-	#need to add option to run on star output
-	case $rnaAligner in 
-	tophat) echo "tophat case"
-		topHatDir="$runDir/$kitName/$samName/$samName.topHatDir"
-		accHitsBam="$topHatDir/$samName.proj.accepted_hits.bam"
-		echo "### My bam is $accHitsBam"
-		if [ ! -e $topHatDir.thPass ] ; then
-			echo "### Looks like tophat is not done yet. $topHatDir.thPass doesnt exist yet"
-			((qsubFails++))
-			continue
-		fi
-		if [[ -e $topHatDir.cuffQuantPass || -e $topHatDir.cuffQuantFail || -e $topHatDir.cuffQuantInQueue ]] ; then 
-			echo "### Cuffquant is already done, failed or inQueue"
-			continue
-		fi 
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Skipping."
+        continue
+    fi
 
-		echo "### Submitting $topHatDir to queue for cuff quant..."
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.sh
-		if [ $? -eq 0 ] ; then
-			touch $topHatDir.cuffQuantInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
-		;;
-	star) echo "star case"
-		starDir="$runDir/$kitName/$samName/$samName.starDir"
-		starBam="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
-		if [ ! -e $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass ] ; then
-			echo "### Looks like rna mark dup is not done yet. $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
-			((qsubFails++))
-			continue
-		fi
-		if [[ -e $starDir.cuffQuantPass || -e $starDir.cuffQuantFail || -e $starDir.cuffQuantInQueue ]] ; then 
-			echo "### Cuffquant is already done, failed or inQueue"
-			continue
-		fi 
+    #need to add option to run on star output
+    case $rnaAligner in
+    tophat) echo "tophat case"
+        topHatDir="$runDir/$kitName/$samName/$samName.topHatDir"
+        accHitsBam="$topHatDir/$samName.proj.accepted_hits.bam"
+        echo "### My bam is $accHitsBam"
+        if [ ! -e $topHatDir.thPass ] ; then
+            echo "### Looks like tophat is not done yet. $topHatDir.thPass doesnt exist yet"
+            ((qsubFails++))
+            continue
+        fi
+        if [[ -e $topHatDir.cuffQuantPass || -e $topHatDir.cuffQuantFail || -e $topHatDir.cuffQuantInQueue ]] ; then
+            echo "### Cuffquant is already done, failed or inQueue"
+            continue
+        fi
 
-		echo "### Submitting $starDir to queue for cuff quant..."
-		if [ $rnaStrand == "FIRST" ] ; then
+        echo "### Submitting $topHatDir to queue for cuff quant..."
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.sh
+        if [ $? -eq 0 ] ; then
+            touch $topHatDir.cuffQuantInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
+        ;;
+    star) echo "star case"
+        starDir="$runDir/$kitName/$samName/$samName.starDir"
+        starBam="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
+        if [ ! -e $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass ] ; then
+            echo "### Looks like rna mark dup is not done yet. $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
+            ((qsubFails++))
+            continue
+        fi
+        if [[ -e $starDir.cuffQuantPass || -e $starDir.cuffQuantFail || -e $starDir.cuffQuantInQueue ]] ; then
+            echo "### Cuffquant is already done, failed or inQueue"
+            continue
+        fi
+
+        echo "### Submitting $starDir to queue for cuff quant..."
+        if [ $rnaStrand == "FIRST" ] ; then
                         echo "##running stranded cuffQuant case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedCuffQuant.sh
-			if [ $? -eq 0 ] ; then
-				touch $starDir.cuffQuantInQueue
-			else
-				((qsubFails++))
-			fi
-			sleep 2
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedCuffQuant.sh
+            if [ $? -eq 0 ] ; then
+                touch $starDir.cuffQuantInQueue
+            else
+                ((qsubFails++))
+            fi
+            sleep 2
                 elif [ $rnaStrand == "SECOND" ] ; then
                         echo "##running second stranded cuffQuant case"
-                        sbatch -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedCuffQuant.sh
+                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedCuffQuant.sh
                         if [ $? -eq 0 ] ; then
                                 touch $starDir.cuffQuantInQueue
                         else
                                 ((qsubFails++))
                         fi
                         sleep 2
-		else
-			echo "##running unstranded cuffQuant case"
-			sbatch -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.sh
-			if [ $? -eq 0 ] ; then
-				touch $starDir.cuffQuantInQueue
-			else
-				((qsubFails++))
-			fi
-			sleep 2
-		fi
-		;;
-	anotherRNAaligner) echo "example RNA aligner"
-		;;
-	*) echo "I should not be here"
-		;;
-	esac 
+        else
+            echo "##running unstranded cuffQuant case"
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_cuffQuant.sh
+            if [ $? -eq 0 ] ; then
+                touch $starDir.cuffQuantInQueue
+            else
+                ((qsubFails++))
+            fi
+            sleep 2
+        fi
+        ;;
+    anotherRNAaligner) echo "example RNA aligner"
+        ;;
+    *) echo "I should not be here"
+        ;;
+    esac
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

@@ -29,10 +29,10 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -o ${OUTVCF} > ${OUTTRACKNAME}.phaseBTOut
 
 if [ $? -eq 0 ] ; then
-	mv ${OUTTRACKNAME}.phaseBTOut ${OUTTRACKNAME}.phaseBTPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${OUTTRACKNAME}.phaseBTOut ${OUTTRACKNAME}.phaseBTFail
+    mv ${OUTTRACKNAME}.phaseBTOut ${OUTTRACKNAME}.phaseBTPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${OUTTRACKNAME}.phaseBTOut ${OUTTRACKNAME}.phaseBTFail
 fi
 
 rm -f ${OUTTRACKNAME}.phaseBTInQueue

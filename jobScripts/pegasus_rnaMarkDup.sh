@@ -24,21 +24,21 @@ java -Xmx22g -jar ${PICARDPATH}/picard.jar MarkDuplicates \
     CREATE_INDEX=true > ${BAMFILE}.rnaMarkDupOut
 
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.rnaMarkDupOut ${BAMFILE}.rnaMarkDupPass
-	# A little organizing
-	if [ ! -d ${RUNDIR}/stats/ ] ; then
-		mkdir -p ${RUNDIR}/stats
-	fi
-	${SAMTOOLSPATH}/samtools idxstats ${OUTPUTBAM} > ${OUTPUTBAM}.idxStats
-	mv ${BAMFILE}.picStats.MarkDupMetrics ${RUNDIR}/stats/	
-	mv ${OUTPUTBAM}.idxStats ${RUNDIR}/stats/
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
-	touch ${RUNDIR}/${NXT5}
+    mv ${BAMFILE}.rnaMarkDupOut ${BAMFILE}.rnaMarkDupPass
+    # A little organizing
+    if [ ! -d ${RUNDIR}/stats/ ] ; then
+        mkdir -p ${RUNDIR}/stats
+    fi
+    ${SAMTOOLSPATH}/samtools idxstats ${OUTPUTBAM} > ${OUTPUTBAM}.idxStats
+    mv ${BAMFILE}.picStats.MarkDupMetrics ${RUNDIR}/stats/
+    mv ${OUTPUTBAM}.idxStats ${RUNDIR}/stats/
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
+    touch ${RUNDIR}/${NXT5}
 else
-	mv ${BAMFILE}.rnaMarkDupOut ${BAMFILE}.rnaMarkDupFail
+    mv ${BAMFILE}.rnaMarkDupOut ${BAMFILE}.rnaMarkDupFail
 fi
 
 rm -f ${BAMFILE}.rnaMarkDupInQueue

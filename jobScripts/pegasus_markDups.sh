@@ -26,25 +26,25 @@ java -Xmx22g -jar ${PICARDPATH}/picard.jar MarkDuplicates \
     CREATE_INDEX=true > ${BAMFILE}.mdOut
 
 if [ $? -eq 0 ] ; then
-	mv ${BAMFILE}.mdOut ${BAMFILE}.mdPass
-	echo "Automatically removed by mark duplicates step to save on space" > ${BAMFILE}
-	# A little organizing
-	if [ ! -d ${RUNDIR}/stats/ ] ; then
-		mkdir -p ${RUNDIR}/stats
-	fi
-	mv ${BAMFILE}.picStats.MarkDupMetrics ${RUNDIR}/stats/	
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
-	touch ${RUNDIR}/${NXT5}
-	touch ${RUNDIR}/${NXT6}
-	touch ${RUNDIR}/${NXT7}
-	touch ${RUNDIR}/${NXT8}
-	touch ${RUNDIR}/${NXT9}
-	touch ${RUNDIR}/${NXT10}
+    mv ${BAMFILE}.mdOut ${BAMFILE}.mdPass
+    echo "Automatically removed by mark duplicates step to save on space" > ${BAMFILE}
+    # A little organizing
+    if [ ! -d ${RUNDIR}/stats/ ] ; then
+        mkdir -p ${RUNDIR}/stats
+    fi
+    mv ${BAMFILE}.picStats.MarkDupMetrics ${RUNDIR}/stats/
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
+    touch ${RUNDIR}/${NXT5}
+    touch ${RUNDIR}/${NXT6}
+    touch ${RUNDIR}/${NXT7}
+    touch ${RUNDIR}/${NXT8}
+    touch ${RUNDIR}/${NXT9}
+    touch ${RUNDIR}/${NXT10}
 else
-	mv ${BAMFILE}.mdOut ${BAMFILE}.mdFail
+    mv ${BAMFILE}.mdOut ${BAMFILE}.mdFail
 fi
 
 rm -f ${BAMFILE}.mdInQueue

@@ -34,35 +34,35 @@ ${SAMTOOLSPATH}/samtools mpileup \
     ${BAMFILE} > ${TRACKNAME}.pileup
 
 if [ $? -eq 0 ] ; then
-	python ${LASERPATH}/pileup2seq/pileup2seq.py \
-	    -m ${HGDPPATH}/HGDP_938.site \
-	    -o ${TRACKNAME} \
-	    ${TRACKNAME}.pileup
+    python ${LASERPATH}/pileup2seq/pileup2seq.py \
+        -m ${HGDPPATH}/HGDP_938.site \
+        -o ${TRACKNAME} \
+        ${TRACKNAME}.pileup
 
-	if [ $? -eq 0 ] ; then
-		${LASERPATH}/laser \
-		    -g ${HGDPPATH}/HGDP_938.geno \
-		    -c ${HGDPPATH}/HGDP_938.RefPC.coord \
-		    -s ${TRACKNAME}.seq \
-		    -K 20 \
-		    -k 4 \
-		    -o ${TRACKNAME}
+    if [ $? -eq 0 ] ; then
+        ${LASERPATH}/laser \
+            -g ${HGDPPATH}/HGDP_938.geno \
+            -c ${HGDPPATH}/HGDP_938.RefPC.coord \
+            -s ${TRACKNAME}.seq \
+            -K 20 \
+            -k 4 \
+            -o ${TRACKNAME}
 
-		if [ $? -eq 0 ] ; then
-			Rscript ${LASERPATH}/plot/plotHGDPMegan.r ${TRACKNAME}.SeqPC.coord ${HGDPPATH}/HGDP_938.RefPC.coord
-			mv ${ANCESTRYDIR}/Ancestry_on_HGDP.pdf ${TRACKNAME}.ancestry_on_HGDP.pdf
-			touch ${TRACKNAME}.ancestryPass
-		else
-			touch ${TRACKNAME}.ancestryFail
-			exit 1
-		fi
-	else
-		touch ${TRACKNAME}.ancestryFail
-		exit 1
-	fi
+        if [ $? -eq 0 ] ; then
+            Rscript ${LASERPATH}/plot/plotHGDPMegan.r ${TRACKNAME}.SeqPC.coord ${HGDPPATH}/HGDP_938.RefPC.coord
+            mv ${ANCESTRYDIR}/Ancestry_on_HGDP.pdf ${TRACKNAME}.ancestry_on_HGDP.pdf
+            touch ${TRACKNAME}.ancestryPass
+        else
+            touch ${TRACKNAME}.ancestryFail
+            exit 1
+        fi
+    else
+        touch ${TRACKNAME}.ancestryFail
+        exit 1
+    fi
 else
-	touch ${TRACKNAME}.ancestryFail
-	exit 1
+    touch ${TRACKNAME}.ancestryFail
+    exit 1
 fi
 
 rm ${TRACKNAME}.ancestryInQueue

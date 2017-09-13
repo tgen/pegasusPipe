@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -58,113 +58,113 @@ qsubFails=0
 ###
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "### Sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Skipping."
-		continue
-	fi
-	#enter case statement here
-	case $rnaAligner in 
-	tophat) echo "### Tophat case"
-			topHatDir="$runDir/$kitName/$samName/$samName.topHatDir"
-			accHitsBam="$topHatDir/$samName.proj.accepted_hits.bam"
-			accHitsSam="$topHatDir/$samName.proj.accepted_hits.sam"
-			echo "### My bam is $accHitsBam"
-			if [ ! -e $topHatDir.thPass ] ; then
-				echo "### Looks like tophat is not done yet. $topHatDir.thPass doesnt exist yet"
-				((qsubFails++))
-				continue
-			fi
-			if [ ! -e $accHitsBam ] ; then
-				echo "### Weird. Bam itself is missing: $accHitsBam"
-				((qsubFails++))
-				continue
-			fi
-			if [[ -e $accHitsSam.htSeqPass || -e $accHitsSam.htSeqFail || -e $accHitsSam.htSeqInQueue ]] ; then 
-				echo "### HT Seq is already done, failed or inQueue"
-				continue
-			fi 
-			echo "### Submitting $accHitsSam to queue for HT Seq..."
-			sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeq.sh
-			if [ $? -eq 0 ] ; then
-				touch $accHitsSam.htSeqInQueue
-			else
-				((qsubFails++))
-			fi
-		sleep 2
-		;;
-	star) echo "### Star case"
-			starDir="$runDir/$kitName/$samName/$samName.starDir"
-			rmDupPass="$starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
-			alignedBam="$starDir/$samName.proj.Aligned.out.sorted.md.bam"
-			alignedSam="$starDir/$samName.proj.Aligned.out.sam"
-			echo "### My bam is $alignedBam"
-			if [ ! -e $starDir.starPass ] ; then
-				echo "### Looks like star alignment is not done yet. $starPass doesnt exist yet"
-				((qsubFails++))
-				continue
-			fi
-			if [ ! -e $alignedSam ] ; then
-				echo "### Weird. Sam itself is missing: $alignedSam"
-				((qsubFails++))
-				continue
-			fi
-			if [[ -e $alignedSam.htSeqPass || -e $alignedSam.htSeqFail || -e $alignedSam.htSeqInQueue ]] ; then 
-				echo "### HT Seq is already done, failed or inQueue"
-				continue
-			fi 
-			echo "### Submitting $alignedSam to queue for HT Seq..."
-			 if [[ $rnaStrand == "FIRST" ]] ; then                        
-				echo "##running stranded STAR case"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedHtSeqForStar.sh
-				if [ $? -eq 0 ] ; then
-					touch $alignedSam.htSeqInQueue
-				else
-					((qsubFails++))
-				fi
-				sleep 2
-			elif  [[ $rnaStrand == "SECOND"  ]] ; then
+    echo "### Sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Skipping."
+        continue
+    fi
+    #enter case statement here
+    case $rnaAligner in
+    tophat) echo "### Tophat case"
+            topHatDir="$runDir/$kitName/$samName/$samName.topHatDir"
+            accHitsBam="$topHatDir/$samName.proj.accepted_hits.bam"
+            accHitsSam="$topHatDir/$samName.proj.accepted_hits.sam"
+            echo "### My bam is $accHitsBam"
+            if [ ! -e $topHatDir.thPass ] ; then
+                echo "### Looks like tophat is not done yet. $topHatDir.thPass doesnt exist yet"
+                ((qsubFails++))
+                continue
+            fi
+            if [ ! -e $accHitsBam ] ; then
+                echo "### Weird. Bam itself is missing: $accHitsBam"
+                ((qsubFails++))
+                continue
+            fi
+            if [[ -e $accHitsSam.htSeqPass || -e $accHitsSam.htSeqFail || -e $accHitsSam.htSeqInQueue ]] ; then
+                echo "### HT Seq is already done, failed or inQueue"
+                continue
+            fi
+            echo "### Submitting $accHitsSam to queue for HT Seq..."
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeq.sh
+            if [ $? -eq 0 ] ; then
+                touch $accHitsSam.htSeqInQueue
+            else
+                ((qsubFails++))
+            fi
+        sleep 2
+        ;;
+    star) echo "### Star case"
+            starDir="$runDir/$kitName/$samName/$samName.starDir"
+            rmDupPass="$starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
+            alignedBam="$starDir/$samName.proj.Aligned.out.sorted.md.bam"
+            alignedSam="$starDir/$samName.proj.Aligned.out.sam"
+            echo "### My bam is $alignedBam"
+            if [ ! -e $starDir.starPass ] ; then
+                echo "### Looks like star alignment is not done yet. $starPass doesnt exist yet"
+                ((qsubFails++))
+                continue
+            fi
+            if [ ! -e $alignedSam ] ; then
+                echo "### Weird. Sam itself is missing: $alignedSam"
+                ((qsubFails++))
+                continue
+            fi
+            if [[ -e $alignedSam.htSeqPass || -e $alignedSam.htSeqFail || -e $alignedSam.htSeqInQueue ]] ; then
+                echo "### HT Seq is already done, failed or inQueue"
+                continue
+            fi
+            echo "### Submitting $alignedSam to queue for HT Seq..."
+             if [[ $rnaStrand == "FIRST" ]] ; then
+                echo "##running stranded STAR case"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_strandedHtSeqForStar.sh
+                if [ $? -eq 0 ] ; then
+                    touch $alignedSam.htSeqInQueue
+                else
+                    ((qsubFails++))
+                fi
+                sleep 2
+            elif  [[ $rnaStrand == "SECOND"  ]] ; then
                                 echo "##running stranded STAR case"
-                                sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_revStrandedHtSeqForStar.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_revStrandedHtSeqForStar.sh
                                 if [ $? -eq 0 ] ; then
                                         touch $alignedSam.htSeqInQueue
                                 else
                                         ((qsubFails++))
                                 fi
                                 sleep 2
-				
-			else
-				echo "##running unstranded STAR case"
-				sbatch -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeqForStar.sh
-				if [ $? -eq 0 ] ; then
-					touch $alignedSam.htSeqInQueue
-				else
-					((qsubFails++))
-				fi
-				sleep 2
-			fi
-		;;
-	anotherRNAaligner) echo "### Anoter RNA aligner"
-		sleep 2
-		;;
-	*) echo "### I should not be here"
-		;;
-	esac
+
+            else
+                echo "##running unstranded STAR case"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_htSeqForStar.sh
+                if [ $? -eq 0 ] ; then
+                    touch $alignedSam.htSeqInQueue
+                else
+                    ((qsubFails++))
+                fi
+                sleep 2
+            fi
+        ;;
+    anotherRNAaligner) echo "### Anoter RNA aligner"
+        sleep 2
+        ;;
+    *) echo "### I should not be here"
+        ;;
+    esac
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

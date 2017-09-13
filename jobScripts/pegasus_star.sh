@@ -49,52 +49,52 @@ ${STARPATH}/STAR --genomeDir ${STARREF} \
     --outSAMmode Full > ${DIR}.starOut
 
 if [ $? -eq 0 ] ; then
-	echo "### Success. Star finished OK."
+    echo "### Success. Star finished OK."
 
-	#check output from next four commands
-	echo "### Starting sam to bam for Aligned and Chimeric sams"
-	${SAMTOOLSPATH}/samtools view -bS Aligned.out.sam > Aligned.out.bam
-	${SAMTOOLSPATH}/samtools view -bS Chimeric.out.sam > Chimeric.out.bam
+    #check output from next four commands
+    echo "### Starting sam to bam for Aligned and Chimeric sams"
+    ${SAMTOOLSPATH}/samtools view -bS Aligned.out.sam > Aligned.out.bam
+    ${SAMTOOLSPATH}/samtools view -bS Chimeric.out.sam > Chimeric.out.bam
 
-	echo "### Starting sorting for Aligned and Chimeric sams"
-	${SAMTOOLSPATH}/samtools sort -@4 -m8G Aligned.out.bam Aligned.out.sorted
-	${SAMTOOLSPATH}/samtools sort -@4 -m8G Chimeric.out.bam Chimeric.out.sorted
+    echo "### Starting sorting for Aligned and Chimeric sams"
+    ${SAMTOOLSPATH}/samtools sort -@4 -m8G Aligned.out.bam Aligned.out.sorted
+    ${SAMTOOLSPATH}/samtools sort -@4 -m8G Chimeric.out.bam Chimeric.out.sorted
 
-	echo "### Starting bam indexing for Aligned and Chimeric bams"
-	${SAMTOOLSPATH}/samtools index Aligned.out.sorted.bam
-	${SAMTOOLSPATH}/samtools index Chimeric.out.sorted.bam
+    echo "### Starting bam indexing for Aligned and Chimeric bams"
+    ${SAMTOOLSPATH}/samtools index Aligned.out.sorted.bam
+    ${SAMTOOLSPATH}/samtools index Chimeric.out.sorted.bam
 
-	echo "### Starting to move the files to their new name"
-	mv Aligned.out.sam ${anotherName}.Aligned.out.sam
-	mv Aligned.out.bam ${anotherName}.Aligned.out.bam
+    echo "### Starting to move the files to their new name"
+    mv Aligned.out.sam ${anotherName}.Aligned.out.sam
+    mv Aligned.out.bam ${anotherName}.Aligned.out.bam
 
-	mv Aligned.out.sorted.bam ${anotherName}.Aligned.out.sorted.bam
-	mv Aligned.out.sorted.bam.bai ${anotherName}.Aligned.out.sorted.bai
+    mv Aligned.out.sorted.bam ${anotherName}.Aligned.out.sorted.bam
+    mv Aligned.out.sorted.bam.bai ${anotherName}.Aligned.out.sorted.bai
 
-	mv Chimeric.out.sam ${anotherName}.Chimeric.out.sam
-	mv Chimeric.out.bam ${anotherName}.Chimeric.out.bam
+    mv Chimeric.out.sam ${anotherName}.Chimeric.out.sam
+    mv Chimeric.out.bam ${anotherName}.Chimeric.out.bam
 
-	mv Chimeric.out.sorted.bam ${anotherName}.Chimeric.out.sorted.bam
-	mv Chimeric.out.sorted.bam.bai ${anotherName}.Chimeric.out.sorted.bai
+    mv Chimeric.out.sorted.bam ${anotherName}.Chimeric.out.sorted.bam
+    mv Chimeric.out.sorted.bam.bai ${anotherName}.Chimeric.out.sorted.bai
 
-	mv Chimeric.out.junction ${anotherName2}.starChimeric.junctions
-	mv SJ.out.tab ${anotherName2}.starAligned.junctions
+    mv Chimeric.out.junction ${anotherName2}.starChimeric.junctions
+    mv SJ.out.tab ${anotherName2}.starAligned.junctions
 
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
-	touch ${RUNDIR}/${NXT5}
-	touch ${RUNDIR}/${NXT6}
-	touch ${RUNDIR}/${NXT7}
-	touch ${RUNDIR}/${NXT8}
-	touch ${RUNDIR}/${NXT9}
-	touch ${RUNDIR}/${NXT10}
-	touch ${RUNDIR}/${NXT11}
-	mv ${DIR}.starOut ${DIR}.starPass	
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
+    touch ${RUNDIR}/${NXT5}
+    touch ${RUNDIR}/${NXT6}
+    touch ${RUNDIR}/${NXT7}
+    touch ${RUNDIR}/${NXT8}
+    touch ${RUNDIR}/${NXT9}
+    touch ${RUNDIR}/${NXT10}
+    touch ${RUNDIR}/${NXT11}
+    mv ${DIR}.starOut ${DIR}.starPass
 else
-	echo "### Fail. Star failed."
-	mv ${DIR}.starOut ${DIR}.starFail
+    echo "### Fail. Star failed."
+    mv ${DIR}.starOut ${DIR}.starFail
 fi
 
 rm -f ${DIR}.starInQueue

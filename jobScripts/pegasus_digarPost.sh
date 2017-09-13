@@ -27,19 +27,19 @@ echo "TIME:$time starting digar post on ${DIGARDIR}"
 cd ${DIGARDIR}
 
 ${DIGARPATH}/digarPost.current.pl \
-	--gtf ${GTF} \
-	--ann ${ANN} \
-	--list ${GENEFILE} \
+    --gtf ${GTF} \
+    --ann ${ANN} \
+    --list ${GENEFILE} \
         --samPath ${SAMTOOLSPATH} \
         --path ${DIGARPATH} \
-	--dir ${DIGARDIR} > ${DIGARDIR}.digarPostOut 2>&1
+    --dir ${DIGARDIR} > ${DIGARDIR}.digarPostOut 2>&1
 if [ $? -eq 0 ] ; then
-	#finished successfully
-	mv ${DIGARDIR}.digarPostOut ${DIGARDIR}.digarPostPass
+    #finished successfully
+    mv ${DIGARDIR}.digarPostOut ${DIGARDIR}.digarPostPass
 else
-	#failed
-	mv ${DIGARDIR}.digarPostOut ${DIGARDIR}.digarPostFail
-fi	
+    #failed
+    mv ${DIGARDIR}.digarPostOut ${DIGARDIR}.digarPostFail
+fi
 
 rm -f ${DIGARDIR}.digarPostInQueue
 endTime=`date +%s`

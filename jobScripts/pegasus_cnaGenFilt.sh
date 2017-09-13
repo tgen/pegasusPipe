@@ -62,17 +62,17 @@ echo "### Start run_ngsCNA.sh"
 echo "${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${hetDev} $genomeTarget"
 ${CNAPATH}/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${thetDepth} ${hetDev} $genomeTarget
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at run_ngsCNA.sh"
-	touch ${TRACKNAME}.cnaGenFiltFail
-	rm -f ${TRACKNAME}.cnaGenFiltInQueue
-	exit
+    echo "### CNA failed at run_ngsCNA.sh"
+    touch ${TRACKNAME}.cnaGenFiltFail
+    rm -f ${TRACKNAME}.cnaGenFiltInQueue
+    exit
 else
-	echo "### Renaming cnaStats files"
-	nFileName=`basename ${NORMALDAT}`
-	tFileName=`basename ${TUMORDAT}`
-	mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.genFilt.cnaStats
-	mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.genFilt.cnaStats
-	echo "### Renaming/moving cnaStats file is done."
+    echo "### Renaming cnaStats files"
+    nFileName=`basename ${NORMALDAT}`
+    tFileName=`basename ${TUMORDAT}`
+    mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.genFilt.cnaStats
+    mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.genFilt.cnaStats
+    echo "### Renaming/moving cnaStats file is done."
 fi
 echo "### End run_ngsCNA.sh"
 
@@ -83,25 +83,25 @@ echo "### End runDNAcopy.R"
 ##plotting
 
 echo "### Start plotCGH.R"
-Rscript --vanilla ${CNAPATH}/plotCGH.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}	
+Rscript --vanilla ${CNAPATH}/plotCGH.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at plotCGH.R"
-	touch ${TRACKNAME}.cnaGenFiltFail
-	rm -f ${TRACKNAME}.cnaGenFiltInQueue
-	exit
+    echo "### CNA failed at plotCGH.R"
+    touch ${TRACKNAME}.cnaGenFiltFail
+    rm -f ${TRACKNAME}.cnaGenFiltInQueue
+    exit
 fi
 echo "### End plotCGH.R"
 
 if [ -e ${OFILE}.hets.tsv ] ; then
-	echo "### Running plots with hets"
-	Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
-	if [ $? -ne 0 ] ; then
-		echo "### CNA failed at plotCGHwithHets.R"
-		touch ${TRACKNAME}.cnaGenFiltFail
-		rm -f ${TRACKNAME}.cnaGenFiltInQueue
-		exit
-	fi
-	echo "### End running plots with hets"
+    echo "### Running plots with hets"
+    Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
+    if [ $? -ne 0 ] ; then
+        echo "### CNA failed at plotCGHwithHets.R"
+        touch ${TRACKNAME}.cnaGenFiltFail
+        rm -f ${TRACKNAME}.cnaGenFiltInQueue
+        exit
+    fi
+    echo "### End running plots with hets"
 fi
 
 ##Annotate and convert SEG file to gVCF 
@@ -111,10 +111,10 @@ DELTHRESH=-0.99    #   <<<< THIS CAN BE ADJUSTED - Deletion Threshold - log2 fol
 echo "### Running annotSeg.pl"
 ${CNAPATH}/annotSeg.pl ${GTF} ${OFILE}.cna.seg ${DUPTHRESH} ${DELTHRESH}
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at annotSeg.pl"
-	touch ${TRACKNAME}.cnaGenFiltFail
-	rm -f ${TRACKNAME}.cnaGenFiltInQueue
-	exit
+    echo "### CNA failed at annotSeg.pl"
+    touch ${TRACKNAME}.cnaGenFiltFail
+    rm -f ${TRACKNAME}.cnaGenFiltInQueue
+    exit
 fi
 echo "### End running annotSeg.pl"
 

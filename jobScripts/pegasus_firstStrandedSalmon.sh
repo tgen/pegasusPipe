@@ -37,33 +37,33 @@ ${SALMONPATH}/salmon quant \
 
 if [ $? -eq 0 ] ; then
     echo "salmon cDNA passed"
-	cd ${DIR}/cDNA
-	mv quant.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
-	mv quant.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
+    cd ${DIR}/cDNA
+    mv quant.genes.sf ${SAMPLE}_salmon_bc_cDNA_genes.sf
+    mv quant.sf ${SAMPLE}_salmon_bc_cDNA_transcripts.sf
 
-	${SALMONPATH}/salmon quant \
-		--index ${SALMON_INDEX_GTF} \
-		--libType ISF \
-		--mates1 <(zcat ${FASTQ1}) \
-		--mates2 <(zcat ${FASTQ2}) \
-		--threads 16 \
-		--biasCorrect \
-		--geneMap ${GTF} \
-		--output ${DIR}/gtf
+    ${SALMONPATH}/salmon quant \
+        --index ${SALMON_INDEX_GTF} \
+        --libType ISF \
+        --mates1 <(zcat ${FASTQ1}) \
+        --mates2 <(zcat ${FASTQ2}) \
+        --threads 16 \
+        --biasCorrect \
+        --geneMap ${GTF} \
+        --output ${DIR}/gtf
 
-	if [ $? = 0 ] ; then
-		echo "Salmon GTF Passed"
-		cd ${DIR}/gtf
-		mv quant.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
-		mv quant.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
-		touch ${DIR}.salmonPass
-	else
-		echo "Salmon GTF Failed"
-		touch ${DIR}.salmonFail
-	fi
+    if [ $? = 0 ] ; then
+        echo "Salmon GTF Passed"
+        cd ${DIR}/gtf
+        mv quant.genes.sf ${SAMPLE}_salmon_bc_gtf_genes.sf
+        mv quant.sf ${SAMPLE}_salmon_bc_gtf_transcripts.sf
+        touch ${DIR}.salmonPass
+    else
+        echo "Salmon GTF Failed"
+        touch ${DIR}.salmonFail
+    fi
 else
-	echo "salmon cDNA failed"
-	touch ${DIR}.salmonFail
+    echo "salmon cDNA failed"
+    touch ${DIR}.salmonFail
 fi
 
 rm ${DIR}.salmonInQueue

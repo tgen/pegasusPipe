@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -52,34 +52,34 @@ echo "### fastqcpt: $fastqcPath"
 qsubFails=0
 for cpFqPassFile in `find $runDir -name *cpFqPass`
 do
-	thisFq=${cpFqPassFile/.cpFqPass/}
-	if [ ! -e $thisFq ] ; then
-		echo "### Fastq itself doesnt exist. Weird: $thisFq"
-		((qsubFails++))
-		continue
-	fi
-	if [[ -e $thisFq.fastqcPass || -e $thisFq.fastqcInQueue || -e $thisFq.fastqcFail ]] ; then
-		echo "### This fastq file already passed, failed, or inQueue"
-		continue
-	fi
-	echo "### Submitting to fastQC for $thisFq"
-	d=`echo $runDir | cut -c 2-`
-	sbatch -n 1 -N 1 --cpus-per-task $nCores --export FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_runFastQC.sh
-	if [ $? -eq 0 ] ; then
-		touch $thisFq.fastqcInQueue
-	else
-		((qsubFails++))
-	fi
-	sleep 1
+    thisFq=${cpFqPassFile/.cpFqPass/}
+    if [ ! -e $thisFq ] ; then
+        echo "### Fastq itself doesnt exist. Weird: $thisFq"
+        ((qsubFails++))
+        continue
+    fi
+    if [[ -e $thisFq.fastqcPass || -e $thisFq.fastqcInQueue || -e $thisFq.fastqcFail ]] ; then
+        echo "### This fastq file already passed, failed, or inQueue"
+        continue
+    fi
+    echo "### Submitting to fastQC for $thisFq"
+    d=`echo $runDir | cut -c 2-`
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_runFastQC.sh
+    if [ $? -eq 0 ] ; then
+        touch $thisFq.fastqcInQueue
+    else
+        ((qsubFails++))
+    fi
+    sleep 1
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

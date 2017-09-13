@@ -19,12 +19,12 @@ java -jar ${SUMSTATSPATH}/parseDirforStats_JK.jar \
     ${SUMSTATSPATH}/TGENAssayCodes.txt > ${RUNDIR}/summaryStatsOut
 
 if [ $? -eq 0 ] ; then
-	mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsPass
-	touch ${RUNDIR}/${NXT1}
+    mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsPass
+    touch ${RUNDIR}/${NXT1}
 elif [ $? -eq 1 ] ; then
-	mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsWARNING
+    mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsWARNING
 else
-	mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsFail
+    mv ${RUNDIR}/summaryStatsOut ${RUNDIR}/summaryStatsFail
 fi
 
 rm -f ${RUNDIR}/summaryStatsInQueue

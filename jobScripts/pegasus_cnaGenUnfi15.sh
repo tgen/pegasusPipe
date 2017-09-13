@@ -58,17 +58,17 @@ echo "### Start run_ngsCNA.sh"
 echo "${CNAPATH}/pegasusCNA/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${thetDepth} ${hetDev}"
 ${CNAPATH}/pegasusCNA/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${thetDepth} ${hetDev}
 if [ $? -ne 0 ] ; then
-	echo "### CNA failed at run_ngsCNA.sh"
-	touch ${TRACKNAME}.cnaGenUnfiFail
-	rm -f ${TRACKNAME}.cnaGenUnfiInQueue
-	exit
+    echo "### CNA failed at run_ngsCNA.sh"
+    touch ${TRACKNAME}.cnaGenUnfiFail
+    rm -f ${TRACKNAME}.cnaGenUnfiInQueue
+    exit
 else
-	echo "### Renaming cnaStats files"
-	nFileName=`basename ${NORMALDAT}`
-	tFileName=`basename ${TUMORDAT}`
-	mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.genUnfi.cnaStats
-	mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.genUnfi.cnaStats
-	echo "### Renaming/moving cnaStats file is done."
+    echo "### Renaming cnaStats files"
+    nFileName=`basename ${NORMALDAT}`
+    tFileName=`basename ${TUMORDAT}`
+    mv ${NORMALDAT}.cnaStats ${RUNDIR}/stats/$nFileName.genUnfi.cnaStats
+    mv ${TUMORDAT}.cnaStats ${RUNDIR}/stats/$tFileName.genUnfi.cnaStats
+    echo "### Renaming/moving cnaStats file is done."
 fi
 
 echo "### End run_ngsCNA.sh"
@@ -79,12 +79,12 @@ Rscript --vanilla ${CNAPATH}/runDNAcopyV2.R ${OFILE}.cna.tsv ${OFILE}.seg
 echo "### End runDNAcopy.R"
 ##plotting
 
-Rscript --vanilla ${CNAPATH}/plotCGH.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}	
+Rscript --vanilla ${CNAPATH}/plotCGH.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}
 
 if [ -f ${OFILE}.hets.tsv ] ; then
-	echo "### Running plots with hets"
-	Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
-	echo "### End running plots with hets"
+    echo "### Running plots with hets"
+    Rscript --vanilla ${CNAPATH}/plotCGHwithHets.R ${OFILE}.cna.tsv ${OFILE}.amp.tsv ${OFILE}.del.tsv ${OFILE}.hets.tsv ${OFILE}_withhets
+    echo "### End running plots with hets"
 fi
 
 echo "### Running plotBAF.R"

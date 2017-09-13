@@ -33,12 +33,12 @@ java -Xmx40G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -U ALLOW_N_CIGAR_READS > ${RNABAM}.splitNCigarOut
 
 if [ $? -eq 0 ] ; then
-	mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarPass
-	touch ${RUNDIR}/${NXT1}
-else	
-	mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarFail
-	rm -f ${RNABAM}.splitNCigarInQueue
-	exit 1
+    mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarPass
+    touch ${RUNDIR}/${NXT1}
+else
+    mv ${RNABAM}.splitNCigarOut ${RNABAM}.splitNCigarFail
+    rm -f ${RNABAM}.splitNCigarInQueue
+    exit 1
 fi
 
 rm -f ${RNABAM}.splitNCigarInQueue

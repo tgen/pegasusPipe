@@ -32,19 +32,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -87,178 +87,178 @@ do
                 if [[ $configLine == SAMPLE* || $configLine == =END* ]] ; then
                         echo "config line is $configLine"
                         arrayCount=${#mergeArray[@]}
-			echo "arrayCount is: $arrayCount"
+            echo "arrayCount is: $arrayCount"
                         if [ $arrayCount -gt 0 ] ; then
                                 echo "### Starting with $samName"
                                 missingFastqSample=0
                                 accountFastqSample=0
                                 fastqList1=""
                                 fastqList2=""
-				rgTagList=""
+                rgTagList=""
                                 read1Count=0
                                 read2Count=0
                                 ((sampleCount++))
                                 echo "### Sample with $arrayCount rows found for kit: $kitName, sample: $samName."
-				echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID"
-				if [[ "$assayID" == "Exome"  ||  "$assayID" == "Genome" || "$assayID" == "exome" || "$assayID" == "genome" ]] ; then
+                echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID"
+                if [[ "$assayID" == "Exome"  ||  "$assayID" == "Genome" || "$assayID" == "exome" || "$assayID" == "genome" ]] ; then
                                         echo "### Assay ID is $assayID. Will skip."
                                         skipGroup=1
                                 fi
                                 lastItemIndex=`echo ${#mergeArray[@]}-1 | bc`
-				if [ $skipGroup -ne 1 ] ; then
-					echo "Assay is RNA will continue"
-					for (( i=0; i<=$lastItemIndex; i++ ))
-					do
-						#echo "array with index $i is::: ${mergeArray[$i]}"
-						((accountFastqSample++));((accountFastqSample++))
-						thisFq=`echo ${mergeArray[$i]} | cut -d= -f2 | cut -d, -f2`
-						r2File=${thisFq/_R1/_R2}
-						sourceName="$runDir/$kitName/$samName/$samName"`printf "_%03d" "$i"`"_R1.fastq.gz"
-						targetName="$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz"
-						sourR2Name="$runDir/$kitName/$samName/$samName"`printf "_%03d" "$i"`"_R2.fastq.gz"
-						targR2Name="$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz"
-						RG_CN=TGen
-						RG_PL=ILLUMINA
-						RG_ID_fromConfig=`echo ${mergeArray[$i]} | cut -d= -f2 | cut -d, -f1`
-						FCID=`zcat $sourceName | head -n1 | cut -d: -f3`
-						LANE=`zcat $sourceName | head -n1 | cut -d: -f4`
-						INDEX=`zcat $sourceName | head -n1 | cut -d: -f10`
-						RG_LB=`echo $RG_ID_fromConfig | cut -d_ -f3`
-						RG_PU="${FCID}_${LANE}"
-						RG_ID="${FCID}_${LANE}_${RG_LB}"
-						#rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}\t"
-						rgTag="ID:${RG_ID}	SM:$samName	PL:${RG_PL}	CN:${RG_CN}	PU:${RG_PU}	LB:${RG_LB}	KS:${INDEX}"
-						echo "RG TAG is: $rgTag"
-						rgTagList="${rgTag} , ${rgTagList}"
-						
-						#echo "target name is $sourceName"
-						if [[ ! -e $sourceName.cpFqPass || ! -e $sourceName ]] ; then
-							echo "### File missing: $sourceName or its .cpFqPass file"
-							((missingFastqTotal++))
-							((missingFastqSample++))
-						else
-							echo "### File found $sourceName "      
-							fastqList1="${sourceName},${fastqList1}"
-							((read1Count++))
-						fi
-						if [[ ! -e $sourR2Name.cpPass && ! -e $sourR2Name ]] ; then
-							echo "### File missing: $sourR2Name or its .cpFqPass file"
-							((missingFastqTotal++))
-							((missingFastqSample++))
-						else
-							echo "### File found $sourR2Name "      
-							fastqList2="${sourR2Name},${fastqList2}"
-							((read2Count++))
-						fi
-						
-						thisPath=`dirname $runDir`
-						cd $thisPath
-						ownDir=$runDir/$kitName/$samName/${samName}.starDir
-						if [ ! -d $ownDir ] ; then
-							mkdir -p $ownDir
-						fi
-						#creating linked files to the original reads
-						r1Name=`basename $sourceName`
-						r2Name=`basename $sourR2Name`
-						cd $ownDir
-						ln -s $sourceName $r1Name
-						read1Name=$ownDir/$r1Name
-						ln -s $sourR2Name $r2Name
-						read2Name=$ownDir/$r2Name
-						cd -
-		
-					done
-					echo "### Done with $samName with $missingFastqSample missing files out of $accountFastqSample" 
-					if [ $missingFastqSample -eq 0 ] ; then
-						#if [ "$assayID" == "RNA" ] ; then
-							echo "### Assay ID is $assayID"
-							echo "### All fastqs were accounted for $samName"
-							echo "### R1 files($read1Count): $fastqList1"
-							echo "### R2 files($read2Count): $fastqList2"
-							#repeats the rg tag so both R1 and R1 have an RG tag
-							#gets rid of the trailing comma on the rg tag list and fastqList2
-							#rgTagList="${rgTagList}${rgTagList}"
-							rgTagList=`echo "${rgTagList%?}"`
-							rgTagList=`echo "${rgTagList%?}"`
-							fastqList1=`echo "${fastqList1%?}"`
-							fastqList2=`echo "${fastqList2%?}"`
-							
-							echo "### RG TAG LIST: $rgTagList"	
-							## START FIXING BELOW HERE, ABOVE GETS THE LIST OF FASTQS TOGETHER
-							#thisPath=`dirname $runDir`
-							#cd $thisPath
-							#ownDir=${samName}.starDir
-							#ownDir=${read1Name/.proj.R1.fastq.gz/.starDir}
-							#if [[ ! -e $read1Name || ! -e $read2Name || ! -e $read1Name.mergeFastqPass || ! -e $read2Name.mergeFastqPass ]] ; then
-							#	echo "### one of the fastq files or read pass files dont exist"
-							#	echo "### read1Pass: $read1Name.mergeFastqPass"
-							#	echo "### read2Pass: $read2Name.mergeFastqPass"
-							#	((qsubFails++))
-							#	continue
-							#fi
-							if [[ -e $ownDir.starPass || -e $ownDir.starFail || -e $ownDir.starInQueue ]] ; then
-								echo "### STAR already done, failed or inQueue"
-								kitName=`echo $configLine | cut -d= -f2 | cut -d, -f1`
-								samName=`echo $configLine | cut -d= -f2 | cut -d, -f2`
-								assayID=`echo $configLine | cut -d= -f2 | cut -d, -f3`
-								unset mergeArray
-								count=0
-								skipGroup=0
-								continue
-							fi
-							#if [ ! -d $ownDir ] ; then
-							#	mkdir -p $ownDir
-							#fi
+                if [ $skipGroup -ne 1 ] ; then
+                    echo "Assay is RNA will continue"
+                    for (( i=0; i<=$lastItemIndex; i++ ))
+                    do
+                        #echo "array with index $i is::: ${mergeArray[$i]}"
+                        ((accountFastqSample++));((accountFastqSample++))
+                        thisFq=`echo ${mergeArray[$i]} | cut -d= -f2 | cut -d, -f2`
+                        r2File=${thisFq/_R1/_R2}
+                        sourceName="$runDir/$kitName/$samName/$samName"`printf "_%03d" "$i"`"_R1.fastq.gz"
+                        targetName="$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz"
+                        sourR2Name="$runDir/$kitName/$samName/$samName"`printf "_%03d" "$i"`"_R2.fastq.gz"
+                        targR2Name="$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz"
+                        RG_CN=TGen
+                        RG_PL=ILLUMINA
+                        RG_ID_fromConfig=`echo ${mergeArray[$i]} | cut -d= -f2 | cut -d, -f1`
+                        FCID=`zcat $sourceName | head -n1 | cut -d: -f3`
+                        LANE=`zcat $sourceName | head -n1 | cut -d: -f4`
+                        INDEX=`zcat $sourceName | head -n1 | cut -d: -f10`
+                        RG_LB=`echo $RG_ID_fromConfig | cut -d_ -f3`
+                        RG_PU="${FCID}_${LANE}"
+                        RG_ID="${FCID}_${LANE}_${RG_LB}"
+                        #rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}\t"
+                        rgTag="ID:${RG_ID}    SM:$samName    PL:${RG_PL}    CN:${RG_CN}    PU:${RG_PU}    LB:${RG_LB}    KS:${INDEX}"
+                        echo "RG TAG is: $rgTag"
+                        rgTagList="${rgTag} , ${rgTagList}"
 
-							#creating linked files to the original reads
-							#r1Name=`basename $read1Name`
-							#r2Name=`basename $read2Name`
-							#cd $ownDir
-							#ln -s $read1Name $r1Name
-							#read1Name=$ownDir/$r1Name
-							#ln -s $read2Name $r2Name
-							#read2Name=$ownDir/$r2Name
-							#cd -
-							#done creating links. vars for reads changed.
-							#echo "### read 1 name: $read1Name"
-							#echo "### read 2 name: $read2Name"
-							lineLength=`gunzip -c $sourceName | head -2 | tail -1 | wc -c`
-							let "readLength=$lineLength-1"
-							echo "### Read length determined to be $readLength for $ownDir"
-							refGrep="STARREF"$readLength
-							starRef=`grep "@@"$recipe"@@" $constants | grep @@"$refGrep"= | cut -d= -f2`
-							echo "### Star reference is $starRef"
-							echo "### submitting $ownDir to queue for STAR aligner... "
-							if [[ $rnaStrand == "FIRST" || $rnaStrand == "SECOND" ]] ; then
-								echo "##running stranded STAR case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_strandedStar.sh
-								if [ $? -eq 0 ] ; then
-									touch $ownDir.starInQueue
-								else
-									((qsubFails++))
-								fi
-								sleep 2
-							else
-								echo "##running unstranded STAR case"
-								sbatch -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.sh
-								if [ $? -eq 0 ] ; then
-									touch $ownDir.starInQueue
-								else
-									((qsubFails++))
-								fi
-								sleep 2
-							fi
-						#else
-						#	echo "### Assay ID is not RNA. $assayID"
-						#	echo "### Shouldn't be doing STAR alignement on this one will skip"
-						#	continue
-						#fi
-					else
-						echo "### Some files were missing for $samName"
-					fi
-				else #else of skipGroup
-					echo "##Skipping Group"
-				fi #end of skipGroup
+                        #echo "target name is $sourceName"
+                        if [[ ! -e $sourceName.cpFqPass || ! -e $sourceName ]] ; then
+                            echo "### File missing: $sourceName or its .cpFqPass file"
+                            ((missingFastqTotal++))
+                            ((missingFastqSample++))
+                        else
+                            echo "### File found $sourceName "
+                            fastqList1="${sourceName},${fastqList1}"
+                            ((read1Count++))
+                        fi
+                        if [[ ! -e $sourR2Name.cpPass && ! -e $sourR2Name ]] ; then
+                            echo "### File missing: $sourR2Name or its .cpFqPass file"
+                            ((missingFastqTotal++))
+                            ((missingFastqSample++))
+                        else
+                            echo "### File found $sourR2Name "
+                            fastqList2="${sourR2Name},${fastqList2}"
+                            ((read2Count++))
+                        fi
+
+                        thisPath=`dirname $runDir`
+                        cd $thisPath
+                        ownDir=$runDir/$kitName/$samName/${samName}.starDir
+                        if [ ! -d $ownDir ] ; then
+                            mkdir -p $ownDir
+                        fi
+                        #creating linked files to the original reads
+                        r1Name=`basename $sourceName`
+                        r2Name=`basename $sourR2Name`
+                        cd $ownDir
+                        ln -s $sourceName $r1Name
+                        read1Name=$ownDir/$r1Name
+                        ln -s $sourR2Name $r2Name
+                        read2Name=$ownDir/$r2Name
+                        cd -
+
+                    done
+                    echo "### Done with $samName with $missingFastqSample missing files out of $accountFastqSample"
+                    if [ $missingFastqSample -eq 0 ] ; then
+                        #if [ "$assayID" == "RNA" ] ; then
+                            echo "### Assay ID is $assayID"
+                            echo "### All fastqs were accounted for $samName"
+                            echo "### R1 files($read1Count): $fastqList1"
+                            echo "### R2 files($read2Count): $fastqList2"
+                            #repeats the rg tag so both R1 and R1 have an RG tag
+                            #gets rid of the trailing comma on the rg tag list and fastqList2
+                            #rgTagList="${rgTagList}${rgTagList}"
+                            rgTagList=`echo "${rgTagList%?}"`
+                            rgTagList=`echo "${rgTagList%?}"`
+                            fastqList1=`echo "${fastqList1%?}"`
+                            fastqList2=`echo "${fastqList2%?}"`
+
+                            echo "### RG TAG LIST: $rgTagList"
+                            ## START FIXING BELOW HERE, ABOVE GETS THE LIST OF FASTQS TOGETHER
+                            #thisPath=`dirname $runDir`
+                            #cd $thisPath
+                            #ownDir=${samName}.starDir
+                            #ownDir=${read1Name/.proj.R1.fastq.gz/.starDir}
+                            #if [[ ! -e $read1Name || ! -e $read2Name || ! -e $read1Name.mergeFastqPass || ! -e $read2Name.mergeFastqPass ]] ; then
+                            #    echo "### one of the fastq files or read pass files dont exist"
+                            #    echo "### read1Pass: $read1Name.mergeFastqPass"
+                            #    echo "### read2Pass: $read2Name.mergeFastqPass"
+                            #    ((qsubFails++))
+                            #    continue
+                            #fi
+                            if [[ -e $ownDir.starPass || -e $ownDir.starFail || -e $ownDir.starInQueue ]] ; then
+                                echo "### STAR already done, failed or inQueue"
+                                kitName=`echo $configLine | cut -d= -f2 | cut -d, -f1`
+                                samName=`echo $configLine | cut -d= -f2 | cut -d, -f2`
+                                assayID=`echo $configLine | cut -d= -f2 | cut -d, -f3`
+                                unset mergeArray
+                                count=0
+                                skipGroup=0
+                                continue
+                            fi
+                            #if [ ! -d $ownDir ] ; then
+                            #    mkdir -p $ownDir
+                            #fi
+
+                            #creating linked files to the original reads
+                            #r1Name=`basename $read1Name`
+                            #r2Name=`basename $read2Name`
+                            #cd $ownDir
+                            #ln -s $read1Name $r1Name
+                            #read1Name=$ownDir/$r1Name
+                            #ln -s $read2Name $r2Name
+                            #read2Name=$ownDir/$r2Name
+                            #cd -
+                            #done creating links. vars for reads changed.
+                            #echo "### read 1 name: $read1Name"
+                            #echo "### read 2 name: $read2Name"
+                            lineLength=`gunzip -c $sourceName | head -2 | tail -1 | wc -c`
+                            let "readLength=$lineLength-1"
+                            echo "### Read length determined to be $readLength for $ownDir"
+                            refGrep="STARREF"$readLength
+                            starRef=`grep "@@"$recipe"@@" $constants | grep @@"$refGrep"= | cut -d= -f2`
+                            echo "### Star reference is $starRef"
+                            echo "### submitting $ownDir to queue for STAR aligner... "
+                            if [[ $rnaStrand == "FIRST" || $rnaStrand == "SECOND" ]] ; then
+                                echo "##running stranded STAR case"
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'"$rgTagList"'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'"$fastqList1"'",FASTQL2="'"$fastqList2"'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_strandedStar.sh
+                                if [ $? -eq 0 ] ; then
+                                    touch $ownDir.starInQueue
+                                else
+                                    ((qsubFails++))
+                                fi
+                                sleep 2
+                            else
+                                echo "##running unstranded STAR case"
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export RGTAGLIST="'$rgTagList'",SAMNAME=$samName,SAMTOOLSPATH=$samtoolsPath,STARPATH=$starPath,STARREF=$starRef,STARGTF=$starGTF,FASTQL1="'$fastqList1'",FASTQL2="'$fastqList2'",DIR=$ownDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,NXT9=$nxtStep9,NXT10=$nxtStep10,NXT11=$nxtStep11,RUNDIR=$runDir,RNASTRAND=$rnaStrand,D=$d $pegasusPbsHome/pegasus_star.sh
+                                if [ $? -eq 0 ] ; then
+                                    touch $ownDir.starInQueue
+                                else
+                                    ((qsubFails++))
+                                fi
+                                sleep 2
+                            fi
+                        #else
+                        #    echo "### Assay ID is not RNA. $assayID"
+                        #    echo "### Shouldn't be doing STAR alignement on this one will skip"
+                        #    continue
+                        #fi
+                    else
+                        echo "### Some files were missing for $samName"
+                    fi
+                else #else of skipGroup
+                    echo "##Skipping Group"
+                fi #end of skipGroup
                         fi
                         kitName=`echo $configLine | cut -d= -f2 | cut -d, -f1`
                         samName=`echo $configLine | cut -d= -f2 | cut -d, -f2`
@@ -266,12 +266,12 @@ do
 
                         unset mergeArray
                         count=0
-			skipGroup=0
+            skipGroup=0
                         continue
                 else #doesnt start with =, add to mergeArray
                         #echo "adding $configLine to mergeArray"
                         mergeArray[$count]=$configLine
-			#echo "mergeArray[$count]=$configLine"
+            #echo "mergeArray[$count]=$configLine"
                         ((count++))
                 fi
         else
@@ -281,11 +281,11 @@ done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

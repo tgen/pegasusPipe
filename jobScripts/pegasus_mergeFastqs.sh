@@ -22,30 +22,30 @@ failCount=0
 cd ${DIR}
 echo "TIME:$time starting fastq merging to create ${MERGEDFASTQ}"
 if [ ${CNT} -eq 1 ] ; then
-	echo "only one thing to merge, commands are:"
-	echo "cp ${FASTQLIST} ${MERGEDFASTQ}"
-	cp ${FASTQLIST} ${MERGEDFASTQ}
-	if [ $? -ne 0 ] ; then #check if foreground finished OK
-		((failCount++))
-	fi
+    echo "only one thing to merge, commands are:"
+    echo "cp ${FASTQLIST} ${MERGEDFASTQ}"
+    cp ${FASTQLIST} ${MERGEDFASTQ}
+    if [ $? -ne 0 ] ; then #check if foreground finished OK
+        ((failCount++))
+    fi
 else
-	echo "more than one thing to merge, commands are:"
-	echo "cat ${FASTQLIST} >> ${MERGEDFASTQ}"
-	cat ${FASTQLIST} >> ${MERGEDFASTQ}
-	if [ $? -ne 0 ] ; then #check if background finished OK
-		((failCount++))
-	fi
+    echo "more than one thing to merge, commands are:"
+    echo "cat ${FASTQLIST} >> ${MERGEDFASTQ}"
+    cat ${FASTQLIST} >> ${MERGEDFASTQ}
+    if [ $? -ne 0 ] ; then #check if background finished OK
+        ((failCount++))
+    fi
 fi
 
 if [ $failCount -eq 0 ] ; then
-	touch ${MERGEDFASTQ}.mergeFastqPass
-	touch ${RUNDIR}/${NXT1}
-	touch ${RUNDIR}/${NXT2}
-	touch ${RUNDIR}/${NXT3}
-	touch ${RUNDIR}/${NXT4}
+    touch ${MERGEDFASTQ}.mergeFastqPass
+    touch ${RUNDIR}/${NXT1}
+    touch ${RUNDIR}/${NXT2}
+    touch ${RUNDIR}/${NXT3}
+    touch ${RUNDIR}/${NXT4}
 
 else
-	touch ${MERGEDFASTQ}.mergeFastqFail
+    touch ${MERGEDFASTQ}.mergeFastqFail
 fi
 
 rm ${MERGEDFASTQ}.mergeFastqInQueue

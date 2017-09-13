@@ -67,9 +67,9 @@ ${SAILFISHPATH}/TranscriptsToGenes.sh \
     --res-file ${SAMPLE}_sailfish_ccds_genes.expr \
 
 if [ $? -eq 0 ] ; then
-	touch ${DIR}.sailFishPass
+    touch ${DIR}.sailFishPass
 else
-	touch ${DIR}.sailFishFail
+    touch ${DIR}.sailFishFail
 fi
 
 rm ${DIR}.sailFishInQueue

@@ -24,9 +24,9 @@ DIR=$(dirname "${SAM}")
 htseq-count -q --format=bam --stranded=no --mode=union ${BAM} ${GTF} > ${DIR}/${anotherName}.htSeqCounts
 
 if [ $? -eq 0 ] ; then
-	touch ${SAM}.htSeqPass
+    touch ${SAM}.htSeqPass
 else
-	mv ${SAM}.htSeqOut ${SAM}.htSeqFail
+    mv ${SAM}.htSeqOut ${SAM}.htSeqFail
 fi
 rm -f ${SAM}.htSeqInQueue
 

@@ -25,10 +25,10 @@ cd ${OUTTRACK}
 
 ${GREGORPATH}/gregor.py --vcf ${VCF} --plink2 ${PLINK2PATH}
 if [ $? -eq 0 ] ; then
-	touch ${OUTTRACKNAME}.sexRelCheckPass
-	mv ${VCF}.gregor2.txt ${OUTTRACKNAME}.gregor2.txt
-else	
-	touch${OUTTRACKNAME}.sexRelCheckFail
+    touch ${OUTTRACKNAME}.sexRelCheckPass
+    mv ${VCF}.gregor2.txt ${OUTTRACKNAME}.gregor2.txt
+else
+    touch${OUTTRACKNAME}.sexRelCheckFail
 fi
 
 rm -f ${OUTTRACKNAME}.sexRelCheckInQueue

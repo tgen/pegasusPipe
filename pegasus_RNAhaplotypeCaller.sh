@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -66,75 +66,75 @@ qsubFails=0
 
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" == "RNA" ] ; then
-		echo "### Assay ID is $assayID."
-		rnaDir="$runDir/$kitName/$samName/$samName.starDir"
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" == "RNA" ] ; then
+        echo "### Assay ID is $assayID."
+        rnaDir="$runDir/$kitName/$samName/$samName.starDir"
                 rnaBam="$rnaDir/$samName.proj.Aligned.out.sorted.md.splitN.rc.bam"
                 rnaPass="$rnaDir/$samName.proj.Aligned.out.sorted.md.splitN.bam.recalibratePass"
-		#pcDir=$runDir/$kitName/$samName
-		#inBam=$runDir/$kitName/$samName/$samName.proj.bam
-		#mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		#jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-		#jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		echo "### My bam is $rnaBam"
-		if [ ! -e $rnaPass ] ; then
-			echo "### Looks like rna align is not done yet. $rnaPass doesnt exist yet"
-			((qsubFails++))
-			continue
-		fi
-		if [ ! -e $rnaBam ] ; then
-			echo "### Weird. Bam itself is missing: $rnaBam"
-			((qsubFails++))
-			continue
-		else				
-			rnaHCDir="$runDir/rnaHC"
-			if [ ! -d $rnaHCDir ] ; then
-				mkdir $rnaHCDir
-			fi
-			mkdir -p $rnaHCDir/$samName
-			workDir="$rnaHCDir/$samName"
-			trackName="$runDir/rnaHC/$samName/$samName"
-			
-			STEP=0
-			STEP_COUNT=`ls $chrList/*list | wc -l`
-			echo "### Submitting to queue to run RNAhc on $wd"
-			while [ ${STEP} -lt $STEP_COUNT ]
-			do
-				(( STEP++ ))
-				if [[ -e ${trackName}_Step${STEP}.RNAhcInQueue || -e ${trackName}_Step${STEP}.RNAhcPass || -e ${trackName}_Step${STEP}.RNAhcFail ]] ; then
-					echo "### Haplotype caller is already done, failed, or inqueue for ${rnaBam}"
-					continue
-				fi
+        #pcDir=$runDir/$kitName/$samName
+        #inBam=$runDir/$kitName/$samName/$samName.proj.bam
+        #mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        #jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+        #jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        echo "### My bam is $rnaBam"
+        if [ ! -e $rnaPass ] ; then
+            echo "### Looks like rna align is not done yet. $rnaPass doesnt exist yet"
+            ((qsubFails++))
+            continue
+        fi
+        if [ ! -e $rnaBam ] ; then
+            echo "### Weird. Bam itself is missing: $rnaBam"
+            ((qsubFails++))
+            continue
+        else
+            rnaHCDir="$runDir/rnaHC"
+            if [ ! -d $rnaHCDir ] ; then
+                mkdir $rnaHCDir
+            fi
+            mkdir -p $rnaHCDir/$samName
+            workDir="$rnaHCDir/$samName"
+            trackName="$runDir/rnaHC/$samName/$samName"
 
-				echo Starting Haplotype caller for Step${STEP}
-				sbatch --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_RNAhaplotypeCaller.sh
-				if [ $? -eq 0 ] ; then
-					touch ${trackName}_Step${STEP}.RNAhcInQueue
-				else
-					((qsubFails++))
-				fi
+            STEP=0
+            STEP_COUNT=`ls $chrList/*list | wc -l`
+            echo "### Submitting to queue to run RNAhc on $wd"
+            while [ ${STEP} -lt $STEP_COUNT ]
+            do
+                (( STEP++ ))
+                if [[ -e ${trackName}_Step${STEP}.RNAhcInQueue || -e ${trackName}_Step${STEP}.RNAhcPass || -e ${trackName}_Step${STEP}.RNAhcFail ]] ; then
+                    echo "### Haplotype caller is already done, failed, or inqueue for ${rnaBam}"
+                    continue
+                fi
 
-				sleep 2
-			done
-		fi		
-	else
-		echo "### Assay ID is $assayID. Must not be RNA. RNA haplotype caller will only operate on RNA"
-		#code for calling AS metrics on tophat bams here
-	fi
+                echo Starting Haplotype caller for Step${STEP}
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_RNAhaplotypeCaller.sh
+                if [ $? -eq 0 ] ; then
+                    touch ${trackName}_Step${STEP}.RNAhcInQueue
+                else
+                    ((qsubFails++))
+                fi
+
+                sleep 2
+            done
+        fi
+    else
+        echo "### Assay ID is $assayID. Must not be RNA. RNA haplotype caller will only operate on RNA"
+        #code for calling AS metrics on tophat bams here
+    fi
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

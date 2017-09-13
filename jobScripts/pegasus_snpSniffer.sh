@@ -25,12 +25,12 @@ echo "### Starting -genotype step"
 java -jar ${SNPSNIFFERPATH}/snpSnifferV5.jar -genotype ${REF} ${BAM}
 
 if [ $? -eq 0 ] ; then
-	touch ${BAM}.snpSniffPass
-	mv ${outName}_flt.vcf ${OUTVCF}
+    touch ${BAM}.snpSniffPass
+    mv ${outName}_flt.vcf ${OUTVCF}
 else
-	echo "### Snp sniffer failed at genotype stage"
-	touch ${BAM}.snpSniffFail
-	rm ${BAM}.snpSniffInQueue
+    echo "### Snp sniffer failed at genotype stage"
+    touch ${BAM}.snpSniffFail
+    rm ${BAM}.snpSniffInQueue
 fi
 
 echo "### Ending -genotype step"

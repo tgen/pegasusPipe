@@ -22,19 +22,19 @@ myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -54,101 +54,101 @@ skipLines=1
 qsubFails=0
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	if [[ $salmon != yes ]] ; then
-		echo "### Salmon not requested for this recipe"
-		continue
-	fi
-	echo "### Sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Skipping."
-		continue
-	fi
-	read1Name=$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz
-	read2Name=$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz
-	echo "read 1 name: $read1Name"
-	echo "read 2 name: $read2Name"
-	echo "### Aligner for recipe $recipe is $rnaAligner"
-	thisPath=`dirname $runDir`
-	cd $thisPath
-	ownDir=${read1Name/.proj.R1.fastq.gz/.salmonDir}
-	if [[ ! -e $read1Name || ! -e $read2Name || ! -e $read1Name.mergeFastqPass || ! -e $read2Name.mergeFastqPass ]] ; then
-		echo "### one of the fastq files or read pass files dont exist"
-		echo "### read1Pass: $read1Name.mergeFastqPass"
-		echo "### read2Pass: $read2Name.mergeFastqPass"
-		((qsubFails++))
-		continue
-	fi
-	if [[ -e $ownDir.salmonPass || -e $ownDir.salmonFail || -e $ownDir.salmonInQueue ]] ; then 
-		echo "### Sail Fish already done, failed or inQueue"
-		continue
-	fi 
-	if [ ! -d $ownDir ] ; then
-		mkdir -p $ownDir
-	fi
+    if [[ $salmon != yes ]] ; then
+        echo "### Salmon not requested for this recipe"
+        continue
+    fi
+    echo "### Sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    rnaStrand=`grep "@@"$kitName"@@" $constants | cut -d= -f2`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID, rnaStrand: $rnaStrand"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Skipping."
+        continue
+    fi
+    read1Name=$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz
+    read2Name=$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz
+    echo "read 1 name: $read1Name"
+    echo "read 2 name: $read2Name"
+    echo "### Aligner for recipe $recipe is $rnaAligner"
+    thisPath=`dirname $runDir`
+    cd $thisPath
+    ownDir=${read1Name/.proj.R1.fastq.gz/.salmonDir}
+    if [[ ! -e $read1Name || ! -e $read2Name || ! -e $read1Name.mergeFastqPass || ! -e $read2Name.mergeFastqPass ]] ; then
+        echo "### one of the fastq files or read pass files dont exist"
+        echo "### read1Pass: $read1Name.mergeFastqPass"
+        echo "### read2Pass: $read2Name.mergeFastqPass"
+        ((qsubFails++))
+        continue
+    fi
+    if [[ -e $ownDir.salmonPass || -e $ownDir.salmonFail || -e $ownDir.salmonInQueue ]] ; then
+        echo "### Sail Fish already done, failed or inQueue"
+        continue
+    fi
+    if [ ! -d $ownDir ] ; then
+        mkdir -p $ownDir
+    fi
 
-	#creating linked files to the original reads
-	r1Name=`basename $read1Name`
-	r2Name=`basename $read2Name`
-	cd $ownDir
-	ln -s $read1Name $r1Name
-	read1Name=$ownDir/$r1Name
-	ln -s $read2Name $r2Name
-	read2Name=$ownDir/$r2Name
-	cd -
-	#done creating links. vars for reads changed.
-	echo "### read 1 name: $read1Name"
-	echo "### read 2 name: $read2Name"
-	#lineLength=`gunzip -c $read1Name | head -2 | tail -1 | wc -c` 
-	#let "readLength=$lineLength-1"
-	#echo "### Read length determined to be $readLength for $ownDir"
-	#refGrep="STARREF"$readLength
-	#starRef=`grep "@@"$recipe"@@" $constants | grep @@"$refGrep"= | cut -d= -f2`
-	#echo "### Star reference is $starRef"
-	echo "### submitting $ownDir to queue for salmon... "
-	echo "### salmon path is: $salmonPath"
-	if [[ $rnaStrand == "FIRST" ]] ; then
-        	echo "##running first stranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedSalmon.sh
-		if [ $? -eq 0 ] ; then
-			touch $ownDir.salmonInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
-	elif [[ $rnaStrand == "SECOND" ]] ; then
-        	echo "##running second stranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedSalmon.sh
-		if [ $? -eq 0 ] ; then
-			touch $ownDir.salmonInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
-	else
-		echo "##running unstranded salmon case"
-		sbatch -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_salmon.sh
-		if [ $? -eq 0 ] ; then
-			touch $ownDir.salmonInQueue
-		else
-			((qsubFails++))
-		fi
-		sleep 2
+    #creating linked files to the original reads
+    r1Name=`basename $read1Name`
+    r2Name=`basename $read2Name`
+    cd $ownDir
+    ln -s $read1Name $r1Name
+    read1Name=$ownDir/$r1Name
+    ln -s $read2Name $r2Name
+    read2Name=$ownDir/$r2Name
+    cd -
+    #done creating links. vars for reads changed.
+    echo "### read 1 name: $read1Name"
+    echo "### read 2 name: $read2Name"
+    #lineLength=`gunzip -c $read1Name | head -2 | tail -1 | wc -c`
+    #let "readLength=$lineLength-1"
+    #echo "### Read length determined to be $readLength for $ownDir"
+    #refGrep="STARREF"$readLength
+    #starRef=`grep "@@"$recipe"@@" $constants | grep @@"$refGrep"= | cut -d= -f2`
+    #echo "### Star reference is $starRef"
+    echo "### submitting $ownDir to queue for salmon... "
+    echo "### salmon path is: $salmonPath"
+    if [[ $rnaStrand == "FIRST" ]] ; then
+            echo "##running first stranded salmon case"
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedSalmon.sh
+        if [ $? -eq 0 ] ; then
+            touch $ownDir.salmonInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
+    elif [[ $rnaStrand == "SECOND" ]] ; then
+            echo "##running second stranded salmon case"
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedSalmon.sh
+        if [ $? -eq 0 ] ; then
+            touch $ownDir.salmonInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
+    else
+        echo "##running unstranded salmon case"
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_salmon.sh
+        if [ $? -eq 0 ] ; then
+            touch $ownDir.salmonInQueue
+        else
+            ((qsubFails++))
+        fi
+        sleep 2
 
-	fi
+    fi
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

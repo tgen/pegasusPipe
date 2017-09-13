@@ -27,15 +27,15 @@ echo "### Starting DESeq3.R"
 echo "/packages/R/3.1.1/bin/Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}"
 /packages/R/3.1.1/bin/Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}
 if [ $? -eq 0 ] ; then
-	touch ${DIRNAME}.deSeq2Pass
-	#echo "running this cmd to rename: mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq_results.txt"
-	mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq2_results.txt
-	#start conversion
-	echo "${DESEQ2PATH}/deseq2vcfNewGtf.pl ${GTF} ${DIRNAME}/$newName.DESeq2_results.txt ${NORMLIST}"
-	${DESEQ2PATH}/deseq2vcfNewGtf.pl ${GTF} ${DIRNAME}/$newName.DESeq2_results.txt ${NORMLIST}
-	#end conversion
+    touch ${DIRNAME}.deSeq2Pass
+    #echo "running this cmd to rename: mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq_results.txt"
+    mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq2_results.txt
+    #start conversion
+    echo "${DESEQ2PATH}/deseq2vcfNewGtf.pl ${GTF} ${DIRNAME}/$newName.DESeq2_results.txt ${NORMLIST}"
+    ${DESEQ2PATH}/deseq2vcfNewGtf.pl ${GTF} ${DIRNAME}/$newName.DESeq2_results.txt ${NORMLIST}
+    #end conversion
 else
-	touch ${DIRNAME}.deSeq2Fail
+    touch ${DIRNAME}.deSeq2Fail
 fi
 rm -f ${DIRNAME}/masterNor.txt
 rm -f ${DIRNAME}/masterTum.txt

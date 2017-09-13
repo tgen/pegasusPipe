@@ -30,17 +30,17 @@ ${SAMTOOLSPATH}/samtools view -x BD -x BI ${BAM} | head
 
 ##Run the actual merging script
 java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
-	-T CombineVariants \
-	-R ${REF} \
-	--variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
-	--variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
-	--variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
-	--genotypemergeoption UNIQUIFY \
-	--out ${TRACKNAME}.merged.vcf
+    -T CombineVariants \
+    -R ${REF} \
+    --variant:haplotypeCaller ${TRACKNAME}.HC.norm.vcf \
+    --variant:freebayes ${TRACKNAME}.freebayes.norm.vcf \
+    --variant:mpileup ${TRACKNAME}.mpileup.norm.vcf \
+    --genotypemergeoption UNIQUIFY \
+    --out ${TRACKNAME}.merged.vcf
 
 if [ $? -eq 0 ] ; then
     echo "the 3 variant callers were merged successfully"
-	touch ${TRACKNAME}.vcfMergerPass
+    touch ${TRACKNAME}.vcfMergerPass
 else
     touch ${TRACKNAME}.vcfMergerFail
 fi

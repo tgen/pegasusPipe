@@ -27,10 +27,10 @@ objectData=${OBJECTDATA}
 # Use DEXSeq R script to perform differential exon usage analysis.
 
 Rscript --vanilla ${DEXSEQPATH} \
-	${DEXSEQCONFIG} \
-	${DEXSEQGFF} \
-	${DEXSEQOUTFILE} \
-	${OBJECTDATA}
+    ${DEXSEQCONFIG} \
+    ${DEXSEQGFF} \
+    ${DEXSEQOUTFILE} \
+    ${OBJECTDATA}
 if [ $? -eq 0 ] ; then
     touch ${DEXSEQOUTDIR}.DEXseqPass
 else
