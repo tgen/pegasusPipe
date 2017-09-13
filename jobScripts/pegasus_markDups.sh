@@ -13,11 +13,13 @@ echo "### SAMTOOLSPATH: ${SAMTOOLSPATH}"
 
 echo "### Starting picard mark duplicates"
 
+echo "java -Xmx22g -jar ${PICARDPATH}/picard.jar MarkDuplicates ASSUME_SORTED=true REMOVE_DUPLICATES=false VALIDATION_STRINGENCY=SILENT TMP_DIR=${TMPDIR} INPUT=${BAMFILE} OUTPUT=${OUTPUTBAM} METRICS_FILE=${BAMFILE}.picStats.MarkDupMetrics MAX_RECORDS_IN_RAM=18000000 CREATE_INDEX=true > ${BAMFILE}.mdOut"
+
 java -Xmx22g -jar ${PICARDPATH}/picard.jar MarkDuplicates \
     ASSUME_SORTED=true \
     REMOVE_DUPLICATES=false \
     VALIDATION_STRINGENCY=SILENT \
-    TMP_DIR=/scratch/tgenjetstream/tmp \
+    TMP_DIR=${TMPDIR} \
     INPUT=${BAMFILE} OUTPUT=${OUTPUTBAM} \
     METRICS_FILE=${BAMFILE}.picStats.MarkDupMetrics \
     MAX_RECORDS_IN_RAM=18000000 \
