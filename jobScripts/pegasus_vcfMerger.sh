@@ -55,14 +55,14 @@ echo "### TUMOR= $TUMOR"
 echo "### REIPE= $RECIPE"
 echo "### D= $D"
 
-module load BEDTools/2.14.0 
-module load R/3.1.1
+module load BEDTools/2.26.0
+module load R/3.2.1
 
 SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 
 #filter the seurat vcf
 if [[ ${MATCHEDNORMAL} == "No" ]] ; then
-        echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for seurat snps"
+    echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for seurat snps"
     cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "( TYPE='somatic_SNV' )" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf
 else
     echo "matched normal detected running seurat SNV filter"
@@ -158,6 +158,9 @@ STRELKA_SNV_VCF_BN=`basename $STRELKA_SNV_VCF`
 STRELKA_INDEL_VCF_BN=`basename $STRELKA_INDEL_VCF`
 MUTECT_SNV_VCF_BN=`basename $MUTECT_SNV_VCF`
 
+
+echo "${VCFMERGER} --dirscript ${VCFMERGER_DIR} --seusnv ${SEURAT_SNV_PATH_BN} --seuindel ${SEURAT_INDEL_PATH_BN} --slksnv ${STRELKA_SNV_VCF_BN} --slkindel ${STRELKA_INDEL_VCF_BN} --mtcsnv ${MUTECT_SNV_VCF_BN} --refgenfa ${REF} --force --outprefix ${SEURAT_BASENAME} 2> ${MERGERDIR}/${SEURAT_BASENAME}.vcfMerger.perfOut"
+
 ${VCFMERGER} --dirscript ${VCFMERGER_DIR} \
     --seusnv ${SEURAT_SNV_PATH_BN} \
     --seuindel ${SEURAT_INDEL_PATH_BN} \
@@ -166,7 +169,7 @@ ${VCFMERGER} --dirscript ${VCFMERGER_DIR} \
     --mtcsnv ${MUTECT_SNV_VCF_BN} \
     --refgenfa ${REF} \
     --force \
-    --outprefix ${SEURAT_BASENAME} 2> ${MERGERDIR}/${SEURAT_BASENAME}.vcfMerger.perfOut
+    --outprefix ${SEURAT_BASENAME}
 
 if [ $? -ne 0 ] ; then
     echo "### vcf merger failed at merge 3 vcfs stage"
