@@ -125,7 +125,7 @@ do
                         continue
                 fi
             echo Starting freebayes caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayesMulti.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="$sampleList",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayesMulti.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.freebayesInQueue
         else
