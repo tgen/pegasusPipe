@@ -21,6 +21,21 @@ echo "### GATKPATH: ${GATKPATH}"
 echo "### SEURATPATH: ${SEURATPATH}"
 
 echo "### Seurat caller started for bams at $time."
+echo "java -Djava.io.tmpdir=$TMPDIR -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
+    -T Seurat \
+    -l INFO \
+    -R ${REF} \
+    -I:dna_normal ${NORMAL} \
+    -I:dna_tumor ${TUMOR} \
+    --both_strands \
+    -L ${CHRLIST}/Step${STEP}.list \
+    --metrics \
+    --indels \
+    --allele_metrics \
+    -o ${TRK}_Step${STEP}.Seurat.vcf \
+    -go ${TRK}_Step${STEP}.perChr.Seurat.txt \
+    --pileup_info > ${TRK}_Step${STEP}.seuratOut"
+
 java -Djava.io.tmpdir=$TMPDIR -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
     -T Seurat \
     -l INFO \
@@ -69,7 +84,7 @@ done
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
     echo SeuratCaller_${STEP}.Done
     #Concatenate VCF with GATK
-     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.seurat.vcf -assumeSorted
+    java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.seurat.vcf -assumeSorted
 
     if [ $? -eq 0 ] ; then
         touch ${TRK}.seuratPass
