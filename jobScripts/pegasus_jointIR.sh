@@ -26,6 +26,7 @@ cd ${WORKDIR}
 
 echo "### Starting indel realigning of file ${BAMLIST}"
 echo "### Step 1, target creator..."
+echo "java -Xmx15g -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar ${BAMLIST} -R ${REF} -T RealignerTargetCreator -nt 16 --maxIntervalSize 350 -DBQ 1 -o ${INTS} --disable_auto_index_creation_and_locking_when_reading_rods -known ${INDELS} > ${TRK}.jointIROut"
 
 java -Xmx15g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
@@ -43,7 +44,7 @@ if [ $? -ne 0 ] ; then
     echo "### JIR failed at RealignerTargetCreator stage"
     mv ${TRK}.jointIROut ${TRK}.jointIRFail
     rm -f ${TRK}.jointIRInQueue
-    exit
+    exit 1
 
 fi
 
