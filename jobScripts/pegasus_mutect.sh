@@ -22,7 +22,7 @@ echo "### TUMOR: ${TUMOR}"
 echo "### NORMAL: ${NORMAL}"
 echo "### MUTECTPATH: ${MUTECTPATH}"
 
-/usr/lib/jvm/java-1.6.0/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
+/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64/jre/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
     --analysis_type MuTect \
     --reference_sequence ${REF} \
     --intervals ${CHRLIST}/Step${STEP}.list \
@@ -45,6 +45,7 @@ echo "### MUTECTPATH: ${MUTECTPATH}"
     --tumor_depth_file ${OUTPUT}_Step${STEP}_MuTect_TumorDepth.wig \
     --normal_depth_file ${OUTPUT}_Step${STEP}_MuTect_NormalDepth.wig \
     --vcf ${OUTPUT}_Step${STEP}_MuTect.vcf > ${OUTPUT}_Step${STEP}.mutectOut
+
 if [ $? -eq 0 ] ; then
     echo "${STEP} Completed" >> ${OUTPUT}_MuTect_Status.txt
     PROGRESS=`wc -l ${OUTPUT}_MuTect_Status.txt | awk '{print $1}'`
