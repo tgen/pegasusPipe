@@ -108,7 +108,7 @@ do
         continue
     fi
     echo "### Submitting $usableName to queue for joint unified genotyper..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyper.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_unifiedGenotyper.sh
     if [ $? -eq 0 ] ; then
         touch $trackName.ugInQueue
     else

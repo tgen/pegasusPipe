@@ -138,7 +138,7 @@ do
         fi
 
         echo Starting Haplotype caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_haplotypeCaller.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.hcInQueue
         else
