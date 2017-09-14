@@ -109,10 +109,10 @@ do
 
     if [ "${jirRequested}" == "no" ] ; then
         normalBamFile=$runDir/$pair1KitName/$pair1/$pair1.proj.md.bam
-            tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.bam
+        tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.bam
 
         normalBaiFile=${normalBamFile/.bam/.bai}
-            tumorBaiFile=${tumorBamFile/.bam/.bai}
+        tumorBaiFile=${tumorBamFile/.bam/.bai}
 
         normalPass=$runDir/$pair1KitName/$pair1/$pair1.proj.bam.mdPass
         tumorPass=$runDir/$pair2KitName/$pair2/$pair2.proj.bam.mdPass
@@ -128,7 +128,7 @@ do
     fi
 
     echo "### normal BAM: $normalBamFile"
-        echo "### tumor  BAM: $tumorBamFile"
+    echo "### tumor  BAM: $tumorBamFile"
 
     if [[ ! -e $normalBamFile || ! -e $normalBaiFile || ! -e $normalPass ]] ; then
         echo "Normal bam, bai, or Pass does not exist"
@@ -145,7 +145,7 @@ do
         mkdir $strelkaDir
     fi
     mkdir -p $strelkaDir/$usableName
-    #trackName="$runDir/strelka/$usableName/$usableName"
+
     wd="$runDir/strelka/$usableName"
     if [[ -e $wd.strelkaInQueue || -e $wd.strelkaPass || -e $wd.strelkaFail ]] ; then
         echo "### Strelka is already done, failed, or inqueue for $wd"

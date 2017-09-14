@@ -28,7 +28,7 @@ cp ${STRELKAPATH}/etc/strelka_config_bwa_default.ini config.ini
 if [ $? -ne 0 ] ; then
     touch ${WD}.strelkaFail
     rm -f ${WD}.strelkaInQueue
-    exit
+    exit 1
 fi
 
 if [ ${ASSAY} == "Exome" ] ; then
@@ -41,7 +41,7 @@ ${STRELKAPATH}/bin/configureStrelkaWorkflow.pl \
     --normal=${NORMAL} \
     --tumor=${TUMOR} \
     --ref=${REF} \
-    --config=config.ini --output-dir=./myAnalysis
+    --config ./config.ini --output-dir=./myAnalysis
 
 if [ $? -ne 0 ] ; then
     touch ${WD}.strelkaFail
