@@ -22,7 +22,7 @@ echo "### TUMOR: ${TUMOR}"
 echo "### NORMAL: ${NORMAL}"
 echo "### MUTECTPATH: ${MUTECTPATH}"
 
-/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64/jre/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
+/home/tgenref/pecan/bin/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
     --analysis_type MuTect \
     --reference_sequence ${REF} \
     --intervals ${CHRLIST}/Step${STEP}.list \

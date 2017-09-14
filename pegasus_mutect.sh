@@ -15,12 +15,6 @@
 thisStep="pegasus_nextJob_mutect.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_vcfMerger.txt"
-#nxtStep2="pegasus_nextJob_cuffDiff.txt"
-#nxtStep3="pegasus_nextJob_htSeq.txt"
-#nxtStep4="pegasus_nextJob_picardRNAMetrics.txt"
-#nxtStep5="pegasus_nextJob_deSeq.txt"
-#nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
-#nxtStep7="pegasus_nextJob_samtoolsStats.txt"
 
 constants=~/jetstream/constants/constants.txt
 constantsDir=~/jetstream/constants/
@@ -31,7 +25,7 @@ echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
     echo "### Please provide runfolder as the only parameter"
     echo "### Exiting!!!"
-    exit
+    exit 1
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
@@ -39,7 +33,7 @@ configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
     echo "### Config file not found at $configFile!!!"
     echo "### Exiting!!!"
-    exit
+    exit 1
 else
     echo "### Config file found."
 fi
@@ -73,7 +67,7 @@ d=`echo $runDir | cut -c 2-`
 
 skipLines=1
 qsubFails=0
-###
+
 for dnaPairLine in `cat $configFile | grep '^DNAPAIR='`
 do
     if [ $mutect != "yes" ] ; then
