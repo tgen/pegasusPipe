@@ -23,7 +23,7 @@ echo "### CHRLIST: ${CHRLIST}"
 
 echo "### freebayes started at $time."
 echo "${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf"
-${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
+perf stat ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
 if [ $? -eq 0 ] ; then
     echo "${STEP} Completed" >> ${TRACKNAME}_fbStatus.txt
     PROGRESS=`wc -l ${TRACKNAME}_fbStatus.txt | awk '{print $1}'`
