@@ -159,7 +159,7 @@ STRELKA_INDEL_VCF_BN=`basename $STRELKA_INDEL_VCF`
 MUTECT_SNV_VCF_BN=`basename $MUTECT_SNV_VCF`
 
 
-echo "${VCFMERGER} --dirscript ${VCFMERGER_DIR} --seusnv ${SEURAT_SNV_PATH_BN} --seuindel ${SEURAT_INDEL_PATH_BN} --slksnv ${STRELKA_SNV_VCF_BN} --slkindel ${STRELKA_INDEL_VCF_BN} --mtcsnv ${MUTECT_SNV_VCF_BN} --refgenfa ${REF} --force --outprefix ${SEURAT_BASENAME} 2> ${MERGERDIR}/${SEURAT_BASENAME}.vcfMerger.perfOut"
+echo "${VCFMERGER} --dirscript ${VCFMERGER_DIR} --seusnv ${SEURAT_SNV_PATH_BN} --seuindel ${SEURAT_INDEL_PATH_BN} --slksnv ${STRELKA_SNV_VCF_BN} --slkindel ${STRELKA_INDEL_VCF_BN} --mtcsnv ${MUTECT_SNV_VCF_BN} --refgenfa ${REF} --force --outprefix ${SEURAT_BASENAME}"
 
 ${VCFMERGER} --dirscript ${VCFMERGER_DIR} \
     --seusnv ${SEURAT_SNV_PATH_BN} \
@@ -293,6 +293,7 @@ if [ -z "${RNABAM}" ] ; then
     fi
 
     # Make final call list venn
+    echo "${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --"
     ${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --
     if [ $? -ne 0 ] ; then
         echo "### vcf merger failed at venn diagram stage"
