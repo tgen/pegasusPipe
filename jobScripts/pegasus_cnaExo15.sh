@@ -4,11 +4,10 @@
 #SBATCH --mail-user=tgenjetstream@tgen.org
 
 
-module load VCFtools/0.1.10
 module load perl
 module load MCR/8.3
 module load R/3.0.0
-MCRPATH=/packages/MCR/8.3/v83
+MCRPATH=/packages/MCR/8.3/
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -80,7 +79,7 @@ if [ $? -ne 0 ] ; then
     echo "### CNA failed at run_ngsCNA.sh"
     touch ${TRACKNAME}.cnaExomeFail
     rm -f ${TRACKNAME}.cnaExomeInQueue
-    exit
+    exit 1
 else
     echo "### Renaming cnaStats files"
     nFileName=`basename ${NORMALDAT}`
@@ -98,7 +97,7 @@ if [ $? -ne 0 ] ; then
     echo "### CNA failed at runDNAcopyExome.R"
     touch ${TRACKNAME}.cnaExomeFail
     rm -f ${TRACKNAME}.cnaExomeInQueue
-    exit
+    exit 1
 fi
 
 echo "### End runDNAcopyExome.R"
@@ -113,7 +112,7 @@ if [ -f ${OFILE}.hets.tsv ] ; then
         echo "### CNA failed at plotCGHwithHets.R"
         touch ${TRACKNAME}.cnaExomeFail
         rm -f ${TRACKNAME}.cnaExomeInQueue
-        exit
+        exit 1
     fi
 
     echo "### End running plots with hets"
@@ -124,29 +123,29 @@ Rscript --vanilla ${CNAPATH}/plotBAF.R ${OFILE}.baf.txt ${OFILE}.baf
 Rscript --vanilla ${CNAPATH}/runDNAcopyBAF.R ${OFILE}.baf.txt ${OFILE}.baf
 ${CNAPATH}/annotBAFseg.pl ${CCDSLIST} ${OFILE}.baf.seg 0.15
 if [ $? -ne 0 ] ; then
-        echo "### CNA failed at annotBAFSeg.pl"
-        touch ${TRACKNAME}.cnaExomeFail
-        rm -f ${TRACKNAME}.cnaExomeInQueue
-        exit
+    echo "### CNA failed at annotBAFSeg.pl"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit 1
 fi
 
 ###These may be switched to "optional" if they become a problem
 module load MCR/9.0
-MCRPATH9=/packages/MCR/9.0/v90
+MCRPATH9=/packages/MCR/9.0/
 ${CNAPATH}/plotLinearCNA/run_plotLinearCNAandBAF.sh ${MCRPATH9} ${OFILE}.cna.tsv ${OFILE}.baf.txt ${OFILE}.cnaBAF.png
 if [ $? -ne 0 ] ; then
-        echo "### CNA failed at plotLinearCNAandBAF.sh"
-        touch ${TRACKNAME}.cnaExomeFail
-        rm -f ${TRACKNAME}.cnaExomeInQueue
-        exit
+    echo "### CNA failed at plotLinearCNAandBAF.sh"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit 1
 fi
 
 ${CNAPATH}/plotLinearCNAabsBAF/run_plotLinearCNAandAbsBAF.sh ${MCRPATH9} ${OFILE}.cna.tsv ${OFILE}.baf.txt ${OFILE}.cnaAbsBAF.png
 if [ $? -ne 0 ] ; then
-        echo "### CNA failed at plotLinearCNAandAbsBAF"
-        touch ${TRACKNAME}.cnaExomeFail
-        rm -f ${TRACKNAME}.cnaExomeInQueue
-        exit
+    echo "### CNA failed at plotLinearCNAandAbsBAF"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit 1
 fi
 
 ##Annotate and convert SEG file to gVCF 
@@ -159,17 +158,17 @@ if [ $? -ne 0 ] ; then
     echo "### CNA failed at annotSeg.pl"
     touch ${TRACKNAME}.cnaExomeFail
     rm -f ${TRACKNAME}.cnaExomeInQueue
-    exit
+    exit 1
 fi
 echo "### End annotSeg.pl"
 
 echo "### START validateCNAVariatsVCF.pl"
 ${CNAPATH}/validateCNAVariantsVCF.pl ${OFILE}.cna.seg.vcf ${OFILE}.baf.txt ${CNAPATH}/ztable.txt
 if [ $? -ne 0 ] ; then
-        echo "### CNA failed at validateCNAvariantsVCF.pl"
-        touch ${TRACKNAME}.cnaExomeFail
-        rm -f ${TRACKNAME}.cnaExomeInQueue
-        exit
+    echo "### CNA failed at validateCNAvariantsVCF.pl"
+    touch ${TRACKNAME}.cnaExomeFail
+    rm -f ${TRACKNAME}.cnaExomeInQueue
+    exit 1
 fi
 echo "### End validateCNAVariantsVCF.pl"
 
