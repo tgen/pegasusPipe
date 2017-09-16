@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_summaryStats.txt"
 #nxtStep1="pegasus_nextJob_saveToIsilon.txt"
 nxtStep1="pegasus_nextJob_finalize.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -79,7 +79,7 @@ if [ -e $runDir/summaryStatsInQueue ] ; then
 fi
 if [ $alreadyDone -eq 0 ] ; then
     echo "submitting $runDir to queue for Summary stats"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_summaryStats.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_summaryStats.sh
     if [ $? -eq 0 ] ; then
         touch $runDir/summaryStatsInQueue
     else

@@ -17,8 +17,8 @@ nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 nxtStep2="pegasus_nextJob_snpEff.txt"
 nxtStep3="pegasus_nextJob_alleleCount.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 #declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -131,7 +131,7 @@ do
         fi
 
         echo Starting Seurat caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_seurat.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_seurat.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.seuratInQueue
         else

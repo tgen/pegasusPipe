@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_ancestry.txt"
 nxtStep1="pegasus_nextJob_postAncestry.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -95,7 +95,7 @@ for sampleLine in `cat $configFile | grep ^SAMPLE=`; do
                 mkdir -p $ancestryDir
             fi
             echo "Starting ancestry for ${bamFile}"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_ancestry.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ANCESTRYDIR=$ancestryDir,BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,LASERPATH=$laserPath,HGDPPATH=$hgdpPath,TRACKNAME=$trackName,KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_ancestry.sh
             if [ $? -eq 0 ] ; then
                 touch ${trackName}.ancestryInQueue
             else

@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_picardGcBiasMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicGcBiasMetrics.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -83,7 +83,7 @@ do
                 echo "### Picard GC Bias summary metric already passed, in queue, or failed for $mdBam"
             else
                 echo "### Submitting for picard GC Bias Metrics: $mdBam"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardGcBiasMetrics.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardGcBiasMetrics.sh
                 if [ $? -eq 0 ] ; then
                     touch $mdBam.picGcBiasMetricsInQueue
                 else
@@ -103,7 +103,7 @@ do
                     echo "### Picard GC Bias summary metric already passed, in queue, or failed for $jrBam"
                 else
                     echo "### Submitting for picard GC Bias Metrics: $jrBam"
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardGcBiasMetrics.sh
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardGcBiasMetrics.sh
                     if [ $? -eq 0 ] ; then
                         touch $jrBam.picGcBiasMetricsInQueue
                     else

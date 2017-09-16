@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_IGLbedCov.txt"
 nxtStep1="pegasus_nextJob_postPIGLbedCov.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -113,7 +113,7 @@ do
         mkdir $runDir/stats
     fi
     echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_IGLbedCov.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_IGLbedCov.sh
     if [ $? -eq 0 ] ; then
         touch $rnaBam.IGLbedCovInQueue
     else

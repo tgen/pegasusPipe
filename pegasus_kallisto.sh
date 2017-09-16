@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_kallisto.txt"
 nxtStep1="pegasus_nextJob_postKallisto.txt"
 ##nxtStep1="pegasus_nextJob_sleuth.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -178,7 +178,7 @@ do
 
                              if [[ $rnaStrand == "FIRST" ]] ; then
                                         echo "##running first stranded kallisto case"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_firstStrandedKallisto.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedKallisto.sh
                                 if [ $? -eq 0 ] ; then
                                     touch $ownDir.kallistoInQueue
                                 else
@@ -187,7 +187,7 @@ do
                                 fi
                             elif [[ $rnaStrand == "SECOND" ]] ; then
                                         echo "##running second stranded kallisto case"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_secondStrandedKallisto.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedKallisto.sh
                                                                 if [ $? -eq 0 ] ; then
                                                                         touch $ownDir.kallistoInQueue
                                                                 else
@@ -196,7 +196,7 @@ do
                                                                 fi
                             else
                                         echo "##running unstranded kallisto case"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_kallisto.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export KALLISTO_INDEX_CDNA=$kallistoIndexCDNA,KALLISTO_INDEX_GTF=$kallistoIndexGTF,SAMNAME=$samName,FASTQL="'"$fastqList"'",DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_kallisto.sh
                                                                 if [ $? -eq 0 ] ; then
                                                                         touch $ownDir.kallistoInQueue
                                                                 else

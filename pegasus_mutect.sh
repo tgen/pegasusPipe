@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_mutect.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_vcfMerger.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -158,7 +158,7 @@ do
         fi
 
         echo Starting MuTect Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pegasusPbsHome/pegasus_mutect.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mutect.sh
         if [ $? -eq 0 ] ; then
             touch ${wd}_Step${STEP}.mutectInQueue
         else

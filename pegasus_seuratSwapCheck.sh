@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_seuratSwapCheck.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep2="pegasus_nextJob_seuratSwapCheck.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -83,7 +83,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.REVseurat.vcf to queue for seuratSwapCheck..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_seuratSwapCheck.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPEFFPATH=$snpeffPath,VCF=$trackName.REVseurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_seuratSwapCheck.sh
         if [ $? -eq 0 ] ; then
                 touch $trackName.REVseurat.vcf.seuratSwapCheckInQueue
         else
@@ -120,7 +120,7 @@ do
                 continue
         fi
         echo "### Submitting $trackName.seurat.vcf to queue for seuratSwapCheck..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_seuratSwapCheck.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SNPEFFPATH=$snpeffPath,VCF=$trackName.seurat.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_seuratSwapCheck.sh
         if [ $? -eq 0 ] ; then
                 touch $trackName.seurat.vcf.seuratSwapCheckInQueue
         else

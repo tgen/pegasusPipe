@@ -17,8 +17,8 @@ nxtStep1="central_nextJob_saveToIsilon.txt"
 nxtStep2="central_nextJob_saveStats.txt"
 nxtStep3="central_nextJob_saveToReport.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

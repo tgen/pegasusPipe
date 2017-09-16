@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_circos.txt"
 nxtStep1="pegasus_nextJob_postCircos.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -138,7 +138,7 @@ do
     cat $outDir/template_circos.part2.conf >> $outDir/template_circos.conf
 
     echo "### Submitting to queue with $normalBamFile"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_circos.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export OUTFILE=$circosSamples,CONF=$conf,OUTDIR=$outDir,SEURATVCF=$seuratVcf,COSMIC=$cosmicVcf,TRNVCF=$trnVcf,CNVTSV=$cnvsTSV,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_circos.sh
     if [ $? -eq 0 ] ; then
         touch $circosSamples.circosInQueue
     else

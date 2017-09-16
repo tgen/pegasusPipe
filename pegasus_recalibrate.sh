@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_recalibrate.txt"
 nxtStep1="pegasus_nextJob_mergeBams.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -127,7 +127,7 @@ do
                         fi
                         d=`echo $runDir | cut -c 2-`
                         echo "### Submitting to recalibrate to create $rcBamFile"
-                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_recalibrate.sh
+                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_recalibrate.sh
                         if [ $? -eq 0 ] ; then
                             touch $inputForNext.recalibrateInQueue
                         else

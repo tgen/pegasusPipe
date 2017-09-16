@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_freebayes.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_germVcfMerger.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -125,7 +125,7 @@ do
                         continue
                 fi
             echo Starting freebayes caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="$sampleList",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayesMulti.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="$sampleList",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_freebayesMulti.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.freebayesInQueue
         else
@@ -187,7 +187,7 @@ do
                     fi
 
                     echo Starting freebayes for ${fbBam}
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_freebayes.sh
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_freebayes.sh
                     if [ $? -eq 0 ] ; then
                         touch ${trackName}_Step${STEP}.freebayesInQueue
                     else

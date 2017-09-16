@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_trn.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -132,7 +132,7 @@ do
         continue
     fi
     echo "### Submitting to queue with $normalBamFile"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_trn.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ASSAY=$assay,BEDFILE=$bedFile,GTF=$gtf,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,OUTFILE=$trnDatFile,TRNPATH=$trnPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,RECIPE=$recipe,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_trn.sh
     if [ $? -eq 0 ] ; then
         touch $trnDatFile.trnInQueue
     else

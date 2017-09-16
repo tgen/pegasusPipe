@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_germlineACmerge.txt "
 nxtStep1="pegasus_nextJob_postgermlineACmerge.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -120,7 +120,7 @@ do
             continue
         else
             echo "### Submitting vcf to queue for vcf merger allele count..."
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,BASENAME=$usableName,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_mergeVcfAlleleCount.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATK=$gatkPath,VCFMERGER=$VCFMERGER,BASENAME=$usableName,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,MERGERDIR=$mergerDir,RNABAM=$rnaBam,ASSAYID=$assayID,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeVcfAlleleCount.sh
             if [ $? -eq 0 ] ; then
                 touch ${mergerDir}/${usableName}.vcfMergerACInQueue
             else

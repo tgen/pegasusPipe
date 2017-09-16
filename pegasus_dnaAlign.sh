@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_dnaAlign.txt"
 nxtStep1="pegasus_nextJob_indelRealign.txt"
 nxtStep2="pegasus_nextJob_recalibrate.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -129,7 +129,7 @@ do
                             fi
 
                             echo "$rgTag"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d $pegasusPbsHome/pegasus_bwaMem.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
                             if [ $? -eq 0 ] ; then
                                 touch $bamName.dnaAlignInQueue
                             else

@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_clonalCov.txt"
 nxtStep1="pegasus_nextJob_cna15.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -94,7 +94,7 @@ do
             ((qsubFails++))
         else
             echo "### Submitting to queue with $normalBamFile"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$normalBamFile,OUTFILE=$normalBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_clonalCov.sh
             if [ $? -eq 0 ] ; then
                 touch $normalBamFile.clonalCovInQueue
             else
@@ -111,7 +111,7 @@ do
             ((qsubFails++))
         else
             echo "### Submitting to queue with $tumorBamFile"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$tumorBamFile,OUTFILE=$tumorBamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_clonalCov.sh
             if [ $? -eq 0 ] ; then
                 touch $tumorBamFile.clonalCovInQueue
             else
@@ -162,7 +162,7 @@ do
                 ((qsubFails++))
             else
                 echo "### Submitting to queue with $bamFile"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_clonalCov.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BAMFILE=$bamFile,OUTFILE=$bamFile.clc,CPATH=$clonalCovPath,SAMPATH=$samtoolsPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_clonalCov.sh
                 if [ $? -eq 0 ] ; then
                     touch $normalBamFile.clonalCovInQueue
                 else

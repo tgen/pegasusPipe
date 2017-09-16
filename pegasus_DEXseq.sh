@@ -15,10 +15,10 @@
 thisStep="pegasus_nextJob_DEXseq.txt"
 nxtStep1="pegasus_nextJob_postDEXseq.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
-myName=`basename $0 | cut -d_ -f2`
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
 
+myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
@@ -147,7 +147,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for DEXseq..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseq.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQPATH=$DEXseqPath,DEXSEQGFF=$DEXseqGff,DEXSEQCONFIG=$DEXseqConfig,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqDir,OBJECTDATA=$objectData,DEXSEQOUTFILE=$DEXseqOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseq.sh
                 if [ $? -eq 0 ] ; then
                        touch $DEXseqDir.DEXseqInQueue
                 else

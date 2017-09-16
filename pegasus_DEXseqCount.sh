@@ -15,8 +15,9 @@
 thisStep="pegasus_nextJob_DEXseqCount.txt"
 nxtStep1="pegasus_nextJob_DEXseq.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -36,6 +37,7 @@ if [ ! -e $configFile ] ; then
 else
     echo "### Config file found."
 fi
+
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
@@ -109,7 +111,7 @@ do
                 echo "### DEXseqCount is already done, failed or inQueue"
             else
                 echo "### Submitting $samName to queue for DEXseqCount..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseqCount.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
                 if [ $? -eq 0 ] ; then
                     touch $DEXseqOut.DEXseqCountInQueue
                 else
@@ -138,7 +140,7 @@ do
                 echo "### DEXseqCount is already done, failed or inQueue"
             else
                 echo "### Submitting $samName to queue for DEXseqCount..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_DEXseqCount.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
 
                 if [ $? -eq 0 ] ; then
                     touch $DEXseqOut.DEXseqCountInQueue

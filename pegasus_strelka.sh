@@ -21,8 +21,8 @@ nxtStep1="pegasus_nextJob_snpEff.txt"
 #nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep7="pegasus_nextJob_samtoolsStats.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -152,7 +152,7 @@ do
         continue
     fi
     echo "### Submitting to queue to run strelka on $wd"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pegasusPbsHome/pegasus_strelka.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strelka.sh
     if [ $? -eq 0 ] ; then
         touch $wd.strelkaInQueue
     else

@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_deNovoGear.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -148,7 +148,7 @@ do
         continue
     fi
     echo "### Submitting $trackName.HC_All.vcf to queue for deNovoGear..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export DENOVOPATH=$deNovoGearPath,TRACKNAME=$trackname,SAMTOOLSPATH=$samtoolsPath,BAMLIST="$sampleList",BAMFILE=$bamText,BCFTOOLSPATH=$bcfToolsPath,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${hcTrackName}.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_deNovoGear.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export DENOVOPATH=$deNovoGearPath,TRACKNAME=$trackname,SAMTOOLSPATH=$samtoolsPath,BAMLIST="$sampleList",BAMFILE=$bamText,BCFTOOLSPATH=$bcfToolsPath,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${hcTrackName}.HC_All.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_deNovoGear.sh
     if [ $? -eq 0 ] ; then
         touch $outTrackName.deNovoGearInQueue
     else

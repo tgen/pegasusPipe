@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_alleleCount.txt"
 nxtStep1="pegasus_nextJob_postAlleleCount.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 
@@ -150,7 +150,7 @@ do
     fi
 
     echo "### Submitting to queue for allele count..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_alleleCount.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_alleleCount.sh
 
     if [ $? -eq 0 ] ; then
         touch $trackName/$usableName.alleleCountInQueue

@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_picardHSMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicHSMetric.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -92,7 +92,7 @@ do
                 echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
             else
                 echo "### Submitting for picard HS Metrics: $mdBam"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardHSMetrics.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardHSMetrics.sh
                 if [ $? -eq 0 ] ; then
                     touch $mdBam.picHSMetricsInQueue
                 else
@@ -112,7 +112,7 @@ do
                     echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
                 else
                     echo "### Submitting for picard HS Metrics: $jrBam"
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_picardHSMetrics.sh
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardHSMetrics.sh
                     if [ $? -eq 0 ] ; then
                         touch $jrBam.picHSMetricsInQueue
                     else

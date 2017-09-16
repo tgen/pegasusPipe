@@ -79,7 +79,7 @@ do
                         else
                             echo "### Submitting to split: $targetName"
                             prefix="$samName"`printf "_%03d" "$i"`"_R1.split.fastq.gz"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PF=$prefix,DIR=$splitDir,D=$d,FQ=$targetName,NXT1=$nxtStep1,RUNDIR=$runDir $pegasusPbsHome/pegasus_splitFastq.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PF=$prefix,DIR=$splitDir,D=$d,FQ=$targetName,NXT1=$nxtStep1,RUNDIR=$runDir ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_splitFastq.sh
                             if [ $? -eq 0 ] ; then
                                 touch $targetName.fastqSplitInQueue
                             else
@@ -92,7 +92,7 @@ do
                         else
                             echo "### Submitting to split: $targR2Name"
                             prefix="$samName"`printf "_%03d" "$i"`"_R2.split.fastq.gz"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PF=$prefix,DIR=$splitDir,D=$d,FQ=$targR2Name,NXT1=$nxtStep1,RUNDIR=$runDir $pegasusPbsHome/pegasus_splitFastq.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PF=$prefix,DIR=$splitDir,D=$d,FQ=$targR2Name,NXT1=$nxtStep1,RUNDIR=$runDir ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_splitFastq.sh
                             if [ $? -eq 0 ] ; then
                                 touch $targR2Name.fastqSplitInQueue
                             else

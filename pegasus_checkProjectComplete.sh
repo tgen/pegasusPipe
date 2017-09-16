@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_checkProjectComplete.txt"
 nxtStep1="pegasus_nextJob_summaryStats.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

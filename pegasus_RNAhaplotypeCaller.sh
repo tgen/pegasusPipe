@@ -15,10 +15,10 @@
 thisStep="pegasus_nextJob_RNAhaplotypeCaller.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
-myName=`basename $0 | cut -d_ -f2`
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
 
+myName=`basename $0 | cut -d_ -f2`
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
@@ -113,7 +113,7 @@ do
                 fi
 
                 echo Starting Haplotype caller for Step${STEP}
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_RNAhaplotypeCaller.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_RNAhaplotypeCaller.sh
                 if [ $? -eq 0 ] ; then
                     touch ${trackName}_Step${STEP}.RNAhcInQueue
                 else

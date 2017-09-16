@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_digarPost.txt"
 nxtStep1="pegasus_nextJob_postdigarPost.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -126,7 +126,7 @@ do
             fi
  
             echo "### Submitting $digarDir to queue for digarPost..."
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digarPost.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digarPost.sh
             if [ $? -eq 0 ] ; then
                 touch $digarDir.digarPostInQueue
             else

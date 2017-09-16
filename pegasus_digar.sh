@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_digar.txt"
 nxtStep1="pegasus_nextJob_digarPost.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 |  cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -129,8 +129,8 @@ do
                 fi
 
                 echo "### Submitting $digarDir to queue for digar..."
-                echo "sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.sh"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_digar.sh
+                echo "sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh
                 if [ $? -eq 0 ] ; then
                     touch ${digarDir}/$samName.$geneName.digarInQueue
                 else

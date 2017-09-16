@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_germVcfMerger.txt"
 #nxtStep1="pegasus_nextJob_mergeVcfAlleleCount.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -142,8 +142,8 @@ do
         fi
                 echo "### Submitting vcfs to queue for vcf merger..."
 
-                echo "qsub -A $debit -l nodes=1:ppn=8 -v VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_germVcfMerge.sh"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_germVcfMerge.sh
+                echo "qsub -A $debit -l nodes=1:ppn=8 -v VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_germVcfMerge.sh"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_germVcfMerge.sh
                 if [ $? -eq 0 ] ; then
                         touch ${mergerDir}/${usableName}.vcfMergerInQueue
                 else
@@ -215,8 +215,8 @@ do
                 fi
                 echo "### Submitting vcfs to queue for vcf merger..."
 
-                echo "qsub -A $debit -l nodes=1:ppn=8 -v VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_germVcfMerge.sh"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_germVcfMerge.sh
+                echo "qsub -A $debit -l nodes=1:ppn=8 -v VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_germVcfMerge.sh"
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export VTPATH=$vtPath,SNPEFFPATH=$snpeffPath,SNPSIFT=$snpSift,DBNSFP=$DBNSFP,DBNSP=$DBNSP,TRACKNAME=$trackName,SAMTOOLS=$samTools,VARSCAN=$varScan,REF=$ref,DICT=$refDict,COSMIC=$COSMIC,KG=$KG,NHLBI=$NHLBI,SNPS=$snps,INDELS=$indels,GATKPATH=$gatkPath,VCFMERGER=$VCFMERGER,VCFMERGER_DIR=$VCFMERGER_DIR,VCFSORTER=$VCFSORTER,RNA_VCF_HEADER=$RNA_VCF_HEADER,POST_MERGE_VENN=$POST_MERGE_VENN,DBSNP=$dbsnp,DBVERSION=$snpeffdb,HCVCF=$hcVcf,MPVCF=$mpVcf,FBVCF=$fbVcf,MERGERDIR=$mergerDir,ASSAYID=$assayID,BEDFILE=$bedFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_germVcfMerge.sh
                 if [ $? -eq 0 ] ; then
                     touch ${mergerDir}/${samName}.vcfMergerInQueue
                 else

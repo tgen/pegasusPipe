@@ -16,8 +16,8 @@ thisStep="pegasus_nextJob_samtoolsMpileUp.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_germVcfMerger.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -133,7 +133,7 @@ do
                         continue
                 fi
                         echo Starting mpileup Step${STEP}
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUpMulti.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamText,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_samtoolsMpileUpMulti.sh
                         if [ $? -eq 0 ] ; then
                                 touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
                         else
@@ -201,7 +201,7 @@ do
                     fi
 
                     echo Starting samtoolsMpileUp for ${bamFile}
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_samtoolsMpileUp.sh
+                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export BEDFILE=$targets,GATKPATH=$gatkPath,SAMTOOLSPATH=$samtoolsPath,BCFTOOLSPATH=$bcftoolsPath,CHRLIST=$chrListBed,TRACKNAME=$trackName,STEP=${STEP},STEPCOUNT=${STEP_COUNT},KNOWN=$snps,BAMFILE=$bamFile,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_samtoolsMpileUp.sh
                     if [ $? -eq 0 ] ; then
                         touch ${trackName}_Step${STEP}.samtoolsMpileUpInQueue
                     else

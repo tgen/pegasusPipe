@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_sleuth.txt"
 nxtStep1="pegasus_nextJob_postSleuth.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -146,7 +146,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for sleuth..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_sleuth.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sleuth.sh
                 if [ $? -eq 0 ] ; then
                        touch $sleuthDir.sleuthInQueue
                 else

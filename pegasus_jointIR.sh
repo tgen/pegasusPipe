@@ -23,8 +23,8 @@ nxtStep6="pegasus_nextJob_strelka.txt"
 nxtStep7="pegasus_nextJob_snpSniff.txt"
 nxtStep8="pegasus_nextJob_REVseurat.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -163,7 +163,7 @@ do
             continue
         fi
         echo "### Submitting $usableName to queue for joint indel realignment..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="$sampleList",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_jointIR.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="$sampleList",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_jointIR.sh
         if [ $? -eq 0 ] ; then
         touch $trackName.jointIRInQueue
         else

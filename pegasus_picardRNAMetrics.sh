@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_picardRNAMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicRnaMetric.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -108,7 +108,7 @@ do
     echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
     if [ $rnaStrand == "FIRST" ] ; then
                 echo "##running stranded picard metrics case"
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_FSpicardRNAMetrics.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_FSpicardRNAMetrics.sh
         if [ $? -eq 0 ] ; then
             touch $rnaBam.picRNAMetricsInQueue
         else
@@ -118,7 +118,7 @@ do
 
         elif [ $rnaStrand == "SECOND" ] ; then
                 echo "##running stranded picard metrics case"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_SSpicardRNAMetrics.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_SSpicardRNAMetrics.sh
                 if [ $? -eq 0 ] ; then
                         touch $rnaBam.picRNAMetricsInQueue
                 else
@@ -127,7 +127,7 @@ do
                 sleep 2
         else
         echo "###running unstranded picard metrics case"
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d $pegasusPbsHome/pegasus_picardRNAMetrics.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardRNAMetrics.sh
         if [ $? -eq 0 ] ; then
             touch $rnaBam.picRNAMetricsInQueue
         else

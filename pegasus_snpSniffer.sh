@@ -15,8 +15,8 @@
 thisStep="pegasus_nextJob_snpSniff.txt"
 nxtStep1="pegasus_nextJob_checkProjectComplete.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -101,7 +101,7 @@ do
                 echo "### Looks like snp sniff is alread in queue, failed, or passed"
             else
                 echo "### Submitting for snpSniffer: $bamFile"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
                 if [ $? -eq 0 ] ; then
                     touch $bamFile.snpSniffInQueue
                 else
@@ -135,7 +135,7 @@ do
             else
                 finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
                 echo "### Submitting for snpSniffer: $bamFile"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d $pegasusPbsHome/pegasus_snpSniffer.sh
+                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
                 if [ $? -eq 0 ] ; then
                     touch $bamFile.snpSniffInQueue
                 else

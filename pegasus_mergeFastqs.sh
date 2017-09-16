@@ -18,8 +18,8 @@ nxtStep2="pegasus_nextJob_detectFusion.txt"
 nxtStep3="pegasus_nextJob_salmon.txt"
 nxtStep4="pegasus_nextJob_kallisto.txt"
 
-constants=~/jetstream/constants/constants.txt
-constantsDir=~/jetstream/constants/
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -131,7 +131,7 @@ do
                             echo "### Already passed, inQueue, or failed"
                         else
                             echo "### Ready to submit for read 1..."
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CNT=$read1Count,RUNDIR=$runDir,NTX1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList1",MERGEDFASTQ=$targetName,D=$d $pegasusPbsHome/pegasus_mergeFastqs.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CNT=$read1Count,RUNDIR=$runDir,NTX1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList1",MERGEDFASTQ=$targetName,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeFastqs.sh
                             if [ $? -eq 0 ] ; then
                                 touch $targetName.mergeFastqInQueue
                             else
@@ -143,7 +143,7 @@ do
                             echo "### Already passed, inQueue, or failed"
                         else
                             echo "### Ready to submit for read 2..."
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CNT=$read1Count,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList2",MERGEDFASTQ=$targR2Name,D=$d $pegasusPbsHome/pegasus_mergeFastqs.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CNT=$read1Count,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,FASTQLIST="$fastqList2",MERGEDFASTQ=$targR2Name,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeFastqs.sh
                             if [ $? -eq 0 ] ; then
                                 touch $targR2Name.mergeFastqInQueue
                             else
