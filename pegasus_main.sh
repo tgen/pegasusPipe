@@ -17,7 +17,7 @@ echo "Starting $0 at $time"
 set -u
 
 topProjDir=${JETSTREAM_DATA}/projects/
-scriptsHome=${JETSTREAM_HOME}/pegasusPipe/jobScripts/
+scriptsHome=${JETSTREAM_HOME}/pegasusPipe/
 
 
 myhostname=`hostname`
