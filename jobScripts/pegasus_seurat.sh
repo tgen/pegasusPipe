@@ -3,6 +3,9 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 #SBATCH --mail-type=FAIL
+#SBATCH -n 1
+#SBATCH -N 1
+#SBATCH --cpus-per-task 4
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
