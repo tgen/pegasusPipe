@@ -12,7 +12,7 @@
 # file distributed with this software.
 #####################################################################
 time=`date +%d-%m-%Y-%H-%M`
-echo "Starting $0 at $time"
+echo "$time Starting $0"
 
 set -u
 
@@ -21,7 +21,6 @@ scriptsHome=${JETSTREAM_HOME}/pegasusPipe/
 
 
 myhostname=`hostname`
-echo "### ~~Running on $myhostname~~"
 findCount=`ps -e | awk '$4=="find"' | wc -l`
 if [ $findCount -ge 3 ] ; then
     echo "Too many finds on $myhostname ($findCount) already, quitting for $myhostname!!!"
