@@ -86,7 +86,7 @@ do
                                 continue
                         fi
             echo "Starting reassignMappingQuality"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_reassignMapQual.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_reassignMapQual.sh
             if [ $? -eq 0 ] ; then
                 touch $rnaBam.reassignMapInQueue
             else

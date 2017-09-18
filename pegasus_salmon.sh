@@ -114,7 +114,7 @@ do
     echo "### salmon path is: $salmonPath"
     if [[ $rnaStrand == "FIRST" ]] ; then
             echo "##running first stranded salmon case"
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedSalmon.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedSalmon.sh
         if [ $? -eq 0 ] ; then
             touch $ownDir.salmonInQueue
         else
@@ -123,7 +123,7 @@ do
         sleep 2
     elif [[ $rnaStrand == "SECOND" ]] ; then
             echo "##running second stranded salmon case"
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedSalmon.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedSalmon.sh
         if [ $? -eq 0 ] ; then
             touch $ownDir.salmonInQueue
         else
@@ -132,7 +132,7 @@ do
         sleep 2
     else
         echo "##running unstranded salmon case"
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_salmon.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SALMONPATH=$salmonPath,SAMPLE=$samName,SALMON_INDEX_cDNA=$salmon_index_cdna,SALMON_INDEX_GTF=$salmon_index_gtf,GTF=$starGTF,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_salmon.sh
         if [ $? -eq 0 ] ; then
             touch $ownDir.salmonInQueue
         else

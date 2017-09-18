@@ -130,7 +130,7 @@ do
                                 continue
                             fi
                             echo "### Submitting to recalibrate to create $rcBamMiniFile"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamMiniFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_recalibrate.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$rcBamMiniFile,D=$d,REF=$ref,BAMFILE=$inputForNext,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_recalibrate.sh
                             if [ $? -eq 0 ] ; then
                                 touch $inputForNext.recalibrateInQueue
                             else

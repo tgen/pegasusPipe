@@ -92,7 +92,7 @@ do
         fi
 
         echo "### Submitting $topHatDir to queue for cuff links..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=${params},DIRNAME=$topHatDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffLink.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=${params},DIRNAME=$topHatDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffLink.sh
         if [ $? -eq 0 ] ; then
             touch $topHatDir.cuffLinkInQueue
         else
@@ -116,7 +116,7 @@ do
         echo "### Submitting $starDir to queue for cuff links..."
         if [[ $rnaStrand == "FIRST" ]] ; then
                         echo "##running stranded cufflinks case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffLink.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffLink.sh
             if [ $? -eq 0 ] ; then
                             touch $starDir.cuffLinkInQueue
                     else
@@ -125,7 +125,7 @@ do
                     sleep 2
         elif [[ $rnaStrand == "SECOND" ]] ; then
                         echo "##running second stranded cufflinks case"
-                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffLink.sh
+                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffLink.sh
                         if [ $? -eq 0 ] ; then
                                 touch $starDir.cuffLinkInQueue
                         else
@@ -135,7 +135,7 @@ do
 
         else
             echo "running unstranded cufflinks case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffLink.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFLINKSPATH=$cufflinksPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffLink.sh
             if [ $? -eq 0 ] ; then
                 touch $starDir.cuffLinkInQueue
             else

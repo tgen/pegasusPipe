@@ -27,7 +27,7 @@ echo hello world, this is ${name}
 Now I submit the script:
 
 ```shell
-[rrichholt@dback-login1]~/scripts$ sbatch oeTest.sh --export name=Jeff
+[rrichholt@dback-login1]~/scripts$ sbatch oeTest.sh --export ALL,name=Jeff
 Submitted batch job 3978
 ```
 
@@ -55,7 +55,7 @@ JobId=3978 JobName=oeTest.sh
    Features=(null) DelayBoot=00:00:00
    Gres=(null) Reservation=(null)
    OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
-   Command=/home/rrichholt/scripts/oeTest.sh --export name=Jeff
+   Command=/home/rrichholt/scripts/oeTest.sh --export ALL,name=Jeff
    WorkDir=/home/rrichholt/scripts
    StdErr=/home/rrichholt/scripts/~/wtf.output
    StdIn=/dev/null

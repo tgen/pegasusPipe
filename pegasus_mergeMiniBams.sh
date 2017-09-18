@@ -165,7 +165,7 @@ do
                                 echo "### Already passed, inQueue, or failed"
                             else
                                 echo "### Ready to submit to create $mergedBamName"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=$bamMiniCount,RUNDIR=$runDir,NXT1=$nxtStep1,BAMLIST="$bamList",MERGEDBAM=$mergedBamName,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeBams.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=$bamMiniCount,RUNDIR=$runDir,NXT1=$nxtStep1,BAMLIST="$bamList",MERGEDBAM=$mergedBamName,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeBams.sh
                                 if [ $? -eq 0 ] ; then
                                     touch $mergedBamName.mergeBamInQueue
                                 else
