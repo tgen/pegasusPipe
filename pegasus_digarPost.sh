@@ -126,7 +126,7 @@ do
             fi
  
             echo "### Submitting $digarDir to queue for digarPost..."
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digarPost.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digarPost.sh
             if [ $? -eq 0 ] ; then
                 touch $digarDir.digarPostInQueue
             else

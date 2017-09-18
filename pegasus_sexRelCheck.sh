@@ -112,7 +112,7 @@ do
         continue
     fi
     echo "### Submitting $trackName.HC_All.snpEff.vcf to queue for sexRelCheck..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sexRelCheck.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,PLINK2PATH=$plink2Path,GREGORPATH=$gregorPath,OUTTRACK=$outTrack,OUTTRACKNAME=$outTrackName,VCF=${trackName}.HC_All.vcf,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sexRelCheck.sh
     if [ $? -eq 0 ] ; then
         touch $outTrackName.sexRelCheckInQueue
     else

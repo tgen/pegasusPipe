@@ -96,7 +96,7 @@ do
         fi
 
         echo "### Submitting $topHatDir to queue for cuff quant..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffQuant.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=${params},DIRNAME=$topHatDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$accHitsBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffQuant.sh
         if [ $? -eq 0 ] ; then
             touch $topHatDir.cuffQuantInQueue
         else
@@ -120,7 +120,7 @@ do
         echo "### Submitting $starDir to queue for cuff quant..."
         if [ $rnaStrand == "FIRST" ] ; then
                         echo "##running stranded cuffQuant case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffQuant.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffQuant.sh
             if [ $? -eq 0 ] ; then
                 touch $starDir.cuffQuantInQueue
             else
@@ -129,7 +129,7 @@ do
             sleep 2
                 elif [ $rnaStrand == "SECOND" ] ; then
                         echo "##running second stranded cuffQuant case"
-                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffQuant.sh
+                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffQuant.sh
                         if [ $? -eq 0 ] ; then
                                 touch $starDir.cuffQuantInQueue
                         else
@@ -138,7 +138,7 @@ do
                         sleep 2
         else
             echo "##running unstranded cuffQuant case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffQuant.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PARAMS=$params,DIRNAME=$starDir,CUFFQUANTPATH=$cuffQuantPath,REF=$ref,BAM=$starBam,USEGTF=$usegtf,USEMASK=$usemask,CUFFLINKGTF=$gtf,CUFFLINKMASK=$gtfmask,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffQuant.sh
             if [ $? -eq 0 ] ; then
                 touch $starDir.cuffQuantInQueue
             else

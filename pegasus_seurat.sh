@@ -131,7 +131,7 @@ do
         fi
 
         echo Starting Seurat caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_seurat.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_seurat.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.seuratInQueue
         else

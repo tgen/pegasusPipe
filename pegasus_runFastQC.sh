@@ -64,7 +64,7 @@ do
     fi
     echo "### Submitting to fastQC for $thisFq"
     d=`echo $runDir | cut -c 2-`
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_runFastQC.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FQ=$thisFq,FASTQCPATH=$fastqcPath,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_runFastQC.sh
     if [ $? -eq 0 ] ; then
         touch $thisFq.fastqcInQueue
     else

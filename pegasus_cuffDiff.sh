@@ -136,7 +136,7 @@ do
         fi
 
         echo "### Submitting $cdName to queue for cuff diff..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffDiff.sh
+        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffDiff.sh
         if [ $? -eq 0 ] ; then
             touch $cdDir.cuffDiffInQueue
         else
@@ -202,7 +202,7 @@ do
         echo "### Submitting $cdName to queue for cuff diff..."
         if [ $rnaTumorStrand == "FIRST" ] ; then
                         echo "##running stranded cuffDiff case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffDiff.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffDiff.sh
             if [ $? -eq 0 ] ; then
                 touch $cdDir.cuffDiffInQueue
             else
@@ -211,7 +211,7 @@ do
             sleep 2
                 elif [ $rnaTumorStrand == "SECOND" ] ; then
                         echo "##running second stranded cuffDiff case"
-                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffDiff.sh
+                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffDiff.sh
                         if [ $? -eq 0 ] ; then
                                 touch $cdDir.cuffDiffInQueue
                         else
@@ -220,7 +220,7 @@ do
                         sleep 2
         else
             echo "running unstranded cuffDiff case"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffDiff.sh
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="'"$normlList"'",BAM2="'"$tumorList"'",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffDiff.sh
             if [ $? -eq 0 ] ; then
                 touch $cdDir.cuffDiffInQueue
             else

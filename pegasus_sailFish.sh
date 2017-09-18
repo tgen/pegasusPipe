@@ -121,7 +121,7 @@ do
     cd -
 
     echo "##running unstranded Sail Fish case"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export SAILFISHPATH=$sailFishPath,SAMPLE=$samName,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sailFish.sh
+    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAILFISHPATH=$sailFishPath,SAMPLE=$samName,SAILFISHGTF=$sailFishGTF,CCDSGTF=$ccdsGTF,SAILFISHINDEXDIR=$sailFishIndexDir,SAILFISHCCDSINDEX=$sailFishCCDSIndex,FASTQ1=$read1Name,FASTQ2=$read2Name,DIR=$ownDir,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sailFish.sh
     if [ $? -eq 0 ] ; then
         touch $ownDir.sailFishInQueue
     else
