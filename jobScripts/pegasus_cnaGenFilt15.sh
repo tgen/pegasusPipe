@@ -3,12 +3,10 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=tgenjetstream@tgen.org
 
-
-module load VCFtools/0.1.10
-module load perl
+module load perl/5.24.1
 module load MCR/8.3
-module load R/3.0.0
-MCRPATH=/packages/MCR/8.3/v83
+module load R/3.3.2 ## NEEDS DNAcopy https://bioconductor.org/packages/release/bioc/html/DNAcopy.html
+MCRPATH=/packages/MCR/8.3/
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
