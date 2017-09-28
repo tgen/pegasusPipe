@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_revstrandhtSeq4Star"
 #SBATCH --time=0-48:00:00
-#SBATCH --mail-user=tgenjetstream@tgen.org
+#SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
 module load python/2.7.3

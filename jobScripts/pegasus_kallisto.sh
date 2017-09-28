@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_kallisto"
 #SBATCH --time=0-60:00:00
-#SBATCH --mail-user=tgenjetstream@tgen.org
+#SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
 module load kallisto/0.42.4

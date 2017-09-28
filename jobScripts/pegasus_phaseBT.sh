@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_phaseBT"
 #SBATCH --time=0-96:00:00
-#SBATCH --mail-user=tgenjetstream@tgen.org
+#SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 #SBATCH -n 1
 #SBATCH -N 1

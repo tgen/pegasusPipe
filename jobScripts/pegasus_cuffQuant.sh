@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_cuffQuant"
 #SBATCH --time=0-240:00:00
-#SBATCH --mail-user=tgenjetstream@tgen.org
+#SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
 time=`date +%d-%m-%Y-%H-%M`

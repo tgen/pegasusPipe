@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_cnaExo15"
 #SBATCH --time=0-48:00:00
-#SBATCH --mail-user=tgenjetstream@tgen.org
+#SBATCH --mail-user=jetstream@tgen.org
 
 module load perl/5.24.1
 module load MCR/8.3
@@ -42,7 +42,7 @@ if [ ${THETDEPTHINT} -gt 49 ] ; then
     THETDEPTHCALC=50
 else
     #send low coverage email
-    echo -e "Coverage for your sample: ${RUNDIR} was lower than 50.  Copy number will use HS metrics calculated target mean for read depth on filtering SNPS" | mail -s "Pegasus Pipeline: Copy Number Alert" tgenjetstream@tgen.org
+    echo -e "Coverage for your sample: ${RUNDIR} was lower than 50.  Copy number will use HS metrics calculated target mean for read depth on filtering SNPS" | mail -s "Pegasus Pipeline: Copy Number Alert" jetstream@tgen.org
     #touch file of low cov
     touch ${TRACKNAME}.cnaLOWCOVERAGEALERT.txt
     THETDEPTHCALC=${THETDEPTH}
