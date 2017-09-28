@@ -91,7 +91,7 @@ do
                         echo "###Exiting"
                         if [ ! -e $runDir/checkConfig.wrongFQextension ] ; then
                             echo "###This fastq doesn't have the proper extension: $thisFq, the proper extension is _R1_001.fastq.gz" >> ~/mailtmp-$$.txt
-                            cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
+                            cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "jetstream@tgen.org"
                             cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
                             mv ~/mailtmp-$$.txt $runDir/checkConfig.wrongFQextension
                         fi
@@ -103,7 +103,7 @@ do
                         echo "FILE: $r2File not found, EXITING"
                         if [ ! -e $runDir/checkConfig.copyFastqFail ] ; then
                             echo "###FILE: $r2File not found" >> ~/mailtmp-$$.txt
-                            cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "tgenjetstream@tgen.org"
+                            cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "jetstream@tgen.org"
                             cat ~/mailtmp-$$.txt | mail -s "Pegasus pipeline ERROR: Your project $projName has an ERROR" "${email}"
                             mv ~/mailtmp-$$.txt $runDir/checkConfig.copyFastqFail
                         fi
