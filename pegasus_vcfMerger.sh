@@ -128,58 +128,58 @@ do
     sampleList=""
 
     echo "$kitName"
-        if [[ "$kitName" == "TSE61" ]] ; then
-                bedFile="/home/tgenref/pipeline_v0.3/annotations/exome_capture/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
-        elif [[ "$kitName" == *S5U ]] || [[ "$kitName" == *S5X ]] ; then
-                bedFile="/home/tgenref/pipeline_v0.3/ensembl70/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
-        elif [[ "$kitName" == *STX ]] ; then
-                #bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_sortedTabs2_padded150.bed"
-                bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *SCR ]] ; then
-                #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *S2X ]] ; then
-                #bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/Agilent_V2_hs37d5/Agilent_V2_hs37d5_TargetsPadded25sorted_Picard.txt"
-                bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/Agilent_V2_hs37d5/Agilent_V2_hs37d5_Targets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *STL ]] ; then
-                #bedFile="/home/tgenref/pecan/annotations/exome_capture/strexome_lite/temp/Strexome_Lite_Targets_padded25.bed"
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/strexome_lite/Strexome_Lite_Targets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *S1X ]] ; then
-                #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_SureSelectV1/temp/SureSelectV1_hs37d5_TargetsPadded25_Picard.txt"
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_SureSelectV1/SureSelectV1_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *S6X ]] ; then
-                #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_TargetsPadded25.txt"
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
+    if [[ "$kitName" == "TSE61" ]] ; then
+        bedFile="/home/tgenref/pipeline_v0.3/annotations/exome_capture/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
+    elif [[ "$kitName" == *S5U ]] || [[ "$kitName" == *S5X ]] ; then
+        bedFile="/home/tgenref/pipeline_v0.3/ensembl70/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
+    elif [[ "$kitName" == *STX ]] ; then
+        #bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_sortedTabs2_padded150.bed"
+        bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *SCR ]] ; then
+        #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *S2X ]] ; then
+        #bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/Agilent_V2_hs37d5/Agilent_V2_hs37d5_TargetsPadded25sorted_Picard.txt"
+        bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/Agilent_V2_hs37d5/Agilent_V2_hs37d5_Targets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *STL ]] ; then
+        #bedFile="/home/tgenref/pecan/annotations/exome_capture/strexome_lite/temp/Strexome_Lite_Targets_padded25.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/strexome_lite/Strexome_Lite_Targets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *S1X ]] ; then
+        #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_SureSelectV1/temp/SureSelectV1_hs37d5_TargetsPadded25_Picard.txt"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_SureSelectV1/SureSelectV1_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *S6X ]] ; then
+        #bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_TargetsPadded25.txt"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *SXP ]] ; then
-                #bedFile="/home/tgenref/pecan/annotations/exome_capture/prostateStrexome/prostateStrexome.targetsPadded25.txt"
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusUTR/Agilent_SureSelect_V6R2_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed" 
+        #bedFile="/home/tgenref/pecan/annotations/exome_capture/prostateStrexome/prostateStrexome.targetsPadded25.txt"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusUTR/Agilent_SureSelect_V6R2_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S4X ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v4_noUTR/Agilent_V4_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *SC2 ]] ; then
-                bedFile="/home/tgenref/annotations/dog/canfam3/vcfMergerBed/agilent_canine_exonV2_targets.padded100.bed"
-        elif [[ "$kitName" == *S6A ]] ; then
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v4_noUTR/Agilent_V4_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *SC2 ]] ; then
+        bedFile="/home/tgenref/annotations/dog/canfam3/vcfMergerBed/agilent_canine_exonV2_targets.padded100.bed"
+    elif [[ "$kitName" == *S6A ]] ; then
         bedFile="/home/tgenref/pecan/annotations/exome_capture/StrAD/StrAD_targets_intersect_sorted_padded100.bed"
-        elif [[ "$kitName" == *S4U ]] ; then
+    elif [[ "$kitName" == *S4U ]] ; then
         bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *E62 ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/illumina_nextera_expanded/NexteraExpandedExome_hs37d5_Targets_PicardPadded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/illumina_nextera_expanded/NexteraExpandedExome_hs37d5_Targets_PicardPadded100.bed"
     elif [[ "$kitName" == *STP ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *ST2 ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S2U ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *V6C ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusCOSMIC/Agilent_SureSelect_V6R2_plusCOSMIC_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_V6R2_plusCOSMIC/Agilent_SureSelect_V6R2_plusCOSMIC_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *CCC ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_ClearSeq_Beta_ComprehensiveCancer/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_ClearSeq_Beta_ComprehensiveCancer/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *CR2 ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_CREv2_cliRes/Agilent_SureSelect_CREv2_cliRes_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
-        fi
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/Agilent_SureSelect_CREv2_cliRes/Agilent_SureSelect_CREv2_cliRes_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *R12 ]] ; then
+        bedFile="/home/tgenref/pecan/annotations/exome_capture/illumina_nextera_v1.2/padded_targets.bed"
+    fi
 
-    #bedFileGrep=$kitName"_CNABED"
-        #bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
-        echo "### BED FILE= $bedFile"
+    echo "### BED FILE= $bedFile"
 
     echo "first checking for seurat snpeff vcf"
     seuratTrackName="$runDir/seurat/$usableName/$usableName"
