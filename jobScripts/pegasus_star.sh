@@ -21,6 +21,33 @@ anotherName2=${SAMNAME}
 anotherName=${SAMNAME}.proj
 cd ${DIR}
 
+echo "${STARPATH}/STAR --genomeDir ${STARREF} \
+    --runMode alignReads \
+    --limitOutSAMoneReadBytes 90000000 \
+    --readFilesCommand zcat \
+    --readFilesIn ${FASTQL1} ${FASTQL2} \
+    --outSAMtype SAM \
+    --outFilterType BySJout \
+    --outFilterMultimapNmax 10 \
+    --outFilterMismatchNmax 10 \
+    --outFilterMismatchNoverLmax 0.1 \
+    --alignIntronMin 20 \
+    --alignIntronMax 1000000 \
+    --alignMatesGapMax 1000000 \
+    --alignSJoverhangMin 8 \
+    --alignSJDBoverhangMin 1 \
+    --seedSearchStartLmax 30 \
+    --chimSegmentMin 15 \
+    --chimJunctionOverhangMin 15 \
+    --runThreadN 14 \
+    --genomeLoad NoSharedMemory \
+    --outSAMstrandField intronMotif \
+    --outSAMunmapped Within \
+    --outSAMmapqUnique 255 \
+    --outSAMattrRGline ${RGTAGLIST} \
+    --outSAMmode Full > ${DIR}.starOut
+"
+
 echo "TIME:$time starting star on ${FASTQ1}"
 ${STARPATH}/STAR --genomeDir ${STARREF} \
     --runMode alignReads \
