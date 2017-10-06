@@ -94,35 +94,6 @@ do
     fi
     sleep 2
 
-#    for eachSample in ${sampleNames//,/ }
-#    do
-#        ((sampleCount++))
-#        #echo "eachsample: $eachSample"
-#        sampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$eachSample"'"'`
-#        kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-#        samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-#        eachSampleVcf=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.UG.vcf
-#        eachSamplePass=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.ugPass
-#        if [[ ! -e $eachSampleVcf || ! -e $eachSamplePass ]] ; then
-#            echo "### Can't find the UG.vcf or md.jr.bam.ugPass"
-#            echo "### BAM: $eachSampleVcf"
-#            echo "### PAS: $eachSamplePass"
-#            ((missingSampleCount++))
-#        else
-#            if [[ -e $eachSampleVcf.vqsrInQueue || -e $eachSampleVcf.vqsrPass || -e $eachSampleVcf.vqsrFail ]] ; then
-#                echo "### VQSR is already done, failed or inQueue"
-#                continue
-#            fi
-#            echo "### Submitting $eachSampleVcf for VQSR..."
-#            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,HAPMAP=$hapmap,RSCRIPT=$eachSampleVcf.plots.R,OMNI=$omni,RECAL=$eachSampleVcf.recal,TRANCHES=$eachSampleVcf.tranches,ASSAY=$assayID,GATKPATH=$gatkPath,KNOWN=$snps,VCF=$eachSampleVcf,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_vqsr.sh
-#            if [ $? -eq 0 ] ; then
-#                touch $eachSampleVcf.vqsrInQueue
-#            else
-#                ((qsubFails++))
-#            fi
-#            sleep 2
-#        fi
-#    done
 done
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
