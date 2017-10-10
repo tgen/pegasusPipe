@@ -15,13 +15,19 @@ echo "### RUNDIR: ${RUNDIR}"
 echo "### FASTQL: ${FASTQL}"
 echo "### KALLISTO_INDEX_CDNA: ${KALLISTO_INDEX_CDNA}"
 echo "### KALLISTO_INDEX_GTF: ${KALLISTO_INDEX_GTF}"
-
-FASTQL=`echo "${FASTQL}" | tr ',' ' '`
 echo "FASTQL: ${FASTQL}"
 
 echo "### Starting Kallisto quant cDNA"
+echo "kallisto quant \
+    --index=${KALLISTO_INDEX_CDNA} \
+    --output-dir=${DIR}/cDNA \
+    --bias \
+    --bootstrap-samples=100 \
+    --threads=14 \
+    --seed=42 \
+    ${FASTQL}
+"
 
-# cDNA
 kallisto quant \
     --index=${KALLISTO_INDEX_CDNA} \
     --output-dir=${DIR}/cDNA \
