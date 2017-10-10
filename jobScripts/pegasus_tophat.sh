@@ -66,7 +66,7 @@ bsize=`stat -c%s $tempBamPrefix.bam`
 echo "bam size: $bsize"
 
 echo "getting insert size metrics with picard"
-module load R/2.14.1
+module load R/2.15.2
 java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics \
     INPUT=$tempBamPrefix.bam
     OUTPUT=$tempBamPrefix.bam.picInsertMetrics.txt

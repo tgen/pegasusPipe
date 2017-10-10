@@ -4,7 +4,10 @@
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
+# This is required for htseq-count
 module load python/2.7.3
+# This is required for tophat
+module load samtools/1.4.1
  
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -67,7 +70,7 @@ echo "### Bam size: $bsize"
 
 statsOutName=${tempBamPrefix/.proj}
 echo "### Getting insert size metrics with picard"
-module load R/2.14.1
+module load R/2.15.2
 java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics \
     INPUT=$tempBamPrefix.bam \
     OUTPUT=$statsOutName.bwa.transcriptome.picInsertMetrics.txt \
@@ -96,6 +99,8 @@ echo "###End of getting insert size section"
 #setting path
 PATH=${BOWTIE1PATH}:$PATH
 
+samtools --version
+
 ${THFUSIONPATH}/tophat2 \
     -p 16 \
     -N 3 \
@@ -111,7 +116,7 @@ ${THFUSIONPATH}/tophat2 \
     --fusion-anchor-length 20 \
     --fusion-ignore-chromosomes MT \
     -o ${DIR} \
-    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thFusionOut
+    ${INDEXBASE} ${FASTQ1} ${FASTQ2}
 
 if [ $? -eq 0 ] ; then
     echo "success."

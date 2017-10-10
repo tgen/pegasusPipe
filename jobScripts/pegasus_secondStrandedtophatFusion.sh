@@ -5,6 +5,7 @@
 #SBATCH --mail-type=FAIL
 
 module load python/2.7.3
+module load R/2.15.2
  
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -21,7 +22,7 @@ echo "### TRIMFASTQPATH: ${TRIMFASTQPATH}"
 echo "### REFPRETOPHAT: ${REFPRETOPHAT}"
 echo "### PICARDPATH: ${PICARDPATH}"
 echo "### BWAPATH: ${BWAPATH}"
-export PATH=${BOWTIE1PATH}:$PATH
+export PATH=${BOWTIE1PATH}:/home/tgenref/pipeline_v0.4/bin/samtools-0.1.19/:$PATH
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -57,7 +58,6 @@ bsize=`stat -c%s $tempBamPrefix.bam`
 echo "### Bam size: $bsize"
 
 echo "### Getting insert size metrics with picard"
-module load R/2.14.1
 statsOutName=${tempBamPrefix/.proj}
 java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics INPUT=$tempBamPrefix.bam OUTPUT=$statsOutName.bwa.transcriptome.picInsertMetrics.txt HISTOGRAM_FILE=$statsOutName.bwa.transcriptome.picInsertMetrics.pdf VALIDATION_STRINGENCY=SILENT TMP_DIR=${DIR} LEVEL=ALL_READS 2>&1
 
@@ -80,7 +80,7 @@ echo "### Got INNERDIST=${INNERDIST} and STDEV=${STDEV}"
 echo "###End of getting insert size section"
 
 #setting path
-PATH=${BOWTIE1PATH}:$PATH
+samtools --version
 
 ${THFUSIONPATH}/tophat2 \
     -p 16 \

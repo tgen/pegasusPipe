@@ -6,6 +6,8 @@
 
 
 module load python/2.7.3
+module load R/2.15.2
+module load samtools/1.4.1
  
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -58,7 +60,6 @@ bsize=`stat -c%s $tempBamPrefix.bam`
 echo "### Bam size: $bsize"
 
 echo "### Getting insert size metrics with picard"
-module load R/2.14.1
 statsOutName=${tempBamPrefix/.proj}
 java -jar ${PICARDPATH}/picard.jar CollectInsertSizeMetrics INPUT=$tempBamPrefix.bam OUTPUT=$statsOutName.bwa.transcriptome.picInsertMetrics.txt HISTOGRAM_FILE=$statsOutName.bwa.transcriptome.picInsertMetrics.pdf VALIDATION_STRINGENCY=SILENT TMP_DIR=${DIR} LEVEL=ALL_READS 2>&1
 echo "### End of getting insert size section"
