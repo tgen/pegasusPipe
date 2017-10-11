@@ -15,9 +15,21 @@ echo "### DIR: ${DIR}"
 echo "### INDEXBASE: ${INDEXBASE}"
 echo "### 2VCFPATH: ${THFUSION2VCFPATH}"
 
+module load samtools
+module load bowtie
+
 newName=`basename ${DIR}`
 newName=${newName/.topHatFusionDir}
 echo "TIME:$time starting tophat fusion post on ${DIR} with indexbase of ${INDEXBASE}"
+echo "${TOPHAT2PATH}/tophat-fusion-post \
+    -p 16 \
+    --num-fusion-reads 3 \
+    --num-fusion-pairs 2 \
+    --num-fusion-both 5 \
+    --skip-read-dist \
+    --fusion-read-mismatches 3 \
+    ${INDEXBASE} > ${DIR}.thFPostOut
+"
 
 ${TOPHAT2PATH}/tophat-fusion-post \
     -p 16 \
