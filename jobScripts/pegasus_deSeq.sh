@@ -20,7 +20,7 @@ cd ${DIRNAME}
 newName=`basename ${DIRNAME}`
 newName=${newName/.dsDir/}
 
-module load R/2.15.2
+module load R/3.2.1
 
 echo "### Starting DESeq3.R"
 echo "Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}"
