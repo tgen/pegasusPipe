@@ -330,7 +330,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 # Make final call list venn
-${POST_MERGE_VENN} --vcf ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${BASENAME}_finalVenn  --maintitle ${BASENAME} --
+${POST_MERGE_VENN} --dirscript ${VCFMERGER_DIR} --vcf ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.rna.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${BASENAME}_finalVenn  --maintitle ${BASENAME} --
 if [ $? -ne 0 ] ; then
     echo "### vcf merger failed at venn diagram stage"
     mv ${MERGERDIR}/${BASENAME}.vcfMergerACInQueue ${MERGERDIR}/${BASENAME}.vcfMergerACFail
