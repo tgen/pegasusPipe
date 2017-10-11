@@ -41,8 +41,9 @@ echo "### BASENAME= $BASENAME"
 
 
 echo "Generate RNA Pileup for DNA call positions"
-module load BEDTools/2.14.0
-module load R/3.1.1
+module load BEDTools/2.26.0
+module load R/3.2.1
+
 
 # Extract the variant positions to a list to provide to samtools for mpileup
 grep -v "#" ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.vcf | awk '{print $1"-"$2"-"$3"-"$4"-"$5}' > ${MERGERDIR}/${BASENAME}_positions.txt
