@@ -9,7 +9,7 @@ time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
 
-module add R/3.1.1
+module add R/3.2.1
 
 echo "### NODE: $machine"
 echo "### RUNDIR: ${RUNDIR}"
@@ -24,8 +24,8 @@ newName=`basename ${DIRNAME}`
 newName=${newName/.dsDir/}
 
 echo "### Starting DESeq3.R"
-echo "/packages/R/3.1.1/bin/Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}"
-/packages/R/3.1.1/bin/Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}
+echo "Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}"
+Rscript --vanilla ${DESEQ2PATH}/DESeq_v2.R ${NORMLIST} ${TUMORLIST}
 if [ $? -eq 0 ] ; then
     touch ${DIRNAME}.deSeq2Pass
     #echo "running this cmd to rename: mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq_results.txt"

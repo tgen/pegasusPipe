@@ -20,9 +20,11 @@ cd ${DIRNAME}
 newName=`basename ${DIRNAME}`
 newName=${newName/.dsDir/}
 
+module load R/2.15.2
+
 echo "### Starting DESeq3.R"
-echo "/packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}"
-/packages/R/2.15.2/bin/Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}
+echo "Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}"
+Rscript --vanilla ${DESEQPATH}/DESeq3.R ${NORMLIST} ${TUMORLIST}
 if [ $? -eq 0 ] ; then
     touch ${DIRNAME}.deSeqPass
     #echo "running this cmd to rename: mv ${DIRNAME}/DESeq_results.txt ${DIRNAME}/$newName.DESeq_results.txt"
