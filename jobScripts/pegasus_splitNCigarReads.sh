@@ -5,7 +5,7 @@
 #SBATCH --mail-type=FAIL
 #SBATCH -n 1
 #SBATCH -N 1
-#SBATCH -cpus-per-task 14
+#SBATCH --cpus-per-task 14
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
