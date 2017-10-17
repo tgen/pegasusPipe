@@ -227,7 +227,17 @@ fi
 echo "Finished Filtering Calls to Targets"
 echo "Annotate the merged VCF"
 echo "..."
-if [ "${RECIPE}" == "cerberus" ] ; then
+if [ "${RECIPE}" == "cerberus" ] || [ "${RECIPE}" == "canis" ] || [ "${RECIPE}" == "mice01" ] ; then
+    echo "Non-human annotation"
+    echo "java -Xmx24g -jar ${GATK}/GenomeAnalysisTK.jar -R ${REF} \
+        -T VariantAnnotator \
+        -nt 4 \
+        -o ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.vcf \
+        -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+        --variant ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.vcf \
+        --dbsnp ${DBSNP} \
+        --disable_auto_index_creation_and_locking_when_reading_rods
+    "
     java -Xmx24g -jar ${GATK}/GenomeAnalysisTK.jar -R ${REF} \
         -T VariantAnnotator \
         -nt 4 \
@@ -242,6 +252,21 @@ if [ "${RECIPE}" == "cerberus" ] ; then
         exit 1
     fi
 else
+    echo "Human annotation"
+    echo "java -Xmx24g -jar ${GATK}/GenomeAnalysisTK.jar -R ${REF} \
+        -T VariantAnnotator \
+        -nt 4 \
+        -o ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.vcf \
+        -U ALLOW_SEQ_DICT_INCOMPATIBILITY \
+        --variant ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.vcf \
+        --dbsnp ${DBSNP} \
+        --comp:EXAC ${EXAC} \
+        --comp:NHLBI ${NHLBI} \
+        --comp:1000G ${KG} \
+        --comp:COSMIC_NC ${COSMICNC} \
+        --comp:COSMIC_C ${COSMICC} \
+        --disable_auto_index_creation_and_locking_when_reading_rods
+    "
     java -Xmx24g -jar ${GATK}/GenomeAnalysisTK.jar -R ${REF} \
         -T VariantAnnotator \
         -nt 4 \

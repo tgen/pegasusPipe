@@ -98,7 +98,7 @@ ${THFUSIONPATH}/tophat2 \
     --fusion-anchor-length 20 \
     --fusion-ignore-chromosomes MT \
     -o ${DIR} \
-    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thFusionOut
+    ${INDEXBASE} ${FASTQ1} ${FASTQ2}
 
 if [ $? -eq 0 ] ; then
     echo "success."
@@ -116,10 +116,10 @@ if [ $? -eq 0 ] ; then
     ${SAMTOOLSPATH}/samtools flagstat ${DIR}/$anotherName.accepted_hits.bam > ${DIR}/$anotherName.accepted_hits.bam.samStats
     echo "bam indexing and flagstat finished"
 
-    mv ${DIR}.thFusionOut ${DIR}.thFusionPass
+    touch ${DIR}.thFusionPass
     touch ${RUNDIR}/${NXT1}
 else
-    mv ${DIR}.thFusionOut ${DIR}.thFusionFail
+    touch ${DIR}.thFusionFail
 fi
 
 rm -f ${DIR}.thFusionInQueue

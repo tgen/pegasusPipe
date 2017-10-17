@@ -4,10 +4,8 @@
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
-
 module load python/2.7.3
 module load R/2.15.2
-module load samtools/1.4.1
  
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
@@ -99,7 +97,8 @@ ${THFUSIONPATH}/tophat2 \
     --fusion-anchor-length 20 \
     --fusion-ignore-chromosomes MT \
     -o ${DIR} \
-    ${INDEXBASE} ${FASTQ1} ${FASTQ2} > ${DIR}.thFusionOut
+    ${INDEXBASE} ${FASTQ1} ${FASTQ2}
+
 if [ $? -eq 0 ] ; then
     echo "success."
     echo "renaming..."
@@ -117,11 +116,12 @@ if [ $? -eq 0 ] ; then
     echo "bam indexing and flagstat finished"
 
 
-    mv ${DIR}.thFusionOut ${DIR}.thFusionPass
+    touch ${DIR}.thFusionPass
     touch ${RUNDIR}/${NXT1}
 else
-    mv ${DIR}.thFusionOut ${DIR}.thFusionFail
+    touch ${DIR}.thFusionFail
 fi
+
 rm -f ${DIR}.thFusionInQueue
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))

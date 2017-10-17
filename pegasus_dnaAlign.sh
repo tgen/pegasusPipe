@@ -40,7 +40,9 @@ fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
+# This was set by recipes, but it is 8 in every single recipe. Bumped to 12
+# so that there are cores for samtools to use (bwa uses 8). 
+nCores=12
 
 
 dnaAligner=`grep "@@"$recipe"@@" $constants | grep @@DNAALIGNER= | cut -d= -f2`
@@ -129,7 +131,7 @@ do
                             fi
 
                             echo "$rgTag"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,D=$d,RGTAG=$rgTag,FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
+                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores  --mem-per-cpu 5000 --export ALL,D=$d,RGTAG="$rgTag",FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
                             if [ $? -eq 0 ] ; then
                                 touch $bamName.dnaAlignInQueue
                             else

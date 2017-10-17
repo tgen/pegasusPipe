@@ -15,6 +15,8 @@
 thisStep="pegasus_nextJob_splitFastqs.txt"
 nxtStep1="pegasus_nextJob_dnaAlignParts.txt"
 
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`

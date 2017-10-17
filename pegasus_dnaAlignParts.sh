@@ -44,7 +44,7 @@ ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 samtoolsPath=`grep "@@"$recipe"@@" $constants | grep @@SAMTOOLSPATH= | cut -d= -f2`
 bwaPath=`grep "@@"$recipe"@@" $constants | grep @@BWAPATH= | cut -d= -f2`
 faiFile="$ref.fai"
-nCores=8
+nCores=12
 
 echo "### projName: $projName"
 echo "### confFile: $configFile"
@@ -135,7 +135,7 @@ do
                                     rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}"
                                 fi
                                 echo "$rgTag"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
+                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem-per-cpu 5000 --export ALL,D=$d,RGTAG=$rgTag,FASTQ1=$thisMiniFq,FASTQ2=$thisMiniR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamMiniPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
                                 if [ $? -eq 0 ] ; then
                                     touch $bamMiniName.dnaAlignInQueue
                                 else
