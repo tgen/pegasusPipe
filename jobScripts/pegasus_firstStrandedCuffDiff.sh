@@ -24,8 +24,11 @@ echo "running first stranded cufflinks options for this RNA"
 cd ${DIRNAME}
 newName=`basename ${DIRNAME}`
 newName=${newName/_cdDir/}
-#update-check ${GTF} ${BAM1} ${BAM2}
-${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} --library-type fr-secondstrand -L Control,Tumor ${GTF} ${BAM1} ${BAM2} > ${DIRNAME}.cuffDiffOut
+
+BAM1=`sed "s/[^\\]\s/,/g" <(echo $BAM1)`
+BAM2=`sed "s/[^\\]\s/,/g" <(echo $BAM1)`
+
+${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} --library-type fr-secondstrand -L Control,Tumor ${GTF} ${BAM1} ${BAM2}
 if [ $? -eq 0 ] ; then
     mv ${DIRNAME}/tss_groups.fpkm_tracking ${DIRNAME}/${newName}_tss_groups.fpkm_tracking
     mv ${DIRNAME}/isoforms.fpkm_tracking ${DIRNAME}/${newName}_isoforms.fpkm_tracking
@@ -38,7 +41,6 @@ if [ $? -eq 0 ] ; then
     mv ${DIRNAME}/gene_exp.diff ${DIRNAME}/${newName}_gene_exp.diff
     mv ${DIRNAME}/cds_exp.diff ${DIRNAME}/${newName}_cds_exp.diff
     mv ${DIRNAME}/cds.diff ${DIRNAME}/${newName}_cds.diff
-
     mv ${DIRNAME}/isoforms.count_tracking ${DIRNAME}/${newName}_isoforms.count_tracking
     mv ${DIRNAME}/tss_groups.count_tracking ${DIRNAME}/${newName}_tss_groups.count_tracking
     mv ${DIRNAME}/cds.count_tracking ${DIRNAME}/${newName}_cds.count_tracking
@@ -56,11 +58,11 @@ if [ $? -eq 0 ] ; then
     ${CUFFDIFF2VCFPATH}/cuffdiff2vcf.pl ${DIRNAME}/${newName}_gene_exp.diff ${BAM1}
     echo "done with 3 external scripts"
 
-    mv ${DIRNAME}.cuffDiffOut ${DIRNAME}.cuffDiffPass
-    #touch ${RUNDIR}/${NXT1}
+    touch ${DIRNAME}.cuffDiffPass
 else
-    mv ${DIRNAME}.cuffDiffOut ${DIRNAME}.cuffDiffFail
+    touch ${DIRNAME}.cuffDiffFail
 fi
+
 rm -f ${DIRNAME}.cuffDiffInQueue
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))

@@ -24,27 +24,25 @@ echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
     echo "### Please provide runfolder as the only parameter"
     echo "### Exiting!!!"
-    exit
+    exit 1
 fi
+
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
     echo "### Config file not found at $configFile!!!"
     echo "### Exiting!!!"
-    exit
+    exit 1
 else
     echo "### Config file found."
 fi
+
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
-
 nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
-
-
 usegtf=`cat $configFile | grep "^CUFFLINKUSEGTF=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 usemask=`cat $configFile | grep "^CUFFLINKUSEMASK=" | cut -d= -f2 | head -1 | tr -d [:space:]`
-
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 rnaAligner=`grep "@@"$recipe"@@" $constants | grep @@RNAALIGNER= | cut -d= -f2`
 cuffdiffPath=`grep @@"$recipe"@@ $constants | grep @@CUFFDIFFPATH= | cut -d= -f2`
@@ -60,7 +58,7 @@ d=`echo $runDir | cut -c 2-`
 
 skipLines=1
 qsubFails=0
-###
+
 for rnaPairLine in `cat $configFile | grep ^RNAPAIR=`
 do
     echo "### RNA pair line is $rnaPairLine"
@@ -74,7 +72,7 @@ do
         cdName="$normlsWithDash-VS-$tumorsWithDash"
     fi
     echo "### Normals: $normls"
-    echo "### Tumors : $tumors"
+    echo "### Tumors: $tumors"
     tumorCount=0
     normlCount=0
     missingTumorCount=0
@@ -96,7 +94,7 @@ do
                 echo "### Can't find accp hits bam or tophat pass"
                 ((missingNormlCount++))
             else
-                normlList="$eachNormlBam,$normlList"
+                normlList="$eachNormlBam $normlList"
             fi
         done
         for eachTumor in ${tumors//;/ }
@@ -112,7 +110,7 @@ do
                 echo "### Can't find accp hits bam or tophat pass"
                 ((missingTumorCount++))
             else
-                tumorList="$eachTumorBam,$tumorList"
+                tumorList="$eachTumorBam $tumorList"
             fi
         done
         if [[ $missingNormlCount -eq 0 && $missingTumorCount -eq 0 ]] ; then
@@ -160,7 +158,7 @@ do
                 echo "### Can't find aligned out sorted bam or star pass"
                 ((missingNormlCount++))
             else
-                normlList="$eachNormlBam,$normlList"
+                normlList="$eachNormlBam $normlList"
             fi
         done
         for eachTumor in ${tumors//;/ }
@@ -177,7 +175,7 @@ do
                 echo "### Can't find aligned out sorted bam or star pass"
                 ((missingTumorCount++))
             else
-                tumorList="$eachTumorBam,$tumorList"
+                tumorList="$eachTumorBam $tumorList"
             fi
         done
         if [[ $missingNormlCount -eq 0 && $missingTumorCount -eq 0 ]] ; then
@@ -201,7 +199,7 @@ do
         fi
         echo "### Submitting $cdName to queue for cuff diff..."
         if [ $rnaTumorStrand == "FIRST" ] ; then
-                        echo "##running stranded cuffDiff case"
+            echo "##running stranded cuffDiff case"
             sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="$normlList",BAM2="$tumorList",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_firstStrandedCuffDiff.sh
             if [ $? -eq 0 ] ; then
                 touch $cdDir.cuffDiffInQueue
@@ -209,15 +207,15 @@ do
                 ((qsubFails++))
             fi
             sleep 2
-                elif [ $rnaTumorStrand == "SECOND" ] ; then
-                        echo "##running second stranded cuffDiff case"
-                        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="$normlList",BAM2="$tumorList",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffDiff.sh
-                        if [ $? -eq 0 ] ; then
-                                touch $cdDir.cuffDiffInQueue
-                        else
-                                ((qsubFails++))
-                        fi
-                        sleep 2
+        elif [ $rnaTumorStrand == "SECOND" ] ; then
+            echo "##running second stranded cuffDiff case"
+            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="$normlList",BAM2="$tumorList",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_secondStrandedCuffDiff.sh
+            if [ $? -eq 0 ] ; then
+                    touch $cdDir.cuffDiffInQueue
+            else
+                    ((qsubFails++))
+            fi
+            sleep 2
         else
             echo "running unstranded cuffDiff case"
             sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,CUFFDIFF2VCFPATH=$cuffdiff2vcfPath,PROCESSCDLISTPATH=$processcdlistPath,CUFFDIFFPATH=$cuffdiffPath,RUNDIR=$runDir,DIRNAME=$cdDir,GTF=$gtf,BAM1="$normlList",BAM2="$tumorList",REF=$ref,MASK=$gtfmask,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_cuffDiff.sh
@@ -237,11 +235,11 @@ do
 done
 
 if [ $qsubFails -eq 0 ] ; then
-#all jobs submitted succesffully, remove this dir from messages
+    # All jobs submitted succesffully, remove this dir from messages
     echo "### I should remove $thisStep from $runDir."
     rm -f $runDir/$thisStep
 else
-#qsub failed at some point, this runDir must stay in messages
+    # qsub failed at some point, this runDir must stay in messages
     echo "### Failure in qsub. Not touching $thisStep"
 fi
 

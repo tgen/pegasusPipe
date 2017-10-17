@@ -24,7 +24,10 @@ cd ${DIRNAME}
 newName=`basename ${DIRNAME}`
 newName=${newName/_cdDir/}
 
-${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} --library-type fr-firststrand -L Control,Tumor ${GTF} ${BAM1} ${BAM2} > ${DIRNAME}.cuffDiffOut
+BAM1=`sed "s/[^\\]\s/,/g" <(echo $BAM1)`
+BAM2=`sed "s/[^\\]\s/,/g" <(echo $BAM1)`
+
+${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} --library-type fr-firststrand -L Control,Tumor ${GTF} ${BAM1} ${BAM2}
 if [ $? -eq 0 ] ; then
     mv ${DIRNAME}/tss_groups.fpkm_tracking ${DIRNAME}/${newName}_tss_groups.fpkm_tracking
     mv ${DIRNAME}/isoforms.fpkm_tracking ${DIRNAME}/${newName}_isoforms.fpkm_tracking
@@ -54,9 +57,9 @@ if [ $? -eq 0 ] ; then
     ${CUFFDIFF2VCFPATH}/cuffdiff2vcf.pl ${DIRNAME}/${newName}_gene_exp.diff ${BAM1}
     echo "done with 3 external scripts"
 
-    mv ${DIRNAME}.cuffDiffOut ${DIRNAME}.cuffDiffPass
+    touch ${DIRNAME}.cuffDiffPass
 else
-    mv ${DIRNAME}.cuffDiffOut ${DIRNAME}.cuffDiffFail
+    touch ${DIRNAME}.cuffDiffFail
 fi
 
 rm -f ${DIRNAME}.cuffDiffInQueue
