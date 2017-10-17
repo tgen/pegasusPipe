@@ -95,9 +95,6 @@ echo "###End of getting insert size section"
 
 #setting path
 PATH=${BOWTIE1PATH}:$PATH
-
-samtools --version
-
 ${THFUSIONPATH}/tophat2 \
     -p 16 \
     -N 3 \

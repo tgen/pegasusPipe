@@ -22,7 +22,7 @@ echo "### TRIMFASTQPATH: ${TRIMFASTQPATH}"
 echo "### REFPRETOPHAT: ${REFPRETOPHAT}"
 echo "### PICARDPATH: ${PICARDPATH}"
 echo "### BWAPATH: ${BWAPATH}"
-export PATH=${BOWTIE1PATH}:/home/tgenref/pipeline_v0.4/bin/samtools-0.1.19/:$PATH
+export PATH=${BOWTIE1PATH}:$PATH
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -80,8 +80,6 @@ echo "### Got INNERDIST=${INNERDIST} and STDEV=${STDEV}"
 echo "###End of getting insert size section"
 
 #setting path
-samtools --version
-
 ${THFUSIONPATH}/tophat2 \
     -p 16 \
     -N 3 \
