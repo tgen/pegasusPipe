@@ -51,8 +51,8 @@ echo "### CONTROL= $CONTROL"
 echo "### TUMOR= $TUMOR"
 echo "### D= $D"
 
-module load BEDTools/2.14.0 
-module load R/3.1.1
+module load BEDTools/2.26.0
+module load R/3.2.1
 
 SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 
