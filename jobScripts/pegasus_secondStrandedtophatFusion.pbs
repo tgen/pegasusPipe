@@ -9,7 +9,7 @@
 #PBS -o /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.out 
 #PBS -e /${D}/oeFiles/${PBS_JOBNAME}_${PBS_JOBID}.err
 
-module load python/2.7.3
+module load python/2.7.13
  
 echo "### Variables coming in:"
 echo "### SAMPLE=${SAMPLE}"
