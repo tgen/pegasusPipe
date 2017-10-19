@@ -6,7 +6,7 @@
 #SBATCH -N 1
 #SBATCH -n 1
 #SBATCH --cpus-per-task 8
-module load python/2.7.3
+module load python/2.7.13
 module load R/3.2.1
 
 beginTime=`date +%s`

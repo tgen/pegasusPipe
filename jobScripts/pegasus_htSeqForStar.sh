@@ -5,7 +5,7 @@
 #SBATCH --mail-type=FAIL
 
 
-module load python/2.7.3
+module load python/2.7.13
 
 beginTime=`date +%s`
 time=`date +%d-%m-%Y-%H-%M`

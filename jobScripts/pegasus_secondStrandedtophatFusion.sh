@@ -4,7 +4,7 @@
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 
-module load python/2.7.3
+module load python/2.7.13
 module load R/2.15.2
  
 echo "### Variables coming in:"
