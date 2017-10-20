@@ -93,7 +93,7 @@ do
         mkdir -p $DEXseqDir
     fi
     DEXseqConfig=$DEXseqDir/${DEXseqName}_DEXseq.config
-    echo "sampleID    condition    libType    exonCountModel    countFilePath" > $DEXseqConfig
+    echo -e "sampleID\tcondition\tlibType\texonCountModel\tcountFilePath" > $DEXseqConfig
 
     for eachNorml in ${normls//;/ }
                 do
@@ -106,7 +106,7 @@ do
                                 ((missingNormlCount++))
                 continue
                         else
-                echo "$eachNorml    unaffected    paired-end    noAggregate    $countsPath" >> $DEXseqConfig
+                echo -e "$eachNorml\tunaffected\tpaired-end\tnoAggregate\t$countsPath" >> $DEXseqConfig
                         fi
                 done
                 for eachTumor in ${tumors//;/ }
@@ -120,7 +120,7 @@ do
                                 ((missingTumorCount++))
                 continue
                         else
-                echo "$eachTumor    affected    paired-end    noAggregate    $countsPath" >> $DEXseqConfig
+                echo -e "$eachTumor\taffected\tpaired-end\tnoAggregate\t$countsPath" >> $DEXseqConfig
                         fi
                 done
                 if [[ $missingNormlCount -eq 0 && $missingTumorCount -eq 0 ]] ; then
