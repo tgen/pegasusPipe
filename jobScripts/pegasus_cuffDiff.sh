@@ -24,7 +24,7 @@ newName=`basename ${DIRNAME}`
 newName=${newName/_cdDir/}
 
 BAM1=`sed "s/\s/,/g" <(echo $BAM1)`
-BAM2=`sed "s/\s/,/g" <(echo $BAM1)`
+BAM2=`sed "s/\s/,/g" <(echo $BAM2)`
 
 ${CUFFDIFFPATH}/cuffdiff -p 16 -N -M ${MASK} -b ${REF} -L Control,Tumor ${GTF} ${BAM1} ${BAM2}
 if [ $? -eq 0 ] ; then
