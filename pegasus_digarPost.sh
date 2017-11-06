@@ -39,7 +39,7 @@ fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
+nCores=8
 #params=`grep @@${myName}_PARAMS= $constantsDir/$recipe | cut -d= -f2`
 
 
