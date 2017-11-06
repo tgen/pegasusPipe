@@ -25,6 +25,12 @@ outData=${DEXSEQOUTFILE}
 objectData=${OBJECTDATA}
 
 # Use DEXSeq R script to perform differential exon usage analysis.
+echo "Rscript --vanilla ${DEXSEQPATH} \
+    ${DEXSEQCONFIG} \
+    ${DEXSEQGFF} \
+    ${DEXSEQOUTFILE} \
+    ${OBJECTDATA}
+"
 
 Rscript --vanilla ${DEXSEQPATH} \
     ${DEXSEQCONFIG} \
