@@ -158,7 +158,7 @@ do
         fi
 
         echo Starting MuTect Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mutect.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SNPS=$snps,RUNDIR=$runDir,STEPCOUNT=$STEP_COUNT,COSMIC_VCF=$cosmicVcf,GATKPATH=$gatkPath,CHRLIST=$chrList,OUTPUT=$wd,STEP=${STEP},MUTECTPATH=$mutectPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mutect.sh
         if [ $? -eq 0 ] ; then
             touch ${wd}_Step${STEP}.mutectInQueue
         else

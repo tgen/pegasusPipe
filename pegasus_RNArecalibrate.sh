@@ -87,7 +87,7 @@ do
                                 continue
                         fi
                         echo "Starting RNA recalibration"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_recalibrate.sh
+            sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,KNOWN=$known,RECALBAM=$outBam,D=$d,REF=$ref,BAMFILE=$rnaBam,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_recalibrate.sh
                         if [ $? -eq 0 ] ; then
                                 touch $rnaBam.recalibrateInQueue
                         else

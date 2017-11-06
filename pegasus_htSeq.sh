@@ -91,7 +91,7 @@ do
                 continue
             fi
             echo "### Submitting $accHitsSam to queue for HT Seq..."
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_htSeq.sh
+            sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,PICARDPATH=$picardPath,SAM=$accHitsSam,BAM=$accHitsBam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_htSeq.sh
             if [ $? -eq 0 ] ; then
                 touch $accHitsSam.htSeqInQueue
             else
@@ -122,7 +122,7 @@ do
             echo "### Submitting $alignedSam to queue for HT Seq..."
              if [[ $rnaStrand == "FIRST" ]] ; then
                 echo "##running stranded STAR case"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strandedHtSeqForStar.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strandedHtSeqForStar.sh
                 if [ $? -eq 0 ] ; then
                     touch $alignedSam.htSeqInQueue
                 else
@@ -131,7 +131,7 @@ do
                 sleep 2
             elif  [[ $rnaStrand == "SECOND"  ]] ; then
                                 echo "##running stranded STAR case"
-                                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_revStrandedHtSeqForStar.sh
+                                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_revStrandedHtSeqForStar.sh
                                 if [ $? -eq 0 ] ; then
                                         touch $alignedSam.htSeqInQueue
                                 else
@@ -141,7 +141,7 @@ do
 
             else
                 echo "##running unstranded STAR case"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_htSeqForStar.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,BAM=$alignedBam,SAM=$alignedSam,GTF=$gtf,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_htSeqForStar.sh
                 if [ $? -eq 0 ] ; then
                     touch $alignedSam.htSeqInQueue
                 else

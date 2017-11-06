@@ -113,7 +113,7 @@ do
         mkdir $runDir/stats
     fi
     echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_IGLbedCov.sh
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DIR=$ownDir,SAMPLE=$samName,CHRLISTBED=$chrListBed,REF=$ref,IGLLISTBED=$iglListBed,BEDTOOLSPATH=$bedtoolsPath,SAMTOOLSPATH=$samtoolsPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_IGLbedCov.sh
     if [ $? -eq 0 ] ; then
         touch $rnaBam.IGLbedCovInQueue
     else

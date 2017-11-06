@@ -125,7 +125,7 @@ do
         continue
     fi
     echo "### Submitting $trackName.HC_All.snpEff.vcf to queue for phaseBT..."
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${trackName}.HC_All.snpEff.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_phaseBT.sh
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,PED=$pedFile,OUTVCF=$outVcf,REF=$ref,OUTTRACKNAME=$outTrackName,SNPEFFPATH=$snpeffPath,VCF=${trackName}.HC_All.snpEff.vcf,DBSNP=$dbsnp,DBVERSION=$snpeffdb,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_phaseBT.sh
     if [ $? -eq 0 ] ; then
         touch $outTrackName.phaseBTInQueue
     else

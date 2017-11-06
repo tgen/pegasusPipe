@@ -133,7 +133,7 @@ do
                     fi
                     fileList="$fileList I=$thisBam"
                 done
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeBamsForBigJIR.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NEWLOC=$newLoc,PICARDPATH=$picardPath,SAMTOOLSPATH=$samtoolsPath,CNT=25,MERGEDBAM=$mergedBam,BAMLIST="$fileList",RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeBamsForBigJIR.sh
                 if [ $? -eq 0 ] ; then
                     touch $mergedBam.mergeBamInQueue
                 else

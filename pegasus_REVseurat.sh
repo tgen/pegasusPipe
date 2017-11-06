@@ -136,7 +136,7 @@ do
         fi
 
         echo Starting Seurat caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_REVseurat.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,STEPCOUNT=$STEP_COUNT,GATKPATH=$gatkPath,SEURATPATH=$seuratPath,NXT1=$nxtStep1,NXT2=$nxtStep2,TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NORMAL=$normalBamFile,TUMOR=$tumorBamFile,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_REVseurat.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.REVseuratInQueue
         else

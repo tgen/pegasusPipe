@@ -111,7 +111,7 @@ do
                 echo "### DEXseqCount is already done, failed or inQueue"
             else
                 echo "### Submitting $samName to queue for DEXseqCount..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RNABAM=$rnaBam,RUNDIR=$runDir,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
                 if [ $? -eq 0 ] ; then
                     touch $DEXseqOut.DEXseqCountInQueue
                 else
@@ -140,7 +140,7 @@ do
                 echo "### DEXseqCount is already done, failed or inQueue"
             else
                 echo "### Submitting $samName to queue for DEXseqCount..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DEXSEQOUT=$DEXseqOut,DEXSEQCOUNTPATH=$DEXseqCountPath,DEXSEQGFF=$DEXseqGff,RUNDIR=$runDir,RNABAM=$rnaBam,DEXSEQOUTDIR=$DEXseqCountDir,DEXSEQCOUNTOUT=$DEXseqCountOut,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_DEXseqCount.sh
 
                 if [ $? -eq 0 ] ; then
                     touch $DEXseqOut.DEXseqCountInQueue

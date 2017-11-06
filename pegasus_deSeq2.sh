@@ -147,7 +147,7 @@ do
         fi
 
         echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="$normlList",TUMORLIST="$tumorList",REF=$ref,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_deSeq2.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="$normlList",TUMORLIST="$tumorList",REF=$ref,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_deSeq2.sh
         if [ $? -eq 0 ] ; then
             touch $deSeqDir.deSeq2InQueue
         else
@@ -219,7 +219,7 @@ do
             mkdir -p $deSeqDir
         fi
         echo "### Submitting $normlList2-VS-$tumorList2 to queue for deSeq..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="$normlList",TUMORLIST="$tumorList",REF=$ref,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_deSeq2.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,DESEQ2PATH=$deseq2Path,RUNDIR=$runDir,DIRNAME=$deSeqDir,GTF=$gtf,NORMLIST="$normlList",TUMORLIST="$tumorList",REF=$ref,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_deSeq2.sh
         if [ $? -eq 0 ] ; then
             touch $deSeqDir.deSeq2InQueue
         else

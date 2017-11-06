@@ -131,7 +131,7 @@ do
                             fi
 
                             echo "$rgTag"
-                            sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores  --mem-per-cpu 5000 --export ALL,D=$d,RGTAG="$rgTag",FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
+                            sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores  --mem-per-cpu 5000 --export ALL,D=$d,RGTAG="$rgTag",FASTQ1=$thisFq,FASTQ2=$thisR2,REF=$ref,BWAPATH=$bwaPath,SAMTOOLSPATH=$samtoolsPath,FAI=$faiFile,BAMPRE=$bamPre,RUNDIR=$runDir,NXT1=$nxtStep1,NXT2=$nxtStep2,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_bwaMem.sh
                             if [ $? -eq 0 ] ; then
                                 touch $bamName.dnaAlignInQueue
                             else

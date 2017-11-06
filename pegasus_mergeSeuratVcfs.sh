@@ -97,7 +97,7 @@ do
             #echo "thisVCF is $thisVCF"
             fileList="$fileList I=$thisVCF"
         done
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeVCFs.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FILELIST="$fileList",NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,MERGEDVCF=$mergedVCF,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_mergeVCFs.sh
         if [ $? -eq 0 ] ; then
             touch $mergedVCF.mergeVcfInQueue
         else

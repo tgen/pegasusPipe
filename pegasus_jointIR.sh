@@ -163,7 +163,7 @@ do
             continue
         fi
         echo "### Submitting $usableName to queue for joint indel realignment..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="$sampleList",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_jointIR.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,WORKDIR=$workDir,GATKPATH=$gatkPath,TRK=$trackName,INTS=$irIntFile,INDELS=$indels,DIRNAME=$jirDir,BAMLIST="$sampleList",REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,NXT4=$nxtStep4,NXT5=$nxtStep5,NXT6=$nxtStep6,NXT7=$nxtStep7,NXT8=$nxtStep8,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_jointIR.sh
         if [ $? -eq 0 ] ; then
         touch $trackName.jointIRInQueue
         else

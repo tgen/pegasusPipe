@@ -113,7 +113,7 @@ do
                 fi
 
                 echo Starting Haplotype caller for Step${STEP}
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_RNAhaplotypeCaller.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST=$rnaBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_RNAhaplotypeCaller.sh
                 if [ $? -eq 0 ] ; then
                     touch ${trackName}_Step${STEP}.RNAhcInQueue
                 else

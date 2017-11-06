@@ -83,7 +83,7 @@ do
                 echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
             else
                 echo "### Submitting for picard Multi Metrics: $mdBam"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
                 if [ $? -eq 0 ] ; then
                     touch $mdBam.picMultiMetricsInQueue
                 else
@@ -103,7 +103,7 @@ do
                     echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
                 else
                     echo "### Submitting for picard Multi Metrics: $jrBam"
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
+                    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
                     if [ $? -eq 0 ] ; then
                         touch $jrBam.picMultiMetricsInQueue
                     else
@@ -154,7 +154,7 @@ do
             mkdir $runDir/stats
         fi
         echo "### Submitting $rnaBam to queue for picard RNA Metrics..."
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,REF=$ref,REFFLAT=$refFlat,RIBINTS=$ribInts,PICARDPATH=$picardPath,BAMFILE=$rnaBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardMultiMetrics.sh
         if [ $? -eq 0 ] ; then
             touch $rnaBam.picMultiMetricsInQueue
         else

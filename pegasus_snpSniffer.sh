@@ -101,7 +101,7 @@ do
                 echo "### Looks like snp sniff is alread in queue, failed, or passed"
             else
                 echo "### Submitting for snpSniffer: $bamFile"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,OUTVCF=$finalOut,REF=$ref,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
                 if [ $? -eq 0 ] ; then
                     touch $bamFile.snpSniffInQueue
                 else
@@ -135,7 +135,7 @@ do
             else
                 finalOut=$runDir/$kitName/$samName/$samName.starDir/$samName.snpSniffer.vcf
                 echo "### Submitting for snpSniffer: $bamFile"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SAMTOOLSPATH=$samtoolsPath,REF=$ref,OUTVCF=$finalOut,SNPSNIFFERPATH=$snpSnifferPath,BAM=$bamFile,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_snpSniffer.sh
                 if [ $? -eq 0 ] ; then
                     touch $bamFile.snpSniffInQueue
                 else

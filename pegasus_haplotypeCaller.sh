@@ -138,7 +138,7 @@ do
         fi
 
         echo Starting Haplotype caller Step${STEP}
-        sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.hcInQueue
         else
@@ -183,7 +183,7 @@ do
                     fi
 
                     echo Starting Haplotype caller for Step${STEP}
-                    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCallerSingle.sh
+                    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$mdBam,KNOWN=$snps,BAMLIST=$mdBam,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCallerSingle.sh
                     if [ $? -eq 0 ] ; then
                         touch ${mdBam}_Step${STEP}.hcInQueue
                     else

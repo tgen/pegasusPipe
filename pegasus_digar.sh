@@ -129,8 +129,8 @@ do
                 fi
 
                 echo "### Submitting $digarDir to queue for digar..."
-                echo "sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh"
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh
+                echo "sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FASTQ1=$read1Name,FASTQ2=$read2Name,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh"
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,FASTQ1=$read1Name,FASTQ2=$read2Name,LISTOFGENES=$listOfGenes,SAMNAME=$samName,TRINITYPATH=$trinityPath,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENENAME=$geneName,DIGARDIR=$digarDir,REF=$ref,NXT1=$nxtStep1,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digar.sh
                 if [ $? -eq 0 ] ; then
                     touch ${digarDir}/$samName.$geneName.digarInQueue
                 else

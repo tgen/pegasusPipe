@@ -152,7 +152,7 @@ do
         continue
     fi
     echo "### Submitting to queue to run strelka on $wd"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strelka.sh
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strelka.sh
     if [ $? -eq 0 ] ; then
         touch $wd.strelkaInQueue
     else

@@ -146,7 +146,7 @@ do
                         continue
                 fi
                 echo "### Submitting $normlList2-VS-$tumorList2 to queue for sleuth..."
-                sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sleuth.sh
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SLEUTHPATH=$sleuthPath,SLEUTHCONFIG=$sleuthConfig,RUNDIR=$runDir,SLEUTHOUTDIR=$sleuthDir,OBJECTDATA=$objectData,SLEUTHOUTFILE=$sleuthOut,KALLISTOOUT=$kallistoDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_sleuth.sh
                 if [ $? -eq 0 ] ; then
                        touch $sleuthDir.sleuthInQueue
                 else

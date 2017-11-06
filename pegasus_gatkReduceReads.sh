@@ -84,7 +84,7 @@ do
         continue
     fi
     echo "### Submitting to queue to reduce reads: $mdBamFile"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,REF=$ref,BAMFILE=$mdBamFile,NXT1=$nxtStep1,RUNDIR=$runDir,OUTPUTBAM=$rrBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_gatkReduceReads.sh
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,REF=$ref,BAMFILE=$mdBamFile,NXT1=$nxtStep1,RUNDIR=$runDir,OUTPUTBAM=$rrBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_gatkReduceReads.sh
     if [ $? -eq 0 ] ; then
         touch $mdBamFile.rrInQueue
     else

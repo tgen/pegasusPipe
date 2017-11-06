@@ -79,7 +79,7 @@ if [ -e $runDir/summaryStatsInQueue ] ; then
 fi
 if [ $alreadyDone -eq 0 ] ; then
     echo "submitting $runDir to queue for Summary stats"
-    sbatch --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_summaryStats.sh
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,SUMSTATSPATH=$sumStatsPath,RUNDIR=$runDir,EMAIL=$email,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_summaryStats.sh
     if [ $? -eq 0 ] ; then
         touch $runDir/summaryStatsInQueue
     else

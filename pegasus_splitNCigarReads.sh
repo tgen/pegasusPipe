@@ -90,7 +90,7 @@ do
                                 continue
                         fi
             echo "Starting splitNCigarReads"
-            sbatch --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_splitNCigarReads.sh
+            sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,GATKPATH=$gatkPath,OUTBAM=$outBam,RNABAM=$rnaBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_splitNCigarReads.sh
             if [ $? -eq 0 ] ; then
                 touch $rnaBam.splitNCigarInQueue
             else
