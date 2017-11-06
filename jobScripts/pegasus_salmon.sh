@@ -75,4 +75,4 @@ elapsed=$(( $endTime - $beginTime ))
 (( mins=$elapsed%3600/60 ))
 echo "RUNTIME:SALMON:$hours:$mins" > ${DIR}.salmon.totalTime
 echo "### Ending salmon"
-echo ${SLURM_JOB_NAME} completed at for sample >> /ProjectRunSummary.txt
+echo ${SLURM_JOB_NAME} completed 
