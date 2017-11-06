@@ -158,7 +158,7 @@ do
         sleep 1
         ;;
     pegasus_nextJob_checkProjectComplete.txt)    echo "### Will check if project complete for $projDir"
-        nohup $scriptsHome/pegasus_checkProjectComplete.sh $projDir >> $projDir/logs/pegasus_checkProjectCompleteLOG.txt 2>&1 &
+        nohup $scriptsHome/pegasus_checkProjectComplete.sh $projDir > $projDir/logs/pegasus_checkProjectCompleteLOG.txt 2>&1 &
         sleep 1
         ;;
     pegasus_nextJob_summaryStats.txt)    echo "### Will run summary stats for $projDir"
