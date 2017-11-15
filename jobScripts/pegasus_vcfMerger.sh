@@ -72,7 +72,7 @@ fi
 ##filter the seurat INDELS, use bed if no matched normal
 if [[ ${MATCHEDNORMAL} == "No" ]] ; then
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_DIV_bed} for seurat indels"
-        cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( TYPE='somatic_deletion' ) | ( TYPE='somatic_insertion' ))"  | /home/tgenref/pecan/bin/vt/vt normalize - -r ${REF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_DIV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_indel.vcf
+        cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( TYPE='somatic_deletion' ) | ( TYPE='somatic_insertion' ))"  | /home/tgenref/binaries/vtvt normalize - -r ${REF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_DIV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_indel.vcf
 else
     echo "Matched normal detected running seurat INDEL filter"
         cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( TYPE='somatic_deletion' ) | ( TYPE='somatic_insertion' ))" > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_indel.vcf
@@ -135,7 +135,7 @@ if [[ ${MATCHEDNORMAL} == "No" ]] ; then
     #STLKA_INDEL_VCF=`ls *.passed.somatic.indels.vcf`
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_DIV_bed} and ${DBSNP_SNP_BED}for STRELKA INDELS/SNPS"
     cat ${STRELKA_SNV_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${STRELKA_BASENAME}.strelka.passed.somatic.snvs.filt.vcf
-    cat ${STRELKA_INDEL_VCF} | /home/tgenref/pecan/bin/vt/vt normalize - -r ${REF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_DIV_BED} > ${MERGERDIR}/${STRELKA_BASENAME}.strelka.passed.somatic.indels.filt.vcf
+    cat ${STRELKA_INDEL_VCF} | /home/tgenref/binaries/vt/vt normalize - -r ${REF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_DIV_BED} > ${MERGERDIR}/${STRELKA_BASENAME}.strelka.passed.somatic.indels.filt.vcf
 
     STRELKA_SNV_VCF="${MERGERDIR}/${STRELKA_BASENAME}.strelka.passed.somatic.snvs.filt.vcf"
     STRELKA_INDEL_VCF="${MERGERDIR}/${STRELKA_BASENAME}.strelka.passed.somatic.indels.filt.vcf"
