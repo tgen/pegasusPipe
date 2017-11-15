@@ -130,21 +130,23 @@ do
         if [[ ${matchedNormal} == "No" ]] ; then
             echo "BED file will be swapped out since it has no matched normal"
             if [[ "$pair1KitName" == *S5U ]]  ; then
-                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_V5_PlusUTR_hs37d5_PaddedTargets_Picard_DGV_1kg_100_interval.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v5_plusUTR/Agilent_SureSelect_V5_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
             elif [[ "$pair1KitName" == *S6X ]]  ; then
-                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_V6_noUTR_hs37d5_PaddedTargets_Picard_DGV_1kg_100_interval.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v6r2_noUTR/Agilent_SureSelect_V6R2_noUTR_hs37d5_Padded_DGV_1kg.cna.bed"
             elif [[ "$pair1KitName" == *S4U ]]  ; then
-                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
-                elif [[ "$pair1KitName" == *S4U ]]  ; then
-                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StxProstate/Agilent_SureSelect_V6R2_StxProstate_hs37d5_Padded_DGV_1kg.cna.bed"
-            elif [[ "$pair1KitName" == *ST2 ]]  ; then
-                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V6R2_StrexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_Padded_DGV_1kg.cna.bed"
-            elif [[ "$pair1KitName" == *S2U ]]  ; then
-                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_V2_NA/Agilent_SureSelect_V2_NA_hs37d5_Padded_DGV_1kg.cna.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v4_plusUTR/Agilent_SureSelect_V4_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
+            elif [[ "$pair1KitName" == *SXP ]]  ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v6r2_strexomeProstateV1/Agilent_SureSelect_V6R2_StrexomeProstate_hs37d5_Padded_DGV_1kg.cna.bed"
             elif [[ "$pair1KitName" == *CCC ]]  ; then
-                                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_ClearSeq_Beta_ComprehensiveCancer/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_Padded_DGV_1kg.cna.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_clearseq_compCancer_NA/Agilent_ClearSeq_Beta_ComprehensiveCancer_hs37d5_Padded_DGV_1kg.cna.bed"
             elif [[ "$pair1KitName" == *CR2 ]]  ; then
-                bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_SureSelect_CREv2_cliRes/Agilent_SureSelect_CREv2_cliRes_hs37d5_Padded_DGV_1kg.cna.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_cre_v2/Agilent_SureSelect_CREv2_cliRes_hs37d5_Padded_DGV_1kg.cna.bed"
+            elif [[ "$pair1KitName" == *STP ]]  ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v6r2_strexomeProstateV2/Agilent_SureSelect_V6R2_StxProstate_hs37d5_Padded_DGV_1kg.cna.bed"
+            elif [[ "$pair1KitName" == *ST2 ]]  ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v6r2_strexomeV2/Agilent_SureSelect_V6R2_StrexomeV2_hs37d5_Padded_DGV_1kg.cna.bed"
+            elif [[ "$pair1KitName" == *S2U ]]  ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v2_NA/Agilent_SureSelect_V2_NA_hs37d5_Padded_DGV_1kg.cna.bed"
             else
                 echo "We don't have a bed filter for this kit for no matched normal at this time"
             fi
@@ -328,10 +330,9 @@ do
             if [[ ${matchedNormal} == "No" ]] ; then
                 echo "BED file will be swapped out since it has no matched normal"
                 if [[ "$pair1KitName" == *S5U ]]  ; then
-                    bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_V5_PlusUTR_hs37d5_PaddedTargets_Picard_DGV_1kg_100_interval.bed"
-
+                    bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v5_plusUTR/Agilent_SureSelect_V5_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
                 elif [[ "$pair1KitName" == *S6X ]]  ; then
-                    bedFile="/home/tgenref/pecan/annotations/CN_filter/Agilent_V6_noUTR_hs37d5_PaddedTargets_Picard_DGV_1kg_100_interval.bed"
+                    bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v6r2_noUTR/Agilent_SureSelect_V6R2_noUTR_hs37d5_Padded_DGV_1kg.cna.bed"
                 else
                     echo "We don't have a bed filter for this kit for no matched normal at this time"
                 fi
