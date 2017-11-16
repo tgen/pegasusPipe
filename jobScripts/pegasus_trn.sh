@@ -22,7 +22,7 @@ cd ${RUNDIR}
 echo "Starting translocations for ${OUTFILE} at $time."
 if [ "${RECIPE}" == "trial01" ] ; then
 echo "Running new strexome version of TRN 02/06/15"
-${TRNPATH}/tgen_somaticSV.pl \
+${TRNPATH}/tgen_somaticSV_0.90.pl \
     T=${TUMOR} \
     R=${NORMAL} \
     O=${OUTFILE} \
@@ -30,7 +30,7 @@ ${TRNPATH}/tgen_somaticSV.pl \
 else
     if [ "${ASSAY}" == "Genome" ] ; then
     echo "Running as a Genome trn"
-    ${TRNPATH}/tgen_somaticSV.pl \
+    ${TRNPATH}/tgen_somaticSV_0.50.pl \
         T=${TUMOR} \
         R=${NORMAL} \
         O=${OUTFILE} \
@@ -39,7 +39,7 @@ else
 
     elif [ "${ASSAY}" == "Exome" ] ; then
     echo "Running as Exome trn"
-    ${TRNPATH}/tgen_somaticSV.pl \
+    ${TRNPATH}/tgen_somaticSV_0.50.pl \
         T=${TUMOR} \
         R=${NORMAL} \
         O=${OUTFILE} \
