@@ -49,6 +49,8 @@ module load R/3.2.1
 grep -v "#" ${MERGERDIR}/${BASENAME}.merge.sort.clean.f2t.ann.vcf | awk '{print $1"-"$2"-"$3"-"$4"-"$5}' > ${MERGERDIR}/${BASENAME}_positions.txt
 
 #This creates a file with each variant postion "chr-position", to test indel calling we will provide the 25bp upstream and downstream for pileup generation
+touch ${MERGERDIR}/${BASENAME}_positions_expanded.txt
+
 for line in `cat ${MERGERDIR}/${BASENAME}_positions.txt`
 do
     CHR=`echo ${line} | cut -d- -f1`
