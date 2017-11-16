@@ -54,7 +54,7 @@ thetDepth=0     #   <<<< THIS CAN BE ADJUSTED - min depth of diploid het positio
 hetDev=0.05          #   <<<< THIS CAN BE ADJUSTED - allowable deviation from ref allele frequency of 0.5
 
 
-genomeTarget=/home/tgenref/pipeline_v0.4/cna/pos35.txt
+genomeTarget=/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/pos35.txt
 echo "### Start run_ngsCNA.sh"
 echo "${CNAPATH}/pegasusCNA/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${hetDev} $genomeTarget"
 ${CNAPATH}/pegasusCNA/run_ngsCNA.sh ${MCRPATH} ${NORMALDAT} ${TUMORDAT} ${OFILE} ${HETFILE} ${smWin} ${fcThresh} ${ASSAY} ${res} ${readDepth} ${maxGap} ${nhetDepth} ${thetDepth} ${hetDev} $genomeTarget

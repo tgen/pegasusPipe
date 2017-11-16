@@ -13,7 +13,6 @@
 #####################################################################
 
 thisStep="pegasus_nextJob_germVcfMerger.txt"
-#nxtStep1="pegasus_nextJob_mergeVcfAlleleCount.txt"
 
 constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
 constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
@@ -60,13 +59,12 @@ dbsnp=`grep @@"$recipe"@@ $constants | grep @@SNPS= | cut -d= -f2`
 snpeffPath=`grep @@"$recipe"@@ $constants | grep @@SNPEFFPATH= | cut -d= -f2`
 vtPath=`grep @@"$recipe"@@ $constants | grep @@VTPATH= | cut -d= -f2`
 
-DBNSFP=/home/tgenref/pecan/bin/vcfMerger/dbNSFP2.4.txt.gz
-VCFMERGER=/home/tgenref/pecan/bin/vcfMerger/pecan.merge.3vcfs.main.sh
-VCFMERGER_DIR=/home/tgenref/pecan/bin/vcfMerger
-VCFSORTER=/home/tgenref/pecan/bin/vcfMerger/vcfsorter.pl
-RNA_VCF_HEADER=/home/tgenref/pecan/bin/vcfMerger/RNA_VCF_HEADER.vcf
-POST_MERGE_VENN=/home/tgenref/pecan/bin/vcfMerger/pecan.Venn_postMMRF_specific_filtering.sh
-#DBSNP=/home/tgenref/pecan/bin/vcfMerger/dbsnp_137.b37.vcf
+DBNSFP="/home/tgenref/homo_sapiens/grch37_hg19/public_databases/dbnsfp/v2.4/dbNSFP2.4.txt.gz"
+VCFMERGER="/home/tgenref/binaries/vcfMerger/vcfMerger/pecan.merge.3vcfs.main.sh"
+VCFMERGER_DIR="/home/tgenref/binaries/vcfMerger/vcfMerger/"
+VCFSORTER="/home/tgenref/binaries/vcfMerger/vcfMerger/vcfsorter.pl"
+RNA_VCF_HEADER="/home/tgenref/binaries/vcfMerger/vcfMerger/RNA_VCF_HEADER.vcf"
+POST_MERGE_VENN="/home/tgenref/binaries/vcfMerger/vcfMerger/pecan.Venn_postMMRF_specific_filtering.sh"
 
 echo "### projName: $projName"
 echo "### confFile: $configFile"
@@ -77,35 +75,32 @@ qsubFails=0
 ###first check all these vcfs are complete/passed
 for dnaPairLine in `cat $configFile | grep '^DNAPAIR=\|^DNAFAMI='`
 do
-    #rnaBam=""
     echo "### DNA pair line is $dnaPairLine for seurat stuff"
     sampleNames=`echo $dnaPairLine | cut -d= -f2`
-
-        shorterName=`echo $dnaPairLine | cut -d= -f2 | cut -d\; -f2`
-        if [[ $shorterName == *,* ]] ; then
-                shorterName=""
-                echo "### No nick name detected for these pairs"
-                usableName=${sampleNames//,/-}
-        else
-                echo "### Nick name for these pairs are: $shorterName"
-                usableName="$shorterName"
-        fi
-        sampleCount=0
-        missingSampleCount=0
-        sampleList=""
+    shorterName=`echo $dnaPairLine | cut -d= -f2 | cut -d\; -f2`
+    if [[ $shorterName == *,* ]] ; then
+            shorterName=""
+            echo "### No nick name detected for these pairs"
+            usableName=${sampleNames//,/-}
+    else
+            echo "### Nick name for these pairs are: $shorterName"
+            usableName="$shorterName"
+    fi
+    sampleCount=0
+    missingSampleCount=0
+    sampleList=""
     echo "$kitName"
     if [[ "$kitName" == "TSE61" ]] ; then
-        bedFile="/home/tgenref/pipeline_v0.3/annotations/exome_capture/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
     elif [[ "$kitName" == *S5U ]] || [[ "$kitName" == *S5X ]] ; then
-        bedFile="/home/tgenref/pipeline_v0.3/ensembl70/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5/gene_model/ensembl_v70/tool_specific_resources/vcfmerger/Agilent_SureSelect_V5_plusUTR/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
     elif [[ "$kitName" == *STX ]] ; then
-        bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_sortedTabs2_padded25.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v5_strexome/Strexome_targets_sortedTabs2_padded25.bed"
     elif [[ "$kitName" == *SCR ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_cre_v1/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
     fi
-    #bedFileGrep=$kitName"_CNABED"
-        #bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
-        echo "### BED FILE= $bedFile"
+
+    echo "### BED FILE= $bedFile"
 
     echo "first checking for haplotype caller snpeff vcf"
     hcTrackName="$runDir/hc/$usableName/$usableName"
@@ -161,25 +156,22 @@ do
         libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
         echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
         if [ "$assayID" != "RNA" ] ; then
-                echo "### Assay ID is $assayID. Must be genome or exome."
-               # pcDir=$runDir/$kitName/$samName
-                #inBam=$runDir/$kitName/$samName/$samName.proj.bam
-                #mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-                #jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-                jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-                if [ $jrRequested -gt 0 ] ; then
-                        echo "### Germline vcf merger will not operate on a single sample because Joint IR is requested for $samName"
-                else
-                        echo "### Germline vcf merger will run on single sample because Joint IR is NOT requested for $samName"
+            echo "### Assay ID is $assayID. Must be genome or exome."
+            jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+            if [ $jrRequested -gt 0 ] ; then
+                echo "### Germline vcf merger will not operate on a single sample because Joint IR is requested for $samName"
+            else
+                echo "### Germline vcf merger will run on single sample because Joint IR is NOT requested for $samName"
             echo "Kitname: $kitName"
+            
             if [[ "$kitName" == "TSE61" ]] ; then
-                bedFile="/home/tgenref/pipeline_v0.3/annotations/exome_capture/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_truseq/TruSeq_exome_targeted_regions_b37_padded.bed"
             elif [[ "$kitName" == *S5U ]] || [[ "$kitName" == *S5X ]] ; then
-                bedFile="/home/tgenref/pipeline_v0.3/ensembl70/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5/gene_model/ensembl_v70/tool_specific_resources/vcfmerger/Agilent_SureSelect_V5_plusUTR/Ensembl_v70_hs37d5_exonic_coordinates_touched_v5UTR_padded25.bed"
             elif [[ "$kitName" == *STX ]] ; then
-                bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/strexome/Strexome_targets_sortedTabs2_padded25.bed"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v5_strexome/Strexome_targets_sortedTabs2_padded25.bed"
             elif [[ "$kitName" == *SCR ]] ; then
-                bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_clinical_research_exome/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_cre_v1/Agilent_Clinical_Research_Exome_hs37d5_TargetsPadded25_sortedTabs2_Picard.txt"
             fi
             echo "### BED FILE= $bedFile"
 

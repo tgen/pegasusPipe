@@ -209,7 +209,7 @@ do
         read1Length=`gunzip -c $read1Name | head -2 | tail -1 | wc -c`
         ((read1Length--))
 
-        spConfig=/home/tgenref/pecan/bin/SOAPfuse-v1.26/config/config.txt
+        spConfig=/home/tgenref/binaries/soapfuse/SOAPfuse-v1.26/config/config.txt
         echo "$samName $libraID $samName $read1Length" > $ownDir/soapFuse.sampleList
 
         #creating linked files to reads in tophatDir

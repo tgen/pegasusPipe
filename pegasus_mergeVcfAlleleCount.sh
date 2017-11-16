@@ -41,7 +41,6 @@ debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:
 
 nCores=8
 
-
 snpSift=`grep @@"$recipe"@@ $constants | grep @@SNPEFFPATH= | cut -d= -f2`
 samTools=`grep "@@"$recipe"@@" $constants | grep @@SAMTOOLSPATH= | cut -d= -f2`
 varScan=`grep @@VARSCANPATH= $constantsDir/$recipe | cut -d= -f2`
@@ -60,16 +59,17 @@ snpeffdb=`grep @@"$recipe"@@ $constants | grep @@SNPEFFDB= | cut -d= -f2`
 dbsnp=`grep @@"$recipe"@@ $constants | grep @@SNPS= | cut -d= -f2`
 snpeffPath=`grep @@"$recipe"@@ $constants | grep @@SNPEFFPATH= | cut -d= -f2`
 
-DBNSFP=/home/tgenref/pecan/bin/vcfMerger/dbNSFP2.4.txt.gz
-VCFMERGER=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819/pecan.merge.3vcfs.main.sh
-VCFMERGER_DIR=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819
-VCFSORTER=/home/tgenref/pecan/bin/vcfMerger/vcfsorter.pl
-RNA_VCF_HEADER=/home/tgenref/pecan/bin/vcfMerger/RNA_VCF_HEADER.vcf
-POST_MERGE_VENN=/home/tgenref/pecan/bin/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819/pecan.Venn_postMMRF_specific_filtering.sh
-KG=/home/tgenref/pecan/bin/vcfMerger/1000G_phase1.snps.high_confidence.b37.vcf
-COSMIC=/home/tgenref/pecan/bin/vcfMerger/CosmicCodingMuts_v66_20130725_sorted.vcf
-NHLBI=/home/tgenref/pecan/bin/vcfMerger/ESP6500SI-V2_snps_indels.vcf
-DBSNP=/home/tgenref/pecan/bin/vcfMerger/dbsnp_137.b37.vcf
+
+DBNSFP="/home/tgenref/homo_sapiens/grch37_hg19/public_databases/dbnsfp/v2.4/dbNSFP2.4.txt.gz"
+VCFMERGER="/home/tgenref/binaries/vcfMerger/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819/pecan.merge.3vcfs.main.sh"
+VCFMERGER_DIR="/home/tgenref/binaries/vcfMerger/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819"
+VCFSORTER="/home/tgenref/binaries/vcfMerger/vcfMerger/vcfsorter.pl"
+RNA_VCF_HEADER="/home/tgenref/binaries/vcfMerger/vcfMerger/RNA_VCF_HEADER.vcf"
+POST_MERGE_VENN="/home/tgenref/binaries/vcfMerger/vcfMerger_V2_norm/production.version.VCFMERGER_V2.WithNorm.201600819/pecan.Venn_postMMRF_specific_filtering.sh"
+KG="/home/tgenref/binaries/vcfMerger/vcfMerger/1000G_phase1.snps.high_confidence.b37.vcf"
+COSMIC="/home/tgenref/binaries/vcfMergervcfMerger/CosmicCodingMuts_v66_20130725_sorted.vcf"
+NHLBI="/home/tgenref/binaries/vcfMerger/vcfMerger/ESP6500SI-V2_snps_indels.vcf"
+DBSNP="/home/tgenref/binaries/vcfMerger/vcfMerger/dbsnp_137.b37.vcf"
 
 
 echo "### projName: $projName"
