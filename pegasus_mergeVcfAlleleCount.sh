@@ -45,7 +45,7 @@ snpSift=`grep @@"$recipe"@@ $constants | grep @@SNPEFFPATH= | cut -d= -f2`
 samTools=`grep "@@"$recipe"@@" $constants | grep @@SAMTOOLSPATH= | cut -d= -f2`
 varScan=`grep @@VARSCANPATH= $constantsDir/$recipe | cut -d= -f2`
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
-refDict=${ref//fa/dict}
+refDict="${ref%.fa}.dict"
 cosmicVcf=`grep "@@"$recipe"@@" $constants | grep @@COSMIC_VCF= | cut -d= -f2`
 snps=`grep "@@"$recipe"@@" $constants | grep @@SNPS= | cut -d= -f2`
 indels=`grep @@"$recipe"@@ $constants | grep @@INDELS= | cut -d= -f2`
