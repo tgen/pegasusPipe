@@ -11,12 +11,15 @@ set -o pipefail
 module load picard-tools/1.128
 PICARD=$(which picard.jar)
 
+REFDICT="${REF%.fa}.dict"
+
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
 echo "### NODE: $machine" >> ${TRACKNAME}.vcfMergerInQueue
 echo "### JOBID: ${SLURM_JOB_ID}" >> ${TRACKNAME}.vcfMergerInQueue
 echo "### REF: ${REF}"
+echo "### REFDICT: ${REFDICT}"
 echo "### RUNDIR: ${RUNDIR}"
 echo "### NXT1: ${NXT1}"
 echo "### SAMTOOLSPATH: ${SAMTOOLSPATH}"
@@ -36,7 +39,7 @@ echo "### Germline vcf merger started at $time."
 
 # Normalize each VCF
 
-java -jar ${PICARD} SortVcf I=${HCVCF} O=${TRACKNAME}.HC.sorted.vcf
+java -jar ${PICARD} SortVcf I=${HCVCF} O=${TRACKNAME}.HC.sorted.vcf SD=${REFDICT}
 cat ${TRACKNAME}.HC.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.HC.norm.vcf
 if [ $? -eq 0 ] ; then
     echo "hcVcf was normalized correctly"
@@ -46,7 +49,7 @@ else
     exit 1
 fi
 
-java -jar ${PICARD} SortVcf I=${FBVCF} O=${TRACKNAME}.freebayes.sorted.vcf
+java -jar ${PICARD} SortVcf I=${FBVCF} O=${TRACKNAME}.freebayes.sorted.vcf SD=${REFDICT}
 cat ${TRACKNAME}.freebayes.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.freebayes.norm.vcf
 if [ $? -eq 0 ] ; then
     echo "fbVcf was normalized correctly"
@@ -56,7 +59,7 @@ else
     exit 1
 fi
 
-java -jar ${PICARD} SortVcf I=${MPVCF} O=${TRACKNAME}.mpileup.sorted.vcf
+java -jar ${PICARD} SortVcf I=${MPVCF} O=${TRACKNAME}.mpileup.sorted.vcf SD=${REFDICT}
 cat ${TRACKNAME}.mpileup.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.mpileup.norm.vcf
 if [ $? -eq 0 ] ; then
     echo "mpVcf was normalized correctly"
