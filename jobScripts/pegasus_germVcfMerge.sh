@@ -7,6 +7,9 @@
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
 
+set -o pipefail
+module load picard-tools/1.128
+PICARD=$(which picard.jar)
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -32,29 +35,35 @@ echo "### TRACKNAME: ${TRACKNAME}"
 echo "### Germline vcf merger started at $time."
 
 # Normalize each VCF
-cat ${HCVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.HC.norm.vcf
+
+java -jar ${PICARD} SortVcf I=${HCVCF} O=${TRACKNAME}.HC.sorted.vcf
+cat ${TRACKNAME}.HC.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.HC.norm.vcf
 if [ $? -eq 0 ] ; then
     echo "hcVcf was normalized correctly"
 else
     touch ${TRACKNAME}.vcfMergerFail
     rm -f ${TRACKNAME}.vcfMergerInQueue
-    exit
+    exit 1
 fi
-cat ${FBVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.freebayes.norm.vcf
+
+java -jar ${PICARD} SortVcf I=${FBVCF} O=${TRACKNAME}.freebayes.sorted.vcf
+cat ${TRACKNAME}.freebayes.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.freebayes.norm.vcf
 if [ $? -eq 0 ] ; then
-        echo "fbVcf was normalized correctly"
+    echo "fbVcf was normalized correctly"
 else
-        touch ${TRACKNAME}.vcfMergerFail
+    touch ${TRACKNAME}.vcfMergerFail
     rm -f ${TRACKNAME}.vcfMergerInQueue
-    exit
+    exit 1
 fi
-cat ${MPVCF} | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.mpileup.norm.vcf
+
+java -jar ${PICARD} SortVcf I=${MPVCF} O=${TRACKNAME}.mpileup.sorted.vcf
+cat ${TRACKNAME}.mpileup.sorted.vcf | ${VTPATH}/vt normalize - -r ${REF} | ${VTPATH}/vt uniq - -o ${TRACKNAME}.mpileup.norm.vcf
 if [ $? -eq 0 ] ; then
-        echo "mpVcf was normalized correctly"
+    echo "mpVcf was normalized correctly"
 else
-        touch ${TRACKNAME}.vcfMergerFail
+    touch ${TRACKNAME}.vcfMergerFail
     rm -f ${TRACKNAME}.vcfMergerInQueue
-    exit
+    exit 1
 fi
 
 ##Run the actual merging script
@@ -68,10 +77,11 @@ java -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     --disable_auto_index_creation_and_locking_when_reading_rods \
     --out ${TRACKNAME}.merged.vcf
 if [ $? -eq 0 ] ; then
-        echo "the 3 variant callers were merged successfully"
+    echo "the 3 variant callers were merged successfully"
     touch ${TRACKNAME}.vcfMergerPass
 else
-        touch ${TRACKNAME}.vcfMergerFail
+    touch ${TRACKNAME}.vcfMergerFail
+    exit 1
 fi
 
 rm -f ${TRACKNAME}.vcfMergerInQueue

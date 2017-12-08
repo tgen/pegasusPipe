@@ -18,6 +18,12 @@ R/2.14.1
 R/2.15.2
 R/3.1.1
 R/3.2.1
+  Vennerable
+  VennDiagram
+  gplots
+  DESeq
+  DESeq2
+  DEXSeq
 R/3.4.1
 sailfish/0.6.3
 salmon/0.6.0
