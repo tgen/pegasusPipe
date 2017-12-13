@@ -17,6 +17,9 @@ echo "### 2VCFPATH: ${THFUSION2VCFPATH}"
 
 module load samtools
 module load bowtie
+module load blast
+
+export BLASTDB='/home/tgenref/multi_species_resources/tool_specific_resources/blast/2013'
 
 newName=`basename ${DIR}`
 newName=${newName/.topHatFusionDir}
