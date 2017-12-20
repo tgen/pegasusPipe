@@ -15,11 +15,10 @@ echo "### DIR: ${DIR}"
 echo "### INDEXBASE: ${INDEXBASE}"
 echo "### 2VCFPATH: ${THFUSION2VCFPATH}"
 
-module load samtools
-module load bowtie
-module load blast
+module load bowtie/0.12.9
 
-export BLASTDB='/home/tgenref/multi_species_resources/tool_specific_resources/blast/2013'
+PATH=/home/tgenref/binaries/blast/ncbi-blast-2.2.29+/bin:$PATH
+export PATH
 
 newName=`basename ${DIR}`
 newName=${newName/.topHatFusionDir}

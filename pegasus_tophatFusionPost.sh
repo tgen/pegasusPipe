@@ -116,7 +116,7 @@ do
     fi
     #end linking stuff
 
-    sbatch --account ${debit} --mem-per-cpu 2000 --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,THFUSION2VCFPATH=$thFusion2vcfPath,TOPHAT2PATH=$tophat2Path,RUNDIR=$runDir,DIR=$topHatFDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,REF=$ref,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_tophatFusionPost.sh
+    sbatch --account ${debit} --mem-per-cpu 10000 --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,THFUSION2VCFPATH=$thFusion2vcfPath,TOPHAT2PATH=$tophat2Path,RUNDIR=$runDir,DIR=$topHatFDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,REF=$ref,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_tophatFusionPost.sh
     if [ $? -eq 0 ] ; then
         touch $topHatFDir.thFPostInQueue
     else
