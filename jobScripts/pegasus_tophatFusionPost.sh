@@ -24,7 +24,7 @@ newName=`basename ${DIR}`
 newName=${newName/.topHatFusionDir}
 echo "TIME:$time starting tophat fusion post on ${DIR} with indexbase of ${INDEXBASE}"
 echo "${TOPHAT2PATH}/tophat-fusion-post \
-    -p 16 \
+    -p 4 \
     --num-fusion-reads 3 \
     --num-fusion-pairs 2 \
     --num-fusion-both 5 \
