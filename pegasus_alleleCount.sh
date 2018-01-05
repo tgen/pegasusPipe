@@ -150,6 +150,7 @@ do
     fi
 
     echo "### Submitting to queue for allele count..."
+    echo "sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_alleleCount.sh"
     sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,OUT=$outFile,ALCOUNTPATH=$alPath,REF=$ref,TRACK=$trackName/$usableName,VCF=$seuratVcf,RNABAM=$rnaInBam,DNABAM=$tumorBam,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_alleleCount.sh
 
     if [ $? -eq 0 ] ; then
