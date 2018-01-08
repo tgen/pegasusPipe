@@ -47,9 +47,8 @@ echo "### MUTECTPATH: ${MUTECTPATH}"
     --vcf ${OUTPUT}_Step${STEP}_MuTect.vcf > ${OUTPUT}_Step${STEP}.mutectOut
 
 if [ $? -eq 0 ] ; then
-    echo "${STEP} Completed" >> ${OUTPUT}_MuTect_Status.txt
-    PROGRESS=`wc -l ${OUTPUT}_MuTect_Status.txt | awk '{print $1}'`
     mv ${OUTPUT}_Step${STEP}.mutectOut ${OUTPUT}_Step${STEP}.mutectPass
+    PROGRESS=$(ls ${OUTPUT}*mutectPass | wc -l)
 else
     mv ${OUTPUT}_Step${STEP}.mutectOut ${OUTPUT}_Step${STEP}.mutectFail
     rm -f ${OUTPUT}_Step${STEP}.mutectInQueue
