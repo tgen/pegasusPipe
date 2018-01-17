@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -15,27 +15,27 @@
 thisStep="pegasus_nextJob_freebayes.txt"
 nxtStep1="pegasus_nextJob_snpEff.txt"
 nxtStep2="pegasus_nextJob_germVcfMerger.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -78,14 +78,14 @@ do
                 sampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$eachSample"'"'`
                 kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
                 samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-		if [ "${jirRequested}" == "no" ] ; then
+        if [ "${jirRequested}" == "no" ] ; then
 
                         eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.bam
                         eachSamplePass=$runDir/$kitName/$samName/$samName.proj.bam.mdPass
                 else
-                	eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-                	eachSamplePass=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
-		fi
+                    eachSampleBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+                    eachSamplePass=$runDir/$kitName/$samName/$samName.proj.md.jr.bam.jointIRPass
+        fi
 
                 if [[ ! -e $eachSampleBam || ! -e $eachSamplePass ]] ; then
                         echo "### Can't find the jr bam or the jr pass"
@@ -106,13 +106,13 @@ do
                 ((qsubFails++))
                 continue
         fi
- 	fbDir="$runDir/freebayes"
-	if [ ! -d $fbDir ] ; then
-		mkdir $fbDir
-	fi
-	mkdir -p $fbDir/$usableName
-	workDir="$fbDir/$usableName"
-	trackName="$runDir/freebayes/$usableName/$usableName"
+     fbDir="$runDir/freebayes"
+    if [ ! -d $fbDir ] ; then
+        mkdir $fbDir
+    fi
+    mkdir -p $fbDir/$usableName
+    workDir="$fbDir/$usableName"
+    trackName="$runDir/freebayes/$usableName/$usableName"
 
         STEP=0
         STEP_COUNT=`ls $chrListBed/*bed | wc -l`
@@ -124,93 +124,92 @@ do
                         echo "### Freebayes is already done, failed, or inqueue for ${trackName}"
                         continue
                 fi
-	        echo Starting freebayes caller Step${STEP}
-		##qsub -A $debit -l nodes=1:ppn=$nCores -v GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="'$sampleList'",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_haplotypeCaller.pbs
-		qsub -A $debit -l nodes=1:ppn=8 -v FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="'$sampleList'",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayesMulti.pbs
-		if [ $? -eq 0 ] ; then
-			touch ${trackName}_Step${STEP}.freebayesInQueue
-		else
-			((qsubFails++))
-		fi
+            echo Starting freebayes caller Step${STEP}
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,BAMLIST="$sampleList",TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,NXT2=$nxtStep2,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_freebayesMulti.sh
+        if [ $? -eq 0 ] ; then
+            touch ${trackName}_Step${STEP}.freebayesInQueue
+        else
+            ((qsubFails++))
+        fi
                 sleep 2
         done
 done
 
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" != "RNA" ] ; then
-		echo "### Assay ID is $assayID. Must be genome or exome."
-		pcDir=$runDir/$kitName/$samName
-		inBam=$runDir/$kitName/$samName/$samName.proj.bam
-		mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
-		jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		if [ $jrRequested -gt 0 ] ; then
-			echo "### freebayes will not operate on a single bam because Joint IR is requested for $samName"
-			echo "setting to JIRbam"
-			fbBam=${jrBam}
-			fbPass=${jrBam}.jointIRPass
-		else
-			
-			echo "### freebayes will run on single bam because Joint IR is NOT requested for $samName"
-			echo "setting to mdBAM"
-			fbBam=${mdBam}
-			fbPass=$inBam.mdPass
-		#fi
-			if [[ ! -e $fbPass || ! -e $fbBam ]] ; then
-				echo "### Either mdPass or the bam itself is missing for $fbBam"
-				((qsubFails++))
-			else
-				fbDir="$runDir/freebayes"
-				if [ ! -d $fbDir ] ; then
-					mkdir $fbDir
-				fi
-				mkdir -p $fbDir/$samName
-				workDir="$fbDir/$samName"
-				trackName="$runDir/freebayes/$samName/$samName"
-				STEP=0
-				STEP_COUNT=`ls $chrListBed/*bed | wc -l`
-				##echo "### Submitting to queue to run freebayes on $wd"
-				while [ ${STEP} -lt $STEP_COUNT ]
-				do
-					(( STEP++ ))
-					
-					echo "### Submitting to queue to run freebayes on STEP: ${STEP}  $wd"
-					if [[ -e ${trackName}_Step${STEP}.freebayesInQueue || -e ${trackName}_Step${STEP}.freebayesPass || -e ${trackName}_Step${STEP}.freebayesFail ]] ; then
-						echo "### freebayes is already done, failed, or inqueue for ${fbBam}"
-						continue
-					fi
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" != "RNA" ] ; then
+        echo "### Assay ID is $assayID. Must be genome or exome."
+        pcDir=$runDir/$kitName/$samName
+        inBam=$runDir/$kitName/$samName/$samName.proj.bam
+        mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+        jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        if [ $jrRequested -gt 0 ] ; then
+            echo "### freebayes will not operate on a single bam because Joint IR is requested for $samName"
+            echo "setting to JIRbam"
+            fbBam=${jrBam}
+            fbPass=${jrBam}.jointIRPass
+        else
 
-					echo Starting freebayes for ${fbBam}
-					qsub -A $debit -l nodes=1:ppn=8 -v FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d $pbsHome/pegasus_freebayes.pbs
-					if [ $? -eq 0 ] ; then
-						touch ${trackName}_Step${STEP}.freebayesInQueue
-					else
-						((qsubFails++))
-					fi
+            echo "### freebayes will run on single bam because Joint IR is NOT requested for $samName"
+            echo "setting to mdBAM"
+            fbBam=${mdBam}
+            fbPass=$inBam.mdPass
+        #fi
+            if [[ ! -e $fbPass || ! -e $fbBam ]] ; then
+                echo "### Either mdPass or the bam itself is missing for $fbBam"
+                ((qsubFails++))
+            else
+                fbDir="$runDir/freebayes"
+                if [ ! -d $fbDir ] ; then
+                    mkdir $fbDir
+                fi
+                mkdir -p $fbDir/$samName
+                workDir="$fbDir/$samName"
+                trackName="$runDir/freebayes/$samName/$samName"
+                STEP=0
+                STEP_COUNT=`ls $chrListBed/*bed | wc -l`
+                ##echo "### Submitting to queue to run freebayes on $wd"
+                while [ ${STEP} -lt $STEP_COUNT ]
+                do
+                    (( STEP++ ))
 
-					sleep 2
-				done
-			fi
-		fi
-	else
-		echo "### Assay ID is $assayID. Must be RNA."
-		#code for calling AS metrics on tophat bams here
-	fi
+                    echo "### Submitting to queue to run freebayes on STEP: ${STEP}  $wd"
+                    if [[ -e ${trackName}_Step${STEP}.freebayesInQueue || -e ${trackName}_Step${STEP}.freebayesPass || -e ${trackName}_Step${STEP}.freebayesFail ]] ; then
+                        echo "### freebayes is already done, failed, or inqueue for ${fbBam}"
+                        continue
+                    fi
+
+                    echo Starting freebayes for ${fbBam}
+                    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,FREEBAYESPATH=$freebayesPath,GATKPATH=$gatkPath,TRACKNAME=$trackName,KNOWN=$snps,STEP=${STEP},STEPCOUNT=$STEP_COUNT,CHRLIST=$chrListBed,FBBAM=$fbBam,REF=$ref,NXT1=$nxtStep1,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_freebayes.sh
+                    if [ $? -eq 0 ] ; then
+                        touch ${trackName}_Step${STEP}.freebayesInQueue
+                    else
+                        ((qsubFails++))
+                    fi
+
+                    sleep 2
+                done
+            fi
+        fi
+    else
+        echo "### Assay ID is $assayID. Must be RNA."
+        #code for calling AS metrics on tophat bams here
+    fi
 done
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

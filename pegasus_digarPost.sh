@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,32 +14,32 @@
 
 thisStep="pegasus_nextJob_digarPost.txt"
 nxtStep1="pegasus_nextJob_postdigarPost.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0`
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
+nCores=8
 #params=`grep @@${myName}_PARAMS= $constantsDir/$recipe | cut -d= -f2`
 
 
@@ -76,81 +76,81 @@ for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
        if [[ "$digar" != "yes" ]] ; then
                 echo "digar not requested for this recipe"
-		echo "### I should remove $thisStep from $runDir."
-        	rm -f $runDir/$thisStep
-		echo "### Exiting!!!"
-		exit
+        echo "### I should remove $thisStep from $runDir."
+            rm -f $runDir/$thisStep
+        echo "### Exiting!!!"
+        exit
        else
-		echo "### Sample is $sampleLine"
-		kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-		samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-		assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-		libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-		echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-		if [ "$assayID" != "RNA" ] ; then
-			echo "### Assay ID is $assayID. Skipping."
-			continue
-		fi
-		read1Name=$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz
-		read2Name=$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz
-		echo "read 1 name: $read1Name"
-		echo "read 2 name: $read2Name"
-		
-		case $rnaAligner in 
-		tophat) echo "tophat case"
-			echo "digar not meant for tophat bams"
-			continue
-			;;
-		star) echo "star case"
-			starDir="$runDir/$kitName/$samName/$samName.starDir"
-			digarDir="$runDir/$kitName/$samName/$samName.digarDir"
-			starBam="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
-			if [ ! -e $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass ] ; then
-				echo "### Looks like rna mark dup is not done yet. $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
-				((qsubFails++))
-				continue
-			fi
-			echo "### read 1 name: $read1Name"
-			echo "### read 2 name: $read2Name"
-			
-			cd $digarDir
-			if [[ -e ${digarDir}.digarPostPass || -e ${digarDir}.digarPostFail || -e ${digarDir}.digarPostInQueue ]] ; then 
-				echo "### Digar post is already done, failed or inQueue"
-				continue
-			fi
-			if [[ ! -e ${digarDir}.digarPass ]] ; then
+        echo "### Sample is $sampleLine"
+        kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+        samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+        assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+        libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+        echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+        if [ "$assayID" != "RNA" ] ; then
+            echo "### Assay ID is $assayID. Skipping."
+            continue
+        fi
+        read1Name=$runDir/$kitName/$samName/$samName.proj.R1.fastq.gz
+        read2Name=$runDir/$kitName/$samName/$samName.proj.R2.fastq.gz
+        echo "read 1 name: $read1Name"
+        echo "read 2 name: $read2Name"
 
-				echo "digar Pass doesn't exist yet: ${digarDir}.digarPass"
-				((qsubFails++))
-				continue
-			fi
+        case $rnaAligner in
+        tophat) echo "tophat case"
+            echo "digar not meant for tophat bams"
+            continue
+            ;;
+        star) echo "star case"
+            starDir="$runDir/$kitName/$samName/$samName.starDir"
+            digarDir="$runDir/$kitName/$samName/$samName.digarDir"
+            starBam="$runDir/$kitName/$samName/$samName.starDir/$samName.proj.Aligned.out.sorted.md.bam"
+            if [ ! -e $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass ] ; then
+                echo "### Looks like rna mark dup is not done yet. $starDir/$samName.proj.Aligned.out.sorted.bam.rnaMarkDupPass"
+                ((qsubFails++))
+                continue
+            fi
+            echo "### read 1 name: $read1Name"
+            echo "### read 2 name: $read2Name"
+
+            cd $digarDir
+            if [[ -e ${digarDir}.digarPostPass || -e ${digarDir}.digarPostFail || -e ${digarDir}.digarPostInQueue ]] ; then
+                echo "### Digar post is already done, failed or inQueue"
+                continue
+            fi
+            if [[ ! -e ${digarDir}.digarPass ]] ; then
+
+                echo "digar Pass doesn't exist yet: ${digarDir}.digarPass"
+                ((qsubFails++))
+                continue
+            fi
  
-			echo "### Submitting $digarDir to queue for digarPost..."
-			qsub -A $debit -l nodes=1:ppn=8 -v DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d $pbsHome/pegasus_digarPost.pbs			
-			if [ $? -eq 0 ] ; then
-				touch $digarDir.digarPostInQueue
-			else
-				((qsubFails++))
-			fi
-			sleep 2
+            echo "### Submitting $digarDir to queue for digarPost..."
+            sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out --export ALL,DIGARPATH=$digarPath,ANN=$digarAnn,SAMTOOLSPATH=$samtoolsPath,BWAPATH=$bwaPath,GENEFILE=$listOfGenes,DIGARDIR=$digarDir,REF=$ref,BAM=$starBam,GTF=$gtf,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_digarPost.sh
+            if [ $? -eq 0 ] ; then
+                touch $digarDir.digarPostInQueue
+            else
+                ((qsubFails++))
+            fi
+            sleep 2
 
-			;;
-		anotherRNAaligner) echo "example RNA aligner"
-			;;
-		*) echo "I should not be here"
-			;;
-		esac 
-	fi
+            ;;
+        anotherRNAaligner) echo "example RNA aligner"
+            ;;
+        *) echo "I should not be here"
+            ;;
+        esac
+    fi
 
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`
