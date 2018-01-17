@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -14,27 +14,27 @@
 
 thisStep="pegasus_nextJob_picardHSMetrics.txt"
 nxtStep1="pegasus_nextJob_postPicHSMetric.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -57,103 +57,85 @@ skipLines=1
 qsubFails=0
 
 if [ ! -d $runDir/stats ] ; then
-	mkdir -p $runDir/stats
+    mkdir -p $runDir/stats
 fi
 
 ###
 for sampleLine in `cat $configFile | grep ^SAMPLE=`
 do
-	echo "sample is $sampleLine"
-	kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
-	samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
-	assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
-	libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
-	#echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
-	if [ "$assayID" == "Exome" ] ; then
-		echo "### Assay ID is $assayID. Must be genome or exome."
-		pcDir=$runDir/$kitName/$samName
-		inBam=$runDir/$kitName/$samName/$samName.proj.bam
-		mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
-		jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
+    echo "sample is $sampleLine"
+    kitName=`echo $sampleLine | cut -d= -f2 | cut -d, -f1`
+    samName=`echo $sampleLine | cut -d= -f2 | cut -d, -f2`
+    assayID=`echo $sampleLine | cut -d= -f2 | cut -d, -f3`
+    libraID=`echo $sampleLine | cut -d= -f2 | cut -d, -f4`
+    #echo "### What I have: Kit: $kitName, sample: $samName, assay: $assayID, libraID: $libraID"
+    if [ "$assayID" == "Exome" ] ; then
+        echo "### Assay ID is $assayID. Must be genome or exome."
+        pcDir=$runDir/$kitName/$samName
+        inBam=$runDir/$kitName/$samName/$samName.proj.bam
+        mdBam=$runDir/$kitName/$samName/$samName.proj.md.bam
+        jrBam=$runDir/$kitName/$samName/$samName.proj.md.jr.bam
 
-		baitGrep=$kitName"_B"
-		trgtGrep=$kitName"_T"
+        baitGrep=$kitName"_B"
+        trgtGrep=$kitName"_T"
 
-		baits=`grep "@@"$recipe"@@" $constants | grep @@"$baitGrep"= | cut -d= -f2`
-		targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
-		echo "### BAITS: $baits"
-		echo "### TARGETS: $targets"
+        baits=`grep "@@"$recipe"@@" $constants | grep @@"$baitGrep"= | cut -d= -f2`
+        targets=`grep "@@"$recipe"@@" $constants | grep @@"$trgtGrep"= | cut -d= -f2`
+        echo "### BAITS: $baits"
+        echo "### TARGETS: $targets"
 
-		#if [[ ! -e $inBam.mergeBamPass || ! -e $inBam ]] ; then
-		#	echo "### Either mergeBamPass or the bam itself is missing for $inBam"
-		#	((qsubFails++))
-		#else
-		#	if [[ -e $inBam.picHSMetricsPass || -e $inBam.picHSMetricsInQueue || -e $inBam.picHSMetricsFail ]] ; then
-		#		echo "### Picard alignment summary metric already passed, in queue, or failed for $inBam"
-		#	else
-		#		echo "### Submitting for picard HS Metrics: $inBam"
-		#		qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$inBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
-		#		if [ $? -eq 0 ] ; then
-		#			touch $inBam.picHSMetricsInQueue
-		#		else
-		#			((qsubFails++))
-		#		fi
-		#		sleep 2
-#
-#			fi
-#		fi
-		if [[ ! -e $inBam.mdPass || ! -e $mdBam ]] ; then
-			echo "### Either mdPass or the bam itself is missing for $mdBam"
-			((qsubFails++))
-		else
-			if [[ -e $mdBam.picHSMetricsPass || -e $mdBam.picHSMetricsInQueue || -e $mdBam.picHSMetricsFail ]] ; then
-				echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
-			else
-				echo "### Submitting for picard HS Metrics: $mdBam"
-				qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
-				if [ $? -eq 0 ] ; then
-					touch $mdBam.picHSMetricsInQueue
-				else
-					((qsubFails++))
-				fi
-				sleep 2
-			fi
-		fi
-		jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
-		if [ $jrRequested -gt 0 ] && [ $jirRequested != "no" ] ; then
-			echo "### Joint IR requested for $samName"
-			if [[ ! -e $jrBam.jointIRPass || ! -e $jrBam ]] ; then
-				echo "### Either jointIRPass or the bam itself is missing for $jrBam"
-				((qsubFails++))
-			else
-				if [[ -e $jrBam.picHSMetricsPass || -e $jrBam.picHSMetricsInQueue || -e $jrBam.picHSMetricsFail ]] ; then
-					echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
-				else
-					echo "### Submitting for picard HS Metrics: $jrBam"
-					qsub -A $debit -l nodes=1:ppn=$nCores -v BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d $pbsHome/pegasus_picardHSMetrics.pbs
-					if [ $? -eq 0 ] ; then
-						touch $jrBam.picHSMetricsInQueue
-					else
-						((qsubFails++))
-					fi
-					sleep 2
-				fi
-			fi
-		else
-			echo "### Joint IR is NOT requested for $samName"
-		fi
-	else
-		echo "### Assay ID is $assayID. This runs on exomes only."
-	fi
+        if [[ ! -e $inBam.mdPass || ! -e $mdBam ]] ; then
+            echo "### Either mdPass or the bam itself is missing for $mdBam"
+            ((qsubFails++))
+        else
+            if [[ -e $mdBam.picHSMetricsPass || -e $mdBam.picHSMetricsInQueue || -e $mdBam.picHSMetricsFail ]] ; then
+                echo "### Picard alignment summary metric already passed, in queue, or failed for $mdBam"
+            else
+                echo "### Submitting for picard HS Metrics: $mdBam"
+                sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$mdBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardHSMetrics.sh
+                if [ $? -eq 0 ] ; then
+                    touch $mdBam.picHSMetricsInQueue
+                else
+                    ((qsubFails++))
+                fi
+                sleep 2
+            fi
+        fi
+        jrRequested=`cat $configFile | grep '^DNAPAIR=\|^DNAFAMI=' | grep $samName | wc -l`
+        if [ $jrRequested -gt 0 ] && [ $jirRequested != "no" ] ; then
+            echo "### Joint IR requested for $samName"
+            if [[ ! -e $jrBam.jointIRPass || ! -e $jrBam ]] ; then
+                echo "### Either jointIRPass or the bam itself is missing for $jrBam"
+                ((qsubFails++))
+            else
+                if [[ -e $jrBam.picHSMetricsPass || -e $jrBam.picHSMetricsInQueue || -e $jrBam.picHSMetricsFail ]] ; then
+                    echo "### Picard alignment summary metric already passed, in queue, or failed for $jrBam"
+                else
+                    echo "### Submitting for picard HS Metrics: $jrBam"
+                    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,BAITS=$baits,TARGETS=$targets,PICARDPATH=$picardPath,RUNDIR=$runDir,REF=$ref,BAMFILE=$jrBam,DIR=$pcDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_picardHSMetrics.sh
+                    if [ $? -eq 0 ] ; then
+                        touch $jrBam.picHSMetricsInQueue
+                    else
+                        ((qsubFails++))
+                    fi
+                    sleep 2
+                fi
+            fi
+        else
+            echo "### Joint IR is NOT requested for $samName"
+        fi
+    else
+        echo "### Assay ID is $assayID. This runs on exomes only."
+    fi
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`

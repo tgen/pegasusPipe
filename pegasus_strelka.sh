@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #####################################################################
 # Copyright (c) 2011 by The Translational Genomics Research
 # Institute. All rights reserved. This License is limited to, and you may
@@ -20,9 +20,9 @@ nxtStep1="pegasus_nextJob_snpEff.txt"
 #nxtStep5="pegasus_nextJob_deSeq.txt"
 #nxtStep6="pegasus_nextJob_checkProjectComplete.txt"
 #nxtStep7="pegasus_nextJob_samtoolsStats.txt"
-pbsHome="/home/tgenjetstream/pegasus-pipe/jobScripts"
-constants="/home/tgenjetstream/central-pipe/constants/constants.txt"
-constantsDir="/home/tgenjetstream/central-pipe/constants"
+
+constants=${JETSTREAM_HOME}/centralPipe/constants/constants.txt
+constantsDir=${JETSTREAM_HOME}/centralPipe/constants/
 myName=`basename $0 | cut -d_ -f2`
 
 declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:12:19)
@@ -30,19 +30,19 @@ declare -a chrGroups=(1:11:17:21 2:10:16:22 3:9:15:18:MT 4:7:14:Y 5:X:13:20 6:8:
 time=`date +%d-%m-%Y-%H-%M`
 echo "Starting $0 at $time"
 if [ "$1" == "" ] ; then
-	echo "### Please provide runfolder as the only parameter"
-	echo "### Exiting!!!"
-	exit
+    echo "### Please provide runfolder as the only parameter"
+    echo "### Exiting!!!"
+    exit
 fi
 runDir=$1
 projName=`basename $runDir | awk -F'_ps20' '{print $1}'`
 configFile=$runDir/$projName.config
 if [ ! -e $configFile ] ; then
-	echo "### Config file not found at $configFile!!!"
-	echo "### Exiting!!!"
-	exit
+    echo "### Config file not found at $configFile!!!"
+    echo "### Exiting!!!"
+    exit
 else
-	echo "### Config file found."
+    echo "### Config file found."
 fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
@@ -73,102 +73,102 @@ qsubFails=0
 ###
 for dnaPairLine in `cat $configFile | grep '^DNAPAIR='`
 do
-	if [ $strelka != "yes" ] ; then
+    if [ $strelka != "yes" ] ; then
                 echo "strelka not requested for this recipe"
                 continue
         fi
 
-	echo "### DNA pair line is $dnaPairLine"
-	sampleNames=`echo $dnaPairLine | cut -d= -f2`
-	usableName=${sampleNames//,/-}
+    echo "### DNA pair line is $dnaPairLine"
+    sampleNames=`echo $dnaPairLine | cut -d= -f2`
+    usableName=${sampleNames//,/-}
 
-	pair1=`echo $sampleNames | cut -d, -f1`
-	pair2=`echo $sampleNames | cut -d, -f2`
+    pair1=`echo $sampleNames | cut -d, -f1`
+    pair2=`echo $sampleNames | cut -d, -f2`
 
-	pair1SampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$pair1"'"'`
-	pair2SampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$pair2"'"'`
-	pair1KitName=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f1`
-	pair2KitName=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f1`
-	pair1SamName=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f2`
-	pair2SamName=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f2`
-	pair1AssayNo=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f3`
-	pair2AssayNo=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f3`
+    pair1SampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$pair1"'"'`
+    pair2SampleLine=`cat $configFile | awk '/^SAMPLE=/' | awk 'BEGIN{FS=","} $2=="'"$pair2"'"'`
+    pair1KitName=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f1`
+    pair2KitName=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f1`
+    pair1SamName=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f2`
+    pair2SamName=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f2`
+    pair1AssayNo=`echo $pair1SampleLine | cut -d= -f2 | cut -d, -f3`
+    pair2AssayNo=`echo $pair2SampleLine | cut -d= -f2 | cut -d, -f3`
 
-	case $pair1AssayNo$pair2AssayNo in
-	GenomeGenome) echo "### Both normal and tumor are Genome"
-			assay="Genome"
-			;;
-	ExomeExome) echo "### Both normal and tumor are Exome"
-			assay="Exome"
-			;;
-	*)	echo "### Something else"
-		echo "### Do not mix and match exomes and genomes!!!"
-			assay="Mixed"
-			;;
-	esac
-	
-	if [ "${jirRequested}" == "no" ] ; then
-		normalBamFile=$runDir/$pair1KitName/$pair1/$pair1.proj.md.bam
-        	tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.bam
+    case $pair1AssayNo$pair2AssayNo in
+    GenomeGenome) echo "### Both normal and tumor are Genome"
+            assay="Genome"
+            ;;
+    ExomeExome) echo "### Both normal and tumor are Exome"
+            assay="Exome"
+            ;;
+    *)    echo "### Something else"
+        echo "### Do not mix and match exomes and genomes!!!"
+            assay="Mixed"
+            ;;
+    esac
 
-		normalBaiFile=${normalBamFile/.bam/.bai}
-        	tumorBaiFile=${tumorBamFile/.bam/.bai}
-	
-		normalPass=$runDir/$pair1KitName/$pair1/$pair1.proj.bam.mdPass
-		tumorPass=$runDir/$pair2KitName/$pair2/$pair2.proj.bam.mdPass
-	else
-		normalBamFile=$runDir/$pair1KitName/$pair1/$pair1.proj.md.jr.bam
-		tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.jr.bam
+    if [ "${jirRequested}" == "no" ] ; then
+        normalBamFile=$runDir/$pair1KitName/$pair1/$pair1.proj.md.bam
+        tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.bam
 
-		normalBaiFile=${normalBamFile/.bam/.bai}
-		tumorBaiFile=${tumorBamFile/.bam/.bai}
+        normalBaiFile=${normalBamFile/.bam/.bai}
+        tumorBaiFile=${tumorBamFile/.bam/.bai}
 
-		normalPass=$runDir/$pair1KitName/$pair1/$pair1.proj.md.jr.bam.jointIRPass
-		tumorPass=$runDir/$pair2KitName/$pair2/$pair2.proj.md.jr.bam.jointIRPass
-	fi
+        normalPass=$runDir/$pair1KitName/$pair1/$pair1.proj.bam.mdPass
+        tumorPass=$runDir/$pair2KitName/$pair2/$pair2.proj.bam.mdPass
+    else
+        normalBamFile=$runDir/$pair1KitName/$pair1/$pair1.proj.md.jr.bam
+        tumorBamFile=$runDir/$pair2KitName/$pair2/$pair2.proj.md.jr.bam
 
-	echo "### normal BAM: $normalBamFile"
-        echo "### tumor  BAM: $tumorBamFile"
+        normalBaiFile=${normalBamFile/.bam/.bai}
+        tumorBaiFile=${tumorBamFile/.bam/.bai}
 
-	if [[ ! -e $normalBamFile || ! -e $normalBaiFile || ! -e $normalPass ]] ; then
-		echo "Normal bam, bai, or Pass does not exist"
-		((qsubFails++))
-		continue
-	fi
-	if [[ ! -e $tumorBamFile || ! -e $tumorBaiFile || ! -e $tumorPass ]] ; then
-		echo "Tumor bam, bai, or Pass does not exist"
-		((qsubFails++))
-		continue
-	fi
-	strelkaDir="$runDir/strelka"
-	if [ ! -d $strelkaDir ] ; then
-		mkdir $strelkaDir
-	fi
-	mkdir -p $strelkaDir/$usableName
-	#trackName="$runDir/strelka/$usableName/$usableName"
-	wd="$runDir/strelka/$usableName"
-	if [[ -e $wd.strelkaInQueue || -e $wd.strelkaPass || -e $wd.strelkaFail ]] ; then
-		echo "### Strelka is already done, failed, or inqueue for $wd"
-		continue
-	fi
-	echo "### Submitting to queue to run strelka on $wd"
-	qsub -A $debit -l nodes=1:ppn=$nCores -v ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d $pbsHome/pegasus_strelka.pbs
-	if [ $? -eq 0 ] ; then
-		touch $wd.strelkaInQueue
-	else
-		((qsubFails++))
-	fi
+        normalPass=$runDir/$pair1KitName/$pair1/$pair1.proj.md.jr.bam.jointIRPass
+        tumorPass=$runDir/$pair2KitName/$pair2/$pair2.proj.md.jr.bam.jointIRPass
+    fi
 
-	sleep 2
+    echo "### normal BAM: $normalBamFile"
+    echo "### tumor  BAM: $tumorBamFile"
+
+    if [[ ! -e $normalBamFile || ! -e $normalBaiFile || ! -e $normalPass ]] ; then
+        echo "Normal bam, bai, or Pass does not exist"
+        ((qsubFails++))
+        continue
+    fi
+    if [[ ! -e $tumorBamFile || ! -e $tumorBaiFile || ! -e $tumorPass ]] ; then
+        echo "Tumor bam, bai, or Pass does not exist"
+        ((qsubFails++))
+        continue
+    fi
+    strelkaDir="$runDir/strelka"
+    if [ ! -d $strelkaDir ] ; then
+        mkdir $strelkaDir
+    fi
+    mkdir -p $strelkaDir/$usableName
+
+    wd="$runDir/strelka/$usableName"
+    if [[ -e $wd.strelkaInQueue || -e $wd.strelkaPass || -e $wd.strelkaFail ]] ; then
+        echo "### Strelka is already done, failed, or inqueue for $wd"
+        continue
+    fi
+    echo "### Submitting to queue to run strelka on $wd"
+    sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,ASSAY=$assay,STRELKAPATH=$strelkaPath,WD=$wd,REF=$ref,NXT1=$nxtStep1,NORMAL=$normalBamFile,TUMOR=$tumorBamFile,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_strelka.sh
+    if [ $? -eq 0 ] ; then
+        touch $wd.strelkaInQueue
+    else
+        ((qsubFails++))
+    fi
+
+    sleep 2
 done
 
 if [ $qsubFails -eq 0 ] ; then
 #all jobs submitted succesffully, remove this dir from messages
-	echo "### I should remove $thisStep from $runDir."
-	rm -f $runDir/$thisStep
+    echo "### I should remove $thisStep from $runDir."
+    rm -f $runDir/$thisStep
 else
 #qsub failed at some point, this runDir must stay in messages
-	echo "### Failure in qsub. Not touching $thisStep"
+    echo "### Failure in qsub. Not touching $thisStep"
 fi
 
 time=`date +%d-%m-%Y-%H-%M`
