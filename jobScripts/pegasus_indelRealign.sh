@@ -32,6 +32,23 @@ if [ $? -ne 0 ] ; then
 fi
 
 echo "### Starting step 2, indel realignment"
+echo "java -Xmx44g -Djava.io.tmpdir=$TMPDIR \
+    -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+    -I ${BAMFILE} \
+    -R ${REF} \
+    -T IndelRealigner \
+    -DBQ 1 \
+    -targetIntervals ${INTS} \
+    --maxReadsInMemory 5000000 \
+    --maxConsensuses 24 \
+    --maxReadsForConsensuses 80 \
+    --maxReadsForRealignment 12000 \
+    -o ${IRBAMFILE} \
+    -model KNOWNS_ONLY \
+    --disable_auto_index_creation_and_locking_when_reading_rods \
+    -known ${INDELS} >> ${BAMFILE}.indelRealignOut
+"
+
 java -Xmx44g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -I ${BAMFILE} \
