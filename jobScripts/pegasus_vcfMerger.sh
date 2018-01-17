@@ -57,6 +57,7 @@ echo "### D= $D"
 
 module load BEDTools/2.26.0
 module load R/3.2.1
+module load samtools/1.4.1
 
 SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 
@@ -318,8 +319,8 @@ if [ -z "${RNABAM}" ] ; then
     fi
 
     # Make final call list venn
-    echo "${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --"
-    ${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --outprefix  ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --dirscript ${VCFMERGER_DIR} --
+    echo "${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --dirscript ${VCFMERGER_DIR}/ --dir-snpsift ${SNPEFFPATH} --outprefix ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --"
+    ${POST_MERGE_VENN} --vcf ${MERGERDIR}/${SEURAT_BASENAME}.merge.sort.clean.f2t.ann.dbnsfp.se74lofcan.vcf --dirscript ${VCFMERGER_DIR}/ --dir-snpsift ${SNPEFFPATH} --outprefix  ${MERGERDIR}/${SEURAT_BASENAME}_finalVenn  --maintitle ${SEURAT_BASENAME} --dirscript ${VCFMERGER_DIR} --
     if [ $? -ne 0 ] ; then
         echo "### vcf merger failed at venn diagram stage"
         mv ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerInQueue ${MERGERDIR}/${SEURAT_BASENAME}.vcfMergerFail
