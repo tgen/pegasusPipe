@@ -171,6 +171,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_cre_v2/Agilent_SureSelect_CREv2_cliRes_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *R12 ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_nextera_v1.2/padded_targets.bed"
+    elif [[ "$kitName" == *R37 ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_nextera_v1.2/NexteraRapidCaptureExomeV1.2_Targets.txt"
     fi
 
     echo "### BED FILE= $bedFile"
