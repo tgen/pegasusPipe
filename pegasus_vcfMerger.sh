@@ -176,7 +176,7 @@ do
     elif [[ "$kitName" == *KBM ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/Baylor_MS_Ig_CS_SNP3/Baylor_MS_Ig_CS_SNP3_Regions.preprocessed.filter.bed"
     elif [[ "$kitName" == *S6B ]] ; then
-        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6s_xt_beta/Human_All_Exon_v6S_XT_beta_targets.preprocessed.filter.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6s_xt_beta/agilent_human_all_exon_v6s_xt_beta_targets.preprocessed.filter.bed"
     fi
 
     echo "### BED FILE= $bedFile"
