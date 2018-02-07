@@ -174,7 +174,7 @@ do
     elif [[ "$kitName" == *R37 ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_nextera_v1.2/NexteraRapidCaptureExomeV1.2_Targets.txt"
     elif [[ "$kitName" == *KBM ]] ; then
-        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/Baylor_MS_Ig_CS_SNP3/Baylor_MS_Ig_CS_SNP3_Regions.preprocessed.filter.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/Agilent_SureSelect_v1_KBM/Agilent_SureSelect_v1_KBM_Covered.preprocessed.filter.bed"
     elif [[ "$kitName" == *S6B ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6s_xt_beta/agilent_human_all_exon_v6s_xt_beta_targets.preprocessed.filter.bed"
     fi
