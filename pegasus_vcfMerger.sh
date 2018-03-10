@@ -125,6 +125,7 @@ do
     sampleCount=0
     missingSampleCount=0
     sampleList=""
+    bedfile=""
 
     echo "$kitName"
     if [[ "$kitName" == "TSE61" ]] ; then
