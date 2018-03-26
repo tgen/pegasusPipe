@@ -136,13 +136,13 @@ do
     elif [[ "$kitName" == *SCR ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_cre_v1/Agilent_Clinical_Research_Exome_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S2X ]] ; then
-        bedFile="/home/tgenref/pipeline_v0.4/annotations/exome_capture/Agilent_V2_hs37d5/Agilent_V2_hs37d5_Targets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v2_NA/Agilent_SureSelect_V2_NA_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *STL ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_strexome_lite/Strexome_Lite_Targets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S1X ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v1_NA/SureSelectV1_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S6X ]] ; then
-        bedFile="/home/tgenref/pecan/annotations/exome_capture/agilent_v6_noUTR/Agilent_V6_noUTR_hs37d5_Targets_intersect_sorted_padded100.bed"
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v6r2_noUTR/Agilent_SureSelect_V6R2_noUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *SXP ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v6r2_plusUTR/Agilent_SureSelect_V6R2_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S4X ]] ; then
@@ -177,6 +177,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/Agilent_SureSelect_v1_KBM/Agilent_SureSelect_v1_KBM_Covered.preprocessed.filter.bed"
     elif [[ "$kitName" == *S6B ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6s_xt_beta/agilent_human_all_exon_v6s_xt_beta_targets.preprocessed.filter.bed"
+    elif [[ "$kitName" == *SHK ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_kinome_NA/Agilent_Sureselect_Kinome_NA_Targets.preprocessed.filter.bed"
     fi
 
     echo "### BED FILE= $bedFile"
