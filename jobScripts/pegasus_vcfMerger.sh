@@ -64,6 +64,7 @@ SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 #filter the seurat vcf
 if [[ ${MATCHEDNORMAL} == "No" ]] ; then
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for seurat snps"
+    echo "cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter \"( TYPE='somatic_SNV' )\" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf"
     cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "( TYPE='somatic_SNV' )" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf
 else
     echo "matched normal detected running seurat SNV filter"
