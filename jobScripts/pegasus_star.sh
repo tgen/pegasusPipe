@@ -7,6 +7,11 @@
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
 machine=`hostname`
+
+RGTAGLIST=$(echo ${RGTAGLIST} | sed "s/\o037/,/g")
+FASTQL1=$(echo ${FASTQL1} | sed "s/\s/,/g")
+FASTQL2=$(echo ${FASTQL2} | sed "s/\s/,/g")
+
 echo "### NODE: $machine"
 echo "### STARREF=${STARREF}"
 echo "### STARGTF=${STARGTF}"

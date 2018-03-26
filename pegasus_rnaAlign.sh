@@ -127,9 +127,9 @@ do
                         RG_PU="${FCID}_${LANE}"
                         RG_ID="${FCID}_${LANE}_${RG_LB}"
                         #rgTag="@RG\tID:${RG_ID}\tSM:$samName\tPL:${RG_PL}\tCN:${RG_CN}\tPU:${RG_PU}\tLB:${RG_LB}\tKS:${INDEX}\t"
-                        rgTag="ID:${RG_ID}    SM:$samName    PL:${RG_PL}    CN:${RG_CN}    PU:${RG_PU}    LB:${RG_LB}    KS:${INDEX}"
+                        rgTag="ID:${RG_ID}	SM:$samName	PL:${RG_PL}	CN:${RG_CN}	PU:${RG_PU}	LB:${RG_LB}	KS:${INDEX}"
                         echo "RG TAG is: $rgTag"
-                        rgTagList="${rgTag} , ${rgTagList}"
+                        rgTagList="${rgTag} $(echo -e "\037") ${rgTagList}"
 
                         #echo "target name is $sourceName"
                         if [[ ! -e $sourceName.cpFqPass || ! -e $sourceName ]] ; then
@@ -138,7 +138,7 @@ do
                             ((missingFastqSample++))
                         else
                             echo "### File found $sourceName "
-                            fastqList1="${sourceName},${fastqList1}"
+                            fastqList1="${sourceName} ${fastqList1}"
                             ((read1Count++))
                         fi
                         if [[ ! -e $sourR2Name.cpPass && ! -e $sourR2Name ]] ; then
@@ -147,7 +147,7 @@ do
                             ((missingFastqSample++))
                         else
                             echo "### File found $sourR2Name "
-                            fastqList2="${sourR2Name},${fastqList2}"
+                            fastqList2="${sourR2Name} ${fastqList2}"
                             ((read2Count++))
                         fi
 
@@ -184,18 +184,7 @@ do
                             fastqList2=`echo "${fastqList2%?}"`
 
                             echo "### RG TAG LIST: $rgTagList"
-                            ## START FIXING BELOW HERE, ABOVE GETS THE LIST OF FASTQS TOGETHER
-                            #thisPath=`dirname $runDir`
-                            #cd $thisPath
-                            #ownDir=${samName}.starDir
-                            #ownDir=${read1Name/.proj.R1.fastq.gz/.starDir}
-                            #if [[ ! -e $read1Name || ! -e $read2Name || ! -e $read1Name.mergeFastqPass || ! -e $read2Name.mergeFastqPass ]] ; then
-                            #    echo "### one of the fastq files or read pass files dont exist"
-                            #    echo "### read1Pass: $read1Name.mergeFastqPass"
-                            #    echo "### read2Pass: $read2Name.mergeFastqPass"
-                            #    ((qsubFails++))
-                            #    continue
-                            #fi
+
                             if [[ -e $ownDir.starPass || -e $ownDir.starFail || -e $ownDir.starInQueue ]] ; then
                                 echo "### STAR already done, failed or inQueue"
                                 kitName=`echo $configLine | cut -d= -f2 | cut -d, -f1`
@@ -206,22 +195,7 @@ do
                                 skipGroup=0
                                 continue
                             fi
-                            #if [ ! -d $ownDir ] ; then
-                            #    mkdir -p $ownDir
-                            #fi
-
-                            #creating linked files to the original reads
-                            #r1Name=`basename $read1Name`
-                            #r2Name=`basename $read2Name`
-                            #cd $ownDir
-                            #ln -s $read1Name $r1Name
-                            #read1Name=$ownDir/$r1Name
-                            #ln -s $read2Name $r2Name
-                            #read2Name=$ownDir/$r2Name
-                            #cd -
-                            #done creating links. vars for reads changed.
-                            #echo "### read 1 name: $read1Name"
-                            #echo "### read 2 name: $read2Name"
+                            
                             lineLength=`gunzip -c $sourceName | head -2 | tail -1 | wc -c`
                             let "readLength=$lineLength-1"
                             echo "### Read length determined to be $readLength for $ownDir"
@@ -248,11 +222,6 @@ do
                                 fi
                                 sleep 2
                             fi
-                        #else
-                        #    echo "### Assay ID is not RNA. $assayID"
-                        #    echo "### Shouldn't be doing STAR alignement on this one will skip"
-                        #    continue
-                        #fi
                     else
                         echo "### Some files were missing for $samName"
                     fi
