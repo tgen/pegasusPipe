@@ -53,6 +53,7 @@ thFusionRef=`grep "@@"$recipe"@@" $constants | grep @@THFUSIONREF= | cut -d= -f2
 gtfmask=`grep @@"$recipe"@@ $constants | grep @@GTFMASK= | cut -d= -f2`
 gtf=`grep @@"$recipe"@@ $constants | grep @@GTF= | cut -d= -f2`
 thfDir=`grep @@"$recipe"@@ $constants | grep @@THFUSIONPOST= | cut -d= -f2`
+species=`grep @@SPECIES= $constantsDir/$recipe | cut -d= -f2`
 
 indexbase=${thFusionRef/.fa}
 
@@ -116,7 +117,7 @@ do
     fi
     #end linking stuff
 
-    sbatch --account ${debit} --mem-per-cpu 3000 --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,THFUSION2VCFPATH=$thFusion2vcfPath,TOPHAT2PATH=$tophat2Path,RUNDIR=$runDir,DIR=$topHatFDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,REF=$ref,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_tophatFusionPost.sh
+    sbatch --account ${debit} --mem-per-cpu 3000 --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,THFUSION2VCFPATH=$thFusion2vcfPath,TOPHAT2PATH=$tophat2Path,RUNDIR=$runDir,DIR=$topHatFDir,INDEXBASE=$indexbase,NXT1=$nxtStep1,REF=$ref,D=$d,SPECIES=$species ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_tophatFusionPost.sh
     if [ $? -eq 0 ] ; then
         touch $topHatFDir.thFPostInQueue
     else
