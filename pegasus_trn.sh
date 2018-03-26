@@ -117,6 +117,7 @@ do
 
     bedFileGrep=$pair1KitName"_CNABED"
     bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
+    echo "### bedFile: grep @@${recipe}@@${pair1KitName}_CNABED="
     echo "### BED FILE= $bedFile"
 
 
