@@ -23,24 +23,28 @@ export PATH
 newName=`basename ${DIR}`
 newName=${newName/.topHatFusionDir}
 echo "TIME:$time starting tophat fusion post on ${DIR} with indexbase of ${INDEXBASE}"
-echo "${TOPHAT2PATH}/tophat-fusion-post \
-    -p 4 \
-    --num-fusion-reads 3 \
-    --num-fusion-pairs 2 \
-    --num-fusion-both 5 \
-    --skip-read-dist \
-    --fusion-read-mismatches 3 \
-    ${INDEXBASE} > ${DIR}.thFPostOut
-"
 
-${TOPHAT2PATH}/tophat-fusion-post \
-    -p 4 \
-    --num-fusion-reads 3 \
-    --num-fusion-pairs 2 \
-    --num-fusion-both 5 \
-    --skip-read-dist \
-    --fusion-read-mismatches 3 \
-    ${INDEXBASE} > ${DIR}.thFPostOut
+if [ "$species" != "HUMAN" ] ; then
+    echo "Nonhuman tophat-fusion-post"
+    ${TOPHAT2PATH}/tophat-fusion-post \
+        -p 4 \
+        --num-fusion-reads 3 \
+        --num-fusion-pairs 2 \
+        --num-fusion-both 5 \
+        --skip-read-dist \
+        --fusion-read-mismatches 3 \
+        --non-human \
+        ${INDEXBASE} > ${DIR}.thFPostOut
+else
+    ${TOPHAT2PATH}/tophat-fusion-post \
+        -p 4 \
+        --num-fusion-reads 3 \
+        --num-fusion-pairs 2 \
+        --num-fusion-both 5 \
+        --skip-read-dist \
+        --fusion-read-mismatches 3 \
+        ${INDEXBASE} > ${DIR}.thFPostOut
+fi
 
 if [ $? -eq 0 ] ; then
     echo "success."
