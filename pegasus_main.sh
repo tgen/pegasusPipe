@@ -18,6 +18,32 @@ set -u
 
 topProjDir=${JETSTREAM_DATA}/projects/
 scriptsHome=${JETSTREAM_HOME}/pegasusPipe/
+PIDFILE=${JETSTREAM_HOME}/.pegasus.pid
+
+make_pid () {
+    echo $$ > $PIDFILE
+    if [ $? -ne 0 ]
+    then
+      echo "Could not create PID file"
+      exit 1
+    fi
+    echo "Made pidfile at ${PIDFILE}"
+}
+
+if [ -f $PIDFILE ]
+then
+  PID=$(cat $PIDFILE)
+  ps -p $PID 
+  if [ $? -eq 0 ]
+  then
+    echo "Job is already running: ${PID}"
+    exit 1
+  else
+    make_pid
+  fi
+else
+  make_pid
+fi
 
 
 myhostname=`hostname`
@@ -306,3 +332,6 @@ do
         ;;
     esac
 done
+
+rm $PIDFILE
+
