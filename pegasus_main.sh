@@ -333,5 +333,10 @@ do
     esac
 done
 
+echo "Waiting for background jobs $(jobs)"
+wait
+
+echo "Done, removing pidfile ${PIDFILE}"
 rm $PIDFILE
+
 
