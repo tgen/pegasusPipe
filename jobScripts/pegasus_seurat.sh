@@ -37,7 +37,7 @@ echo "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64/jre/bin/java -
     --allele_metrics \
     -o ${TRK}_Step${STEP}.Seurat.vcf \
     -go ${TRK}_Step${STEP}.perChr.Seurat.txt \
-    --pileup_info > ${TRK}_Step${STEP}.seuratOut"
+    --pileup_info"
 
 /usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64/jre/bin/java -Djava.io.tmpdir=$TMPDIR -jar -Xmx8g ${SEURATPATH}/Seurat.jar \
     -T Seurat \
@@ -52,31 +52,35 @@ echo "/usr/lib/jvm/java-1.7.0-openjdk-1.7.0.91-2.6.2.3.el7.x86_64/jre/bin/java -
     --allele_metrics \
     -o ${TRK}_Step${STEP}.Seurat.vcf \
     -go ${TRK}_Step${STEP}.perChr.Seurat.txt \
-    --pileup_info > ${TRK}_Step${STEP}.seuratOut
+    --pileup_info
 
 if [ $? -eq 0 ] ; then
-    #Clean-up the produced VCF to exclude lines where the REF and ALT are identical
+    # Clean-up the produced VCF to exclude lines where the REF and ALT are identical
     grep "#" ${TRK}_Step${STEP}.Seurat.vcf > ${TRK}_Step${STEP}.Seurat.header
     grep -v "#" ${TRK}_Step${STEP}.Seurat.vcf | awk '{if($4 != $5) print $0}' > ${TRK}_Step${STEP}.Seurat.calls
 
     cat ${TRK}_Step${STEP}.Seurat.header ${TRK}_Step${STEP}.Seurat.calls > ${TRK}_Step${STEP}.Seurat.vcf
 
-    #Clean-up directory to remove temp files
+    # Clean-up directory to remove temp files
     rm ${TRK}_Step${STEP}.Seurat.header
     rm ${TRK}_Step${STEP}.Seurat.calls
 
-    echo "${STEP} Completed" >> ${TRK}_seuratStatus.txt
-    PROGRESS=`wc -l ${TRK}_seuratStatus.txt | awk '{print $1}'`
-    mv ${TRK}_Step${STEP}.seuratOut ${TRK}_Step${STEP}.seuratPass
+    # Seurat jobs are split over each chromosome, here we
+    # discover the progress of the entire job by counting
+    # the number of seuratPass files.
+    echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.seuratPass
+    PROGRESS=$(ls ${OUTPUT}*seuratPass | wc -l)
+    
     touch ${RUNDIR}/${NXT1}
 else
-    mv ${TRK}_Step${STEP}.seuratOut ${TRK}_Step${STEP}.seuratFail
+    echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.seuratFail
     rm -f ${TRK}_Step${STEP}.seuratInQueue
     exit 1
 fi
 
+# Here vcfList is the arguments built for the following merger 
+# step by appending "-V <vcf>" for each vcf in STEPCOUNT.
 vcfList=""
-#here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
     thisVcf="-V ${TRK}_Step$i.Seurat.vcf "
@@ -86,6 +90,7 @@ done
 #IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
     echo SeuratCaller_${STEP}.Done
+
     #Concatenate VCF with GATK
     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRK}.seurat.vcf -assumeSorted
 
@@ -98,9 +103,7 @@ if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
         touch ${TRK}.seuratFail
     fi
 
-    mv ${TRK}_seuratStatus.txt ${TRK}_seuratStatus.txt.used
 else
-    echo
     echo SeuratCaller_${STEP}.Done
 fi
 
@@ -114,3 +117,4 @@ echo "RUNTIME:Seurat:$hours:$mins" > ${TRK}_Step${STEP}.seurat.totalTime
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Seuratcaller finished at $time."
+
