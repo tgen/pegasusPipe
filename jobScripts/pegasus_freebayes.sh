@@ -23,44 +23,42 @@ echo "### CHRLIST: ${CHRLIST}"
 
 echo "### freebayes started at $time."
 echo "${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf"
-perf stat ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
+${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
+
+# Freebayes jobs are split over each chromosome, here
+# we discover the progress of the entire job by counting
+# the number of freebayesPass files. There should be one 
+# for each step in STEPCOUNT.
 if [ $? -eq 0 ] ; then
-    echo "${STEP} Completed" >> ${TRACKNAME}_fbStatus.txt
-    PROGRESS=`wc -l ${TRACKNAME}_fbStatus.txt | awk '{print $1}'`
-    touch ${TRACKNAME}_Step${STEP}.freebayesPass
+    echo Freebayes_${STEP}.Done
+    echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.freebayesPass
+    PROGRESS=$(ls ${OUTPUT}*freebayesPass | wc -l)
 else
     touch ${TRACKNAME}_Step${STEP}.freebayesFail
     rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue
-    exit
+    exit 1
 fi
-vcfList=""
 
 # Here we make a look to create the list of vcfs based on STEPCOUNT
+vcfList=""
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRACKNAME}_Step$i.freebayes.vcf "
-        vcfList="$vcfList $thisVcf"
+    thisVcf="-V ${TRACKNAME}_Step$i.freebayes.vcf "
+    vcfList="$vcfList $thisVcf"
 done
 
 # IF the progress count equals the step count merge to single vcf
-if [ ${PROGRESS} -eq ${STEPCOUNT} ]
-then
-        echo Freebayes_${STEP}.Done
+if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
     # Concatenate VCF with GATK
     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRACKNAME}.freebayes_All.vcf -assumeSorted
-        if [ $? -eq 0 ] ; then
-                        touch ${TRACKNAME}.freebayesPass
-                        touch ${RUNDIR}/${NXT1}
-                        touch ${RUNDIR}/${NXT2}
-                else
-                        touch ${TRACKKNAME}.freebayesFail
-                fi
-                mv ${TRACKNAME}_fbStatus.txt ${TRACKNAME}_fbStatus.txt.used
-else
-    echo
-        echo HapCaller_${STEP}.Done
+    if [ $? -eq 0 ] ; then
+        touch ${TRACKNAME}.freebayesPass
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+    else
+        touch ${TRACKKNAME}.freebayesFail
+    fi
 fi
-
 
 rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue
 
@@ -72,3 +70,4 @@ echo "RUNTIME:FREEBAYES:$hours:$mins" > ${TRACKNAME}_Step${STEP}.totalTime
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Freebayes finished at $time."
+

@@ -20,6 +20,17 @@ echo "### KNOWN: ${KNOWN}"
 echo "### BAMLIST: ${BAMLIST}"
 
 echo "### Haplotype caller started for multiple bams at $time."
+echo "java -Djava.io.tmpdir=$TMPDIR -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
+-l INFO \
+-R ${REF} \
+-L ${CHRLIST}/Step${STEP}.list \
+-nct 8 \
+-T HaplotypeCaller \
+${BAMLIST} \
+-D ${KNOWN} \
+-mbq 10 \
+-o ${TRK}_Step${STEP}.HC.vcf"
+
 java -Djava.io.tmpdir=$TMPDIR -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 -l INFO \
 -R ${REF} \
@@ -29,20 +40,24 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 ${BAMLIST} \
 -D ${KNOWN} \
 -mbq 10 \
--o ${TRK}_Step${STEP}.HC.vcf > ${TRK}_Step${STEP}.hcOut
+-o ${TRK}_Step${STEP}.HC.vcf
 
+# HaplotypeCaller jobs are split over each chromosome, here 
+# we discover the progress of the entire job by counting
+# the number of hcPass files. There should be one for each
+# step in STEPCOUNT.
 if [ $? -eq 0 ] ; then
-    echo "${STEP} Completed" >> ${TRK}_hcStatus.txt
-    PROGRESS=`wc -l ${TRK}_hcStatus.txt | awk '{print $1}'`
-    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcPass
+    echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.hcPass
+    PROGRESS=$(ls ${OUTPUT}*hcPass | wc -l)
 else
-    mv ${TRK}_Step${STEP}.hcOut ${TRK}_Step${STEP}.hcFail
+    echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.hcFail
     rm -f ${TRK}_Step${STEP}.hcInQueue
-    exit
+    exit 1
 fi
 
+# Here vcfList is the arguments built for the following merger
+# step by appending "-V <vcf>" for each vcf in STEPCOUNT.
 vcfList=""
-# Here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
         thisVcf="-V ${TRK}_Step$i.HC.vcf "
@@ -50,8 +65,7 @@ do
 done
 
 # IF the progress count equals the step count merge to single vcf
-if [ ${PROGRESS} -eq ${STEPCOUNT} ]
-then
+if [ ${PROGRESS} -eq ${STEPCOUNT} ]; then
     echo "PROGRESS: ${PROGRESS} equals STEPCOUNT: ${STEPCOUNT}"
     echo HapCaller_${STEP}.Done
 
@@ -66,10 +80,8 @@ then
     else
         touch ${TRK}.hcFail
     fi
-    mv ${TRK}_hcStatus.txt ${TRK}_hcStatus.txt.used
 
 else
-    echo
     echo HapCaller_${STEP}.Done
 fi
 
@@ -83,3 +95,4 @@ echo "RUNTIME:GATKHC:$hours:$mins" > ${TRK}_Step${STEP}.hapCal.totalTime
 
 time=`date +%d-%m-%Y-%H-%M`
 echo "Haplotypecaller finished at $time."
+
