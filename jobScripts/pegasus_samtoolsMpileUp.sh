@@ -57,7 +57,7 @@ ${BCFTOOLSPATH}/bcftools call \
 if [ $? -eq 0 ] ; then
     echo mpileup_${STEP}.Done
     echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
-    PROGRESS=$(ls ${OUTPUT}*samtoolsMpileUpPass | wc -l)
+    PROGRESS=$(ls ${TRACKNAME}*samtoolsMpileUpPass | wc -l)
 else
     echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.samtoolsMpileUpFail
     rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue

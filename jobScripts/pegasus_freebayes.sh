@@ -32,7 +32,7 @@ ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed -
 if [ $? -eq 0 ] ; then
     echo Freebayes_${STEP}.Done
     echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.freebayesPass
-    PROGRESS=$(ls ${OUTPUT}*freebayesPass | wc -l)
+    PROGRESS=$(ls ${TRACKNAME}*freebayesPass | wc -l)
 else
     touch ${TRACKNAME}_Step${STEP}.freebayesFail
     rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue

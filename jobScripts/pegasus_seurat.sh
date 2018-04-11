@@ -69,7 +69,7 @@ if [ $? -eq 0 ] ; then
     # discover the progress of the entire job by counting
     # the number of seuratPass files.
     echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.seuratPass
-    PROGRESS=$(ls ${OUTPUT}*seuratPass | wc -l)
+    PROGRESS=$(ls ${TRK}*seuratPass | wc -l)
     
     touch ${RUNDIR}/${NXT1}
 else

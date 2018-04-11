@@ -48,7 +48,7 @@ ${BAMLIST} \
 # step in STEPCOUNT.
 if [ $? -eq 0 ] ; then
     echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.hcPass
-    PROGRESS=$(ls ${OUTPUT}*hcPass | wc -l)
+    PROGRESS=$(ls ${TRK}*hcPass | wc -l)
 else
     echo "${SLURM_JOB_ID}" > ${TRK}_Step${STEP}.hcFail
     rm -f ${TRK}_Step${STEP}.hcInQueue
