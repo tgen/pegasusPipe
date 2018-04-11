@@ -13,7 +13,7 @@
 #####################################################################
 time=`date +%d-%m-%Y-%H-%M`
 echo "$time Starting $0"
-
+echo "$(date) Starting"
 set -u
 
 topProjDir=${JETSTREAM_DATA}/projects/
@@ -333,10 +333,11 @@ do
     esac
 done
 
-echo "Waiting for background jobs $(jobs)"
+echo "$(date) Waiting for background jobs"
+jobs
 wait
 
-echo "Done, removing pidfile ${PIDFILE}"
+echo "$(date) Done, removing pidfile ${PIDFILE}"
 rm $PIDFILE
 
 
