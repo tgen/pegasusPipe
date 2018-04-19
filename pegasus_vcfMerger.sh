@@ -151,7 +151,7 @@ do
     elif [[ "$kitName" == *E62 ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/illumina_nextera_expanded/NexteraExpandedExome_hs37d5_Targets_PicardPadded100.bed"
     elif [[ "$kitName" == *SC2 ]] ; then
-        bedFile="/home/tgenref/canis_familiaris/canfam3/capture_targets/canine_exonV2/agilent_canine_exonV2_targets_padded100.bed"
+        bedFile="/home/tgenref/canis_familiaris/canfam3/capture_targets/canine_exonV2/agilent_canine_exonV2_targets.bed"
     elif [[ "$kitName" == *UBC ]] ; then
         bedFile="/home/tgenref/canis_familiaris/canfam3/capture_targets/Uppsala_Broad_EZ_HX1/120705_CF3_Uppsala_Broad_EZ_HX1_padded100.bed"
     elif [[ "$kitName" == *S6A ]] ; then
