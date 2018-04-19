@@ -25,7 +25,7 @@ mergedBai=${MERGEDBAM/.bam/.bai}
 
 if [ ${CNT} -eq 1 ] ; then
     #nothing really merged, only copied
-    echo "### Just copying $onlyBamFile to ${MERGEDBAM}" > ${MERGEDBAM}.mergeBamOut
+    echo "### Just copying $onlyBamFile to ${MERGEDBAM}" | tee ${MERGEDBAM}.mergeBamOut
     cp $onlyBaiFile $mergedBai
     cp $onlyBamFile ${MERGEDBAM}
     if [ $? -ne 0 ] ; then #bad cp
