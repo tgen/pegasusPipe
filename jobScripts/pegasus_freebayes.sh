@@ -22,8 +22,12 @@ echo "### TRACKNAME: ${TRACKNAME}"
 echo "### CHRLIST: ${CHRLIST}"
 
 echo "### freebayes started at $time."
-echo "${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf"
-${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
+
+# Added perf stat back to this command in order to avoid 
+# job failures when freebayes crashes. This is referenced
+# in issue #40
+echo "perf stat ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf"
+perf stat ${FREEBAYESPATH}/freebayes -f ${REF} -b ${FBBAM} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
 
 # Freebayes jobs are split over each chromosome, here
 # we discover the progress of the entire job by counting
