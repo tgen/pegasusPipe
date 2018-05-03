@@ -182,6 +182,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_kinome_NA/Agilent_Sureselect_Kinome_NA_Targets.preprocessed.filter.bed"
     elif [[ "$kitName" == *AHE ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6/agilent_region.filter.bed"
+    elif [[ "$kitName" == *IDT ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.filter.bed"
     fi
 
     echo "### BED FILE= $bedFile"
