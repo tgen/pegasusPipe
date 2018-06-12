@@ -144,6 +144,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v1_NA/SureSelectV1_hs37d5_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S6X ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v6r2_noUTR/Agilent_SureSelect_V6R2_noUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
+    elif [[ "$kitName" == *S7X ]] ; then
+	bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_all_exome_v7/agilent_sureselect_all_exome_v7_regions_preprocessed.filter.bed"
     elif [[ "$kitName" == *SXP ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v6r2_plusUTR/Agilent_SureSelect_V6R2_plusUTR_hs37d5_GRCh37.74_PaddedTargets_intersect_sorted_padded100.bed"
     elif [[ "$kitName" == *S4X ]] ; then
