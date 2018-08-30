@@ -151,6 +151,12 @@ do
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_kinome_NA/Agilent_Sureselect_Kinome_NA_Targets.preprocessed.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *AHE ]] ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6/agilent_region.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *IDT ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *S7X ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_all_exome_v7/agilent_sureselect_all_exome_v7_regions_preprocessed.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *TSC ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_tsc_NA/agilent_custom_tsc_NA.unmatched_cna.bed"
             else
                 echo "We don't have a bed filter for this kit for no matched normal at this time"
             fi
