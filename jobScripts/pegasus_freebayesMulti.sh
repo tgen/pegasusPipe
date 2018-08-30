@@ -26,41 +26,42 @@ echo "### BAMLIST: ${BAMLIST}"
 echo "### freebayes started at $time."
 echo "${FREEBAYESPATH}/freebayes -f ${REF} ${BAMLIST} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf"
 perf stat ${FREEBAYESPATH}/freebayes -f ${REF} ${BAMLIST} -t ${CHRLIST}/Step${STEP}.bed --ploidy 2 --min-repeat-entropy 1 > ${TRACKNAME}_Step${STEP}.freebayes.vcf
+
 if [ $? -eq 0 ] ; then
-        echo "${STEP} Completed" >> ${TRACKNAME}_fbStatus.txt
-        PROGRESS=`wc -l ${TRACKNAME}_fbStatus.txt | awk '{print $1}'`
-    touch ${TRACKNAME}_Step${STEP}.freebayesPass
+    echo "FreebayesMulti ${STEP} Completed"
+    echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.freebayesPass
+    PROGRESS=$(ls ${TRACKNAME}*freebayesPass | wc -l)
 else
     touch ${TRACKNAME}_Step${STEP}.freebayesFail
     rm -f ${TRACKNAME}_Step${STEP}.freebayesInQueue
-    exit
+    exit 1
 fi
-vcfList=""
 
+vcfList=""
 # Here we make a look to create the list of vcfs based on STEPCOUNT
 for i in `seq 1 ${STEPCOUNT}`;
 do
-        thisVcf="-V ${TRACKNAME}_Step$i.freebayes.vcf "
-        vcfList="$vcfList $thisVcf"
+    thisVcf="-V ${TRACKNAME}_Step$i.freebayes.vcf "
+    vcfList="$vcfList $thisVcf"
 done
 
 # IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
-        echo Freebayes_${STEP}.Done
+    echo "Freebayes progress: ${PROGRESS} == ${STEPCOUNT}"
+
     # Concatenate VCF with GATK
     java -cp ${GATKPATH}/GenomeAnalysisTK.jar org.broadinstitute.gatk.tools.CatVariants -R ${REF} $vcfList -out ${TRACKNAME}.freebayes_All.vcf -assumeSorted
-        if [ $? -eq 0 ] ; then
-                        touch ${TRACKNAME}.freebayesPass
-                        touch ${RUNDIR}/${NXT1}
-                        touch ${RUNDIR}/${NXT2}
-                else
-                        touch ${TRACKKNAME}.freebayesFail
-                fi
-                mv ${TRACKNAME}_fbStatus.txt ${TRACKNAME}_fbStatus.txt.used
+
+    if [ $? -eq 0 ] ; then
+        touch ${TRACKNAME}.freebayesPass
+        touch ${RUNDIR}/${NXT1}
+        touch ${RUNDIR}/${NXT2}
+    else
+        touch ${TRACKKNAME}.freebayesFail
+    fi
 else
-    echo
-        echo HapCaller_${STEP}.Done
+   echo "Freebayes progress: ${PROGRESS} != ${STEPCOUNT} not launching merge"
 fi
 
 
