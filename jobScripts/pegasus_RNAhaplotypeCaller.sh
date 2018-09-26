@@ -34,14 +34,13 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx32g ${GATKPATH}/GenomeAnalysisTK.jar \
     -stand_call_conf 20 \
     -stand_emit_conf 20 \
     -mbq 10 \
-    -o ${TRK}_Step${STEP}.rnaHC.vcf > ${TRK}_Step${STEP}.RNAhcOut
+    -o ${TRK}_Step${STEP}.rnaHC.vcf 
 
 if [ $? -eq 0 ] ; then
-    echo "${STEP} Completed" >> ${TRK}_RNAhcStatus.txt
-    PROGRESS=`wc -l ${TRK}_RNAhcStatus.txt | awk '{print $1}'`
-    mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcPass
+    touch ${TRK}_Step${STEP}.RNAhcPass
+    PROGRESS=$(ls ${TRK}*.RNAhcPass | wc -l)
 else
-    mv ${TRK}_Step${STEP}.RNAhcOut ${TRK}_Step${STEP}.RNAhcFail
+    touch ${TRK}_Step${STEP}.RNAhcFail
     rm -f ${TRK}_Step${STEP}.RNAhcInQueue
     exit 1
 fi
@@ -70,10 +69,7 @@ then
     else
         touch ${TRK}.RNAhcFail
     fi
-
-    mv ${TRK}_RNAhcStatus.txt ${TRK}_RNAhcStatus.txt.used
 else
-    echo
     echo HapCaller_${STEP}.Done
 fi
 

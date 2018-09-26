@@ -39,10 +39,6 @@ else
     touch ${DIRNAME}.deSeq2Fail
 fi
 
-rm -f ${DIRNAME}/masterNor.txt
-rm -f ${DIRNAME}/masterTum.txt
-rm -f ${DIRNAME}/CountsTable.txt
-
 rm -f ${DIRNAME}.deSeq2InQueue
 endTime=`date +%s`
 elapsed=$(( $endTime - $beginTime ))

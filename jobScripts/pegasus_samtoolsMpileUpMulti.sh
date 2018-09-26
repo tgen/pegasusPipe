@@ -29,11 +29,21 @@ echo "### GATKPATH: ${GATKPATH}"
 
 echo "### Samtools mPileUP started at $time."
 
-${SAMTOOLSPATH}/samtools mpileup -DsSOg -C 50 -F 0.01 -l ${CHRLIST}/Step${STEP}.bed -f ${REF} --bam-list ${BAMFILE} | ${BCFTOOLSPATH}/bcftools call -vmO v -o ${TRACKNAME}_Step${STEP}.mpileup.vcf
+${SAMTOOLSPATH}/samtools mpileup \
+    -DsSOg \
+    -C 50 \
+    -F 0.01 \
+    -l ${CHRLIST}/Step${STEP}.bed \
+    -f ${REF} \
+    --bam-list ${BAMFILE} |\
+    ${BCFTOOLSPATH}/bcftools call \
+    -vmO v \
+    -o ${TRACKNAME}_Step${STEP}.mpileup.vcf
+
 if [ $? -eq 0 ] ; then
-    echo "${STEP} Completed" >> ${TRACKNAME}_spStatus.txt
-    PROGRESS=`wc -l ${TRACKNAME}_spStatus.txt | awk '{print $1}'`
-    touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
+    echo "samtoolsMpileupMulti step ${STEP} Completed"
+    echo "${SLURM_JOB_ID}" > ${TRACKNAME}_Step${STEP}.samtoolsMpileUpPass
+    PROGRESS=$(ls ${TRACKNAME}_Step*.samtoolsMpileUpPass | wc -l)
 else
     touch ${TRACKNAME}_Step${STEP}.samtoolsMpileUpFail
     rm -f ${TRACKNAME}_Step${STEP}.samtoolsMpileUpInQueue
@@ -47,6 +57,7 @@ do
     thisVcf="-V ${TRACKNAME}_Step$i.mpileup.vcf "
     vcfList="$vcfList $thisVcf"
 done
+
 #IF the progress count equals the step count merge to single vcf
 if [ ${PROGRESS} -eq ${STEPCOUNT} ]
 then
@@ -60,7 +71,6 @@ then
     else
             touch ${TRACKNAME}.samtoolsMpileUpFail
     fi
-    mv ${TRACKNAME}_spStatus.txt ${TRACKNAME}_spStatus.txt.used
 else
     echo mpileup_${STEP}.Done
 fi
@@ -74,3 +84,4 @@ elapsed=$(( $endTime - $beginTime ))
 echo "RUNTIME:SAMTOOLSMPILEUP:$hours:$mins" > ${TRACKNAME}.samtoolsPileUp.totalTime
 time=`date +%d-%m-%Y-%H-%M`
 echo "SamtoolsMPileUp finished at $time."
+
