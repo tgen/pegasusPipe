@@ -14,7 +14,6 @@
 
 thisStep="pegasus_nextJob_finalize.txt"
 nxtStep1="central_nextJob_saveToIsilon.txt"
-nxtStep2="central_nextJob_saveStats.txt"
 nxtStep3="central_nextJob_saveToReport.txt"
 
 module load ImageMagick/7.0.5
