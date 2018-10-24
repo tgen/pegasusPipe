@@ -62,7 +62,7 @@ module load samtools/1.4.1
 SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 
 #filter the seurat vcf
-if [[ ${MATCHEDNORMAL} == "No" ]] ; then
+if [[ ${MATCHEDNORMAL} == "false" ]] ; then
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for seurat snps"
     echo "cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter \"( TYPE='somatic_SNV' )\" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf"
     cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "( TYPE='somatic_SNV' )" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf
@@ -72,7 +72,7 @@ else
 fi
 
 ##filter the seurat INDELS, use bed if no matched normal
-if [[ ${MATCHEDNORMAL} == "No" ]] ; then
+if [[ ${MATCHEDNORMAL} == "False" ]] ; then
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_DIV_bed} for seurat indels"
         cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( TYPE='somatic_deletion' ) | ( TYPE='somatic_insertion' ))"  | /home/tgenref/binaries/vt/vt normalize - -r ${REF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_DIV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_indel.vcf
 else
@@ -103,7 +103,7 @@ if [ "${FIRST_GENOTYPE_COLUMN}" == "${TUMOR}" ]
     then
     # Filter the MUTECT calls
     echo "Found expected genotype order - Proceeding with filtering"
-    if [[ ${MATCHEDNORMAL} == "No" ]] ; then
+    if [[ ${MATCHEDNORMAL} == "false" ]] ; then
         echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for mutect snvs"
         cat ${MUTECT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( FILTER = 'PASS') & ( GEN[1].FA <= 0.02 ) & ( GEN[0].FA >= 0.05 ))" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${MUTECT_BASENAME}.mutect_snv_filt.vcf
         else
@@ -114,7 +114,7 @@ elif [ "${FIRST_GENOTYPE_COLUMN}" == "${CONTROL}" ]
     then
     # Reorder the genotype columns and then filter
     ##Filtering with a bed file if nor matched normal
-    if [[ ${MATCHEDNORMAL} == "No" ]] ; then
+    if [[ ${MATCHEDNORMAL} == "false" ]] ; then
         echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for mutect snvs"
         awk -F'\t' '{OFS="\t" ; print $1,$2,$3,$4,$5,$6,$7,$8,$9,$11,$10}' ${MUTECT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "(( FILTER = 'PASS') & ( GEN[1].FA <= 0.02 ) & ( GEN[0].FA >= 0.05 ))" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${MUTECT_BASENAME}.mutect_snv_filt.vcf
     else
@@ -132,7 +132,7 @@ MUTECT_SNV_VCF=${MERGERDIR}/${MUTECT_BASENAME}.mutect_snv_filt.vcf
 
 #finding STRELKA VCF and copying over, if no matched normal adding in filtering
 STRELKA_BASENAME=`basename ${STRELKA_INDEL_VCF} ".strelka.passed.somatic.indels.vcf"`
-if [[ ${MATCHEDNORMAL} == "No" ]] ; then
+if [[ ${MATCHEDNORMAL} == "false" ]] ; then
     #STLKA_SNV_VCF=`ls *.passed.somatic.snvs.vcf`
     #STLKA_INDEL_VCF=`ls *.passed.somatic.indels.vcf`
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_DIV_bed} and ${DBSNP_SNP_BED}for STRELKA INDELS/SNPS"
