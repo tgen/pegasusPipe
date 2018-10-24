@@ -127,7 +127,7 @@ do
         bedFileGrep=$pair1KitName"_CNABED"
         bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
         echo "matchedNormal = ${matchedNormal}"
-        if [[ ${matchedNormal} == "No" ]] ; then
+        if [[ ${matchedNormal} == "false" ]] ; then
             echo "BED file will be swapped out since it has no matched normal"
             if [[ "$pair1KitName" == *S5U ]]  ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v5_plusUTR/Agilent_SureSelect_V5_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
@@ -337,7 +337,7 @@ do
             bedFileGrep=$pair1KitName"_CNABED"
             bedFile=`grep "@@"$recipe"@@" $constants | grep @@"$bedFileGrep"= | cut -d= -f2`
             echo "matchedNormal = ${matchedNormal}"
-            if [[ ${matchedNormal} == "No" ]] ; then
+            if [[ ${matchedNormal} == "false" ]] ; then
                 echo "BED file will be swapped out since it has no matched normal"
                 if [[ "$pair1KitName" == *S5U ]]  ; then
                     bedFile="/home/tgenref/homo_sapiens/grch37_hg19/hs37d5_tgen/tool_specific_resources/tconut/agilent_sureselect_v5_plusUTR/Agilent_SureSelect_V5_plusUTR_hs37d5_Padded_DGV_1kg.cna.bed"
