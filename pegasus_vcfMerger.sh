@@ -186,8 +186,14 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6/agilent_region.filter.bed"
     elif [[ "$kitName" == *IDT ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.filter.bed"
+    elif [[ "$kitName" == *AG2 ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.filter.bed"
     elif [[ "$kitName" == *TSC ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_tsc_NA/agilent_custom_tsc_NA.filter.bed"
+    elif [[ "$kitName" == *GEX ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/generic_custom_grch37_humanexome/grch37_all_exons_1_to_xy.extended.bed"
+    elif [[ "$kitName" == *PTC ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_johnchan2017_v1/John_Chan_2017_new_1_Covered.ens.extended.bed"
     fi
 
     echo "### BED FILE= $bedFile"
