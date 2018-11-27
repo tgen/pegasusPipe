@@ -194,6 +194,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/generic_custom_grch37_humanexome/grch37_all_exons_1_to_xy.extended.bed"
     elif [[ "$kitName" == *PTC ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_johnchan2017_v1/John_Chan_2017_new_1_Covered.ens.extended.bed"
+    elif [[ "$kitName" == *NEZ ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/roche_seqcapez_v3_humanexome/SeqCap_EZ_Exome_v3_hg19_primary_targets.ens.extended.bed"
     fi
 
     echo "### BED FILE= $bedFile"
