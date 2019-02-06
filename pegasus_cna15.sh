@@ -153,6 +153,8 @@ do
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6/agilent_region.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *IDT ]] ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *ID2 ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2_v2/gem2_v2_targets.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *AG2 ]] ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *S7X ]] ; then

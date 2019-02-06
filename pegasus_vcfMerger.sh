@@ -186,6 +186,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_human_all_exon_v6/agilent_region.filter.bed"
     elif [[ "$kitName" == *IDT ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.filter.bed"
+    elif [[ "$kitName" == *ID2 ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2_v2/gem2_v2_targets.filter.bed"
     elif [[ "$kitName" == *AG2 ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/ashion_extra_gem2/gem2_targets.filter.bed"
     elif [[ "$kitName" == *TSC ]] ; then
