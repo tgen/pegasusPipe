@@ -167,6 +167,8 @@ do
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_johnchan2017_v1/John_Chan_2017_new_1_Covered.ens.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *NEZ ]] ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/roche_seqcapez_v3_humanexome/SeqCap_EZ_Exome_v3_hg19_primary_targets.ens.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *NGT ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_ngt_NA/KHNGT_targets.unmatched_cna.bed"
             else
                 echo "We don't have a bed filter for this kit for no matched normal at this time"
             fi

@@ -198,6 +198,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_johnchan2017_v1/John_Chan_2017_new_1_Covered.ens.extended.bed"
     elif [[ "$kitName" == *NEZ ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/roche_seqcapez_v3_humanexome/SeqCap_EZ_Exome_v3_hg19_primary_targets.ens.extended.bed"
+    elif [[ "$kitName" == *NGT ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_ngt_NA/KHNGT_targets.extended.bed"
     fi
 
     echo "### BED FILE= $bedFile"
