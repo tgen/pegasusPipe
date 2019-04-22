@@ -171,6 +171,8 @@ do
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_ngt_NA/KHNGT_targets.unmatched_cna.bed"
             elif [[ "$pair1KitName" == *S7U ]] ; then
                 bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v7_plusUTR/agilent_sureselect_v7_plusUTR.targets.unmatched_cna.bed"
+            elif [[ "$pair1KitName" == *ICG ]] ; then
+                bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_ICGC50Mb/SureSelect_All_Exon_50mb_hg19a.pre.unmatched_cna.bed"
             else
                 echo "We don't have a bed filter for this kit for no matched normal at this time"
             fi

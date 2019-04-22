@@ -202,8 +202,10 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_custom_ngt_NA/KHNGT_targets.extended.bed"
     elif [[ "$kitName" == *S7U ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v7_plusUTR/agilent_sureselect_v7_plusUTR.targets.extended.bed"
+    elif [[ "$kitName" == *ICG ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_ICGC50Mb/SureSelect_All_Exon_50mb_hg19a.pre.extended.bed"
     fi
-
+   
     echo "### BED FILE= $bedFile"
 
     echo "first checking for seurat snpeff vcf"
