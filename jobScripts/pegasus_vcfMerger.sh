@@ -62,7 +62,7 @@ module load samtools/1.4.1
 SEURAT_BASENAME=`basename ${SEURAT_VCF} ".seurat.vcf"`
 
 #filter the seurat vcf
-if [[ ${MATCHEDNORMAL} == "false" ]] ; then
+if [[ ${MATCHEDNORMAL} == "False" ]] ; then
     echo "Sample does not have a matched normal, will filter with bed file ${DBSNP_SNV_bed} for seurat snps"
     echo "cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter \"( TYPE='somatic_SNV' )\" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf"
     cat ${SEURAT_VCF} | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar filter "( TYPE='somatic_SNV' )" | java -jar -Xmx20g ${SNPSIFT}/SnpSift.jar intervals -x ${DBSNP_SNV_BED} > ${MERGERDIR}/${SEURAT_BASENAME}_seurat_snv.vcf
