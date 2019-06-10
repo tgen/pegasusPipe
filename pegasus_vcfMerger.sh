@@ -204,6 +204,8 @@ do
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v7_plusUTR/agilent_sureselect_v7_plusUTR.targets.extended.bed"
     elif [[ "$kitName" == *ICG ]] ; then
         bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_ICGC50Mb/SureSelect_All_Exon_50mb_hg19a.pre.extended.bed"
+    elif [[ "$kitName" == *S5C ]] ; then
+        bedFile="/home/tgenref/homo_sapiens/grch37_hg19/capture_targets/agilent_sureselect_v5_colo829/SureSelectV5_UTR_COLO.extended.bed"
     fi
    
     echo "### BED FILE= $bedFile"
