@@ -3,6 +3,7 @@
 #SBATCH --time=0-16:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
+#SBATCH --exclusive 
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -20,6 +21,7 @@ snpEffInt=${OUT/.vcf/.snpEffInt.vcf}
 snpEffTxt=${OUT/.vcf/.snpEff.txt}
 summaryOut=${OUT/.vcf/.snpEff.summary_html}
 
+set -e
 java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
     -v \
     -i vcf \
@@ -40,6 +42,7 @@ java -Xmx6g -jar ${SNPEFFPATH}/snpEff.jar eff \
     ${DBVERSION} \
     ${VCF} > $snpEffInt
 
+set +e
 if [ $? -ne 0 ] ; then
     echo "snpEff first part failed." >> ${VCF}.snpEffOut
     mv ${VCF}.snpEffOut ${VCF}.snpEffFail

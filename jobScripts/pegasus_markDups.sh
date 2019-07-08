@@ -3,6 +3,7 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
+#SBATCH --mem=48G
 
 cd ${DIR}
 beginTime=`date +%s`
