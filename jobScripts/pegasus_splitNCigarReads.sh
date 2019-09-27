@@ -5,7 +5,7 @@
 #SBATCH --mail-type=FAIL
 #SBATCH -n 1
 #SBATCH -N 1
-#SBATCH --mem-per-cpu 3072
+#SBATCH --mem-per-cpu 4096
 #SBATCH --cpus-per-task 14
 
 time=`date +%d-%m-%Y-%H-%M`

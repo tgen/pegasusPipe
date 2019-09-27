@@ -6,6 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 8
+#SBATCH --mem-per-cpu 4096
 
 beginTime=`date +%s`
 machine=`hostname`

@@ -3,7 +3,7 @@
 #SBATCH --time=0-32:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
-
+#SBATCH --mem-per-cpu 4096
  
 module load R/2.15.2
 beginTime=`date +%s`
