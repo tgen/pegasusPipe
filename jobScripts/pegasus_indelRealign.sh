@@ -33,7 +33,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 echo "### Starting step 2, indel realignment"
-java -Xmx120g -Djava.io.tmpdir=$TMPDIR \
+java -Xmx128g -Djava.io.tmpdir=$TMPDIR \
     -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -I ${BAMFILE} \
     -R ${REF} \
