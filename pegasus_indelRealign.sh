@@ -49,6 +49,7 @@ indels=`grep @@"$recipe"@@ $constants | grep @@INDELS= | cut -d= -f2`
 bwaPath=`grep "@@"$recipe"@@" $constants | grep @@BWAPATH= | cut -d= -f2`
 irRequested=`grep "@@"$recipe"@@" $constants | grep @@INDELREALIGN= | cut -d= -f2`
 faiFile="$ref.fai"
+indel=`grep @@INDELREALIGN= $constantsDir/$recipe | cut -d= -f2`
 
 echo "### projName: $projName"
 echo "### confFile: $configFile"
@@ -61,6 +62,10 @@ qsubFails=0
 ###
 for configLine in `cat $configFile`
 do
+    if [ $indel != "yes" ] ; then
+        echo "indel realignment not requested for this recipe"
+        continue
+    fi
     if [ "$configLine" == "=START" ] ; then
         skipLines=0
         continue
