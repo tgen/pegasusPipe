@@ -112,9 +112,11 @@ do
                         d=`echo $runDir | cut -c 2-`
 			if [ $indel != "yes" ] ; then
         		    echo "Indel realignment not requested for this recipe, skipping job submission..."
-			    echo "Renaming bam file to bypass naming scheme validation in later steps..."
-			    echo "mv $bamName $irBamFile"
-			    mv $bamName $irBamFile
+			    echo "Copying and renaming the bam file and index to bypass naming scheme validation in later steps..."
+			    echo "cp $bamName $irBamFile"
+			    echo "cp ${bamName}.bai ${irBamFile}.bai"
+			    cp $bamName $irBamFile
+			    cp ${bamName}.bai ${irBamFile}.bai
 			    echo "Touching ${bamName}.indelRealignPass"
 			    touch ${bamName}.indelRealignPass
 			    echo "Touching ${runDir}/${nxtStep1}"
