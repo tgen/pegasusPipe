@@ -62,10 +62,6 @@ qsubFails=0
 ###
 for configLine in `cat $configFile`
 do
-    if [ $indel != "yes" ] ; then
-        echo "indel realignment not requested for this recipe"
-        continue
-    fi
     if [ "$configLine" == "=START" ] ; then
         skipLines=0
         continue
@@ -114,6 +110,17 @@ do
                             continue
                         fi
                         d=`echo $runDir | cut -c 2-`
+			if [ $indel != "yes" ] ; then
+        		    echo "Indel realignment not requested for this recipe, skipping job submission..."
+			    echo "Renaming bam file to bypass naming scheme validation in later steps..."
+			    echo "mv $bamName $irBamFile"
+			    mv $bamName $irBamFile
+			    echo "Touching ${bamName}.indelRealignPass"
+			    touch ${bamName}.indelRealignPass
+			    echo "Touching ${runDir}/${nxtStep1}"
+    			    touch ${runDir}/${nxtStep1}
+        		    continue
+    			fi
                         echo "### Submitting to indel realign to create $bamName"
 			echo "sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem 128G --export ALL,GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_indelRealign.sh"
                         sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem 128G --export ALL,GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_indelRealign.sh
