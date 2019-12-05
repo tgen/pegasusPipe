@@ -3,7 +3,7 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#SBATCH --mem 8G
+#SBATCH --mem 16G
 
 beginTime=`date +%s`
 machine=`hostname`
@@ -23,7 +23,7 @@ echo "### TUMOR: ${TUMOR}"
 echo "### NORMAL: ${NORMAL}"
 echo "### MUTECTPATH: ${MUTECTPATH}"
 
-echo "/home/tgenref/binaries/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
+echo "/home/tgenref/binaries/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx12G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
     -nt 1 \
     -nct 1 \
     --analysis_type MuTect \
@@ -49,7 +49,7 @@ echo "/home/tgenref/binaries/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR 
     --normal_depth_file ${OUTPUT}_Step${STEP}_MuTect_NormalDepth.wig \
     --vcf ${OUTPUT}_Step${STEP}_MuTect.vcf"
 
-/home/tgenref/binaries/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx4G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
+/home/tgenref/binaries/java/jdk1.6.0_45/bin/java -Djava.io.tmpdir=$TMPDIR -Xmx12G -jar ${MUTECTPATH}/muTect-1.1.4.jar \
     -nt 1 \
     -nct 1 \
     --analysis_type MuTect \
