@@ -22,7 +22,7 @@ echo "### OUTBAM: ${OUTBAM}"
 echo "### GATK splitNCigarReads started at $time."
 
 # All mapping qualities of 255 will be reassigned to 60 in the bam
-java -Xmx40G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Xmx48G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -l INFO \
     -R ${REF} \
     -T SplitNCigarReads \
