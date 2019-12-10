@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name="pegasus_rnaMD"
-#SBATCH --time=0-48:00:00
+#SBATCH --time=0-72:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
 #SBATCH --mem 64G
@@ -14,7 +14,7 @@ echo "### BAMFILE: ${BAMFILE}"
 echo "### SAMTOOLSPATH: ${SAMTOOLSPATH}"
 
 echo "### Starting picard mark duplicates"
-java -Xmx22g -jar ${PICARDPATH}/picard.jar MarkDuplicates \
+java -Xmx31g -jar ${PICARDPATH}/picard.jar MarkDuplicates \
     ASSUME_SORTED=true \
     REMOVE_DUPLICATES=false \
     VALIDATION_STRINGENCY=SILENT \
