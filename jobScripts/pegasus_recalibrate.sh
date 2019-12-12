@@ -6,6 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --cpus-per-task 14
+#SBATCH --mem-per-cpu 4096
 
 time=`date +%d-%m-%Y-%H-%M` 
 beginTime=`date +%s`
@@ -17,7 +18,7 @@ echo "### GATK: ${GATKPATH}"
 echo "### KNOWN: ${KNOWN}"
 echo "gatk base recalibration started on $machine"
 
-java -Xmx44g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Xmx48g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -T BaseRecalibrator \
     -nct 8 \
     -l INFO \
@@ -39,7 +40,7 @@ if [ $? -ne 0 ] ; then
 fi
 
 echo "gatk base recalibration print reads stage started"
-java -Xmx44g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Xmx48g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -l INFO \
     -nct 14 \
     -R ${REF} \
