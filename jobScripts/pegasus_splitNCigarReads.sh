@@ -6,7 +6,7 @@
 #SBATCH -n 1
 #SBATCH -N 1
 #SBATCH --mem-per-cpu 4096
-#SBATCH --cpus-per-task 14
+#SBATCH --cpus-per-task 16
 
 time=`date +%d-%m-%Y-%H-%M`
 beginTime=`date +%s`
@@ -21,8 +21,11 @@ echo "### OUTBAM: ${OUTBAM}"
 
 echo "### GATK splitNCigarReads started at $time."
 
+# Dynamically setting max heap size
+maxHeap=$((`nproc`*4-4))
+
 # All mapping qualities of 255 will be reassigned to 60 in the bam
-java -Xmx48G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
+java -Xmx${maxHeap}G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -l INFO \
     -R ${REF} \
     -T SplitNCigarReads \
