@@ -3,9 +3,6 @@
 #SBATCH --time=0-48:00:00
 #SBATCH --mail-user=jetstream@tgen.org
 #SBATCH --mail-type=FAIL
-#SBATCH -n 1
-#SBATCH -N 1
-#SBATCH --cpus-per-task 14
 #SBATCH --mem-per-cpu 4096
 
 time=`date +%d-%m-%Y-%H-%M` 
@@ -20,7 +17,7 @@ echo "gatk base recalibration started on $machine"
 
 java -Xmx48g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -T BaseRecalibrator \
-    -nct 8 \
+    -nct 4 \
     -l INFO \
     -R ${REF} \
     -knownSites ${KNOWN} \
@@ -42,7 +39,7 @@ fi
 echo "gatk base recalibration print reads stage started"
 java -Xmx48g -jar ${GATKPATH}/GenomeAnalysisTK.jar \
     -l INFO \
-    -nct 14 \
+    -nct 4 \
     -R ${REF} \
     -I ${BAMFILE} \
     -T PrintReads \

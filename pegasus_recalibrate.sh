@@ -39,13 +39,13 @@ fi
 recipe=`cat $configFile | grep "^RECIPE=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 debit=`cat $configFile | grep "^DEBIT=" | cut -d= -f2 | head -1 | tr -d [:space:]`
 
-nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2`
+nCores=`grep @@${myName}_CORES= $constantsDir/$recipe | cut -d= -f2` # 16 cores
 
 dnaAligner=`grep "@@"$recipe"@@" $constants | grep @@DNAALIGNER= | cut -d= -f2`
 ref=`grep "@@"$recipe"@@" $constants | grep @@REF= | cut -d= -f2`
 samtoolsPath=`grep "@@"$recipe"@@" $constants | grep @@SAMTOOLSPATH= | cut -d= -f2`
 gatkPath=`grep "@@"$recipe"@@" $constants | grep @@GATKPATH= | cut -d= -f2`
-known=`grep @@"$recipe"@@ $constants | grep @@SNPS= | cut -d= -f2`
+known=`grep "@@"$recipe"@@" $constants | grep @@SNPS= | cut -d= -f2`
 bwaPath=`grep "@@"$recipe"@@" $constants | grep @@BWAPATH= | cut -d= -f2`
 irRequested=`grep "@@"$recipe"@@" $constants | grep @@INDELREALIGN= | cut -d= -f2`
 rcRequested=`grep "@@"$recipe"@@" $constants | grep @@RECALIBRATE= | cut -d= -f2`
