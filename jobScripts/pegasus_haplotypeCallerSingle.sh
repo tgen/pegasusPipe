@@ -24,7 +24,7 @@ java -Djava.io.tmpdir=$TMPDIR -jar -Xmx24g ${GATKPATH}/GenomeAnalysisTK.jar \
 -R ${REF} \
 -T HaplotypeCaller \
 -L ${CHRLIST}/Step${STEP}.list \
--nct 8 \
+-nct 4 \
 -I ${BAMLIST} \
 -D ${KNOWN} \
 -mbq 10 \
