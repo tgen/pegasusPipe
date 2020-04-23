@@ -138,7 +138,7 @@ do
         fi
 
         echo Starting Haplotype caller Step${STEP}
-        jidhc=$(sbatch --parsable --profile=ltask --acctg-freq=task=10 --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh)
+        jidhc=$(sbatch --parsable --profile=ltask --acctg-freq=task=5 --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh)
         if [[ $jidhc != "" ]]
         then
             jidh5=$(sbatch --parsable -J sh5utils_job${jidhc} -n1 --mem=2G --time=0-01:00:00 --dependency=afterany:$jidhc --wrap="sh5util -j $jidhc")  #create a dependant job to execute sh5util when job is finished
