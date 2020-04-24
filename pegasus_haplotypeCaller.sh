@@ -138,12 +138,8 @@ do
         fi
 
         echo Starting Haplotype caller Step${STEP}
-        jidhc=$(sbatch --parsable --profile=ltask --acctg-freq=task=5 --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh)
-        if [[ $jidhc != "" ]]
-        then
-            jidh5=$(sbatch --parsable -J sh5utils_job${jidhc} -n1 --mem=2G --time=0-01:00:00 --dependency=afterany:$jidhc --wrap="sh5util -j $jidhc")  #create a dependant job to execute sh5util when job is finished
-            sbatch -n1 --mem=2G --time=0-01:00:00 -J plot_h5_${jidhc}_${jidh5} -o slurm_plot_profiling_for_job_${jidh5}.out --dependency=afterok:${jidh5} --wrap="module load R/3.6.1-phoenix ; Rscript /home/tgenjetstream/git_repositories/tgenHPC_Notes/slurm/profiling_make_Rplots.R -i job_${jidhc}.h5 -o job_${jidhc}.h5.pdf -p 8 --max_mem_gb 48 -t 'haplotype_caller' " ; ## run script to make plots about profile summary for job ${SLURM_JOB_ID}
-        fi
+        sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --export ALL,GATKPATH=$gatkPath,STEPCOUNT=$STEP_COUNT,TRK=$trackName,KNOWN=$snps,BAMLIST="$sampleList",TRK=$trackName,CHRLIST=$chrList,REF=$ref,STEP=${STEP},NXT1=$nxtStep1,NXT2=$nxtStep2,NXT3=$nxtStep3,RUNDIR=$runDir,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_haplotypeCaller.sh
+
         if [ $? -eq 0 ] ; then
             touch ${trackName}_Step${STEP}.hcInQueue
         else
