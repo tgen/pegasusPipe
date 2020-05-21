@@ -5,7 +5,7 @@
 #SBATCH --mail-type=FAIL
 #SBATCH -n 1
 #SBATCH -N 1
-#SBATCH --mem-per-cpu 6144
+#SBATCH --mem-per-cpu 8192
 #SBATCH --cpus-per-task 16
 
 time=`date +%d-%m-%Y-%H-%M`
@@ -22,7 +22,7 @@ echo "### OUTBAM: ${OUTBAM}"
 echo "### GATK splitNCigarReads started at $time."
 
 # Dynamically setting max heap size
-maxHeap=$((`nproc`*6-8))
+maxHeap=$((`nproc`*8-8))
 
 # All mapping qualities of 255 will be reassigned to 60 in the bam
 java -Xmx${maxHeap}G -Djava.io.tmpdir=$TMPDIR -jar ${GATKPATH}/GenomeAnalysisTK.jar \
