@@ -146,11 +146,11 @@ do
                 checkIfSplit="$runDir/$kitName/$samName/$samName.preMerge.000.bam.processSplit"
                 inAPair=`cat $configFile | grep 'DNAPAIR' | grep $samName`
                 inAFam=`cat $configFile | grep 'DNAFAMI' | grep $samName`
-                #if [ -z "$inAPair" ] && [ -z "$inAFam" ] ; then
-                #        inputNextExt="ir.rc.bam"
-                #        prevStepExt="recalibratePass"
-                #        prevStepFile="ir.bam"
-                #fi
+                if [ -z "$inAPair" ] && [ -z "$inAFam" ] ; then
+                    inputNextExt="ir.rc.bam"
+                    prevStepExt="recalibratePass"
+                    prevStepFile="ir.bam"
+                fi
                 if [ -e $checkIfSplit ] ; then
                     echo "### Setting previous step extension to mergeBamPass because this bam was processed in pieces"
                     prevStepExt="mergeBamPass"

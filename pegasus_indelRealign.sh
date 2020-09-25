@@ -49,7 +49,6 @@ indels=`grep @@"$recipe"@@ $constants | grep @@INDELS= | cut -d= -f2`
 bwaPath=`grep "@@"$recipe"@@" $constants | grep @@BWAPATH= | cut -d= -f2`
 irRequested=`grep "@@"$recipe"@@" $constants | grep @@INDELREALIGN= | cut -d= -f2`
 faiFile="$ref.fai"
-indel=`grep @@INDELREALIGN= $constantsDir/$recipe | cut -d= -f2`
 
 echo "### projName: $projName"
 echo "### confFile: $configFile"
@@ -110,21 +109,8 @@ do
                             continue
                         fi
                         d=`echo $runDir | cut -c 2-`
-			if [ $indel != "yes" ] ; then
-        		    echo "Indel realignment not requested for this recipe, skipping job submission..."
-			    echo "Copying and renaming the bam file and index to bypass naming scheme validation in later steps..."
-			    echo "cp $bamName $irBamFile"
-			    echo "cp ${bamName}.bai ${irBamFile}.bai"
-			    cp $bamName $irBamFile
-			    cp ${bamName}.bai ${irBamFile}.bai
-			    echo "Touching ${bamName}.indelRealignPass"
-			    touch ${bamName}.indelRealignPass
-			    echo "Touching ${runDir}/${nxtStep1}"
-    			    touch ${runDir}/${nxtStep1}
-        		    continue
-    			fi
                         echo "### Submitting to indel realign to create $bamName"
-			echo "sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem 128G --export ALL,GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_indelRealign.sh"
+                        echo "sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem 128G --export ALL,GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_indelRealign.sh"
                         sbatch --account ${debit} --output $runDir/oeFiles/%x-slurm-%j.out -n 1 -N 1 --cpus-per-task $nCores --mem 128G --export ALL,GATKPATH=$gatkPath,INTS=$irIntFile,IRBAMFILE=$irBamFile,D=$d,INDELS=$indels,REF=$ref,BAMFILE=$bamName,RUNDIR=$runDir,NXT1=$nxtStep1,D=$d ${JETSTREAM_HOME}/pegasusPipe/jobScripts/pegasus_indelRealign.sh
                         if [ $? -eq 0 ] ; then
                             touch $bamName.indelRealignInQueue

@@ -95,14 +95,14 @@ do
                             echo "### Indel realign is $irRequested."
                             inAPair=`cat $configFile | grep 'DNAPAIR' | grep $samName`
                             inAFam=`cat $configFile | grep 'DNAFAMI' | grep $samName`
-                                                        if [ -z "$inAPair" ] && [ -z "$inAFam" ] ; then
-                                                                echo "This sample isn't paired a solo indel realign was done"
-                                                                prevStepFile=$bamName
-                                                                inputForNext=$irBamFile
-                                                                prevStepExtn="indelRealignPass"
-                                                                rcBamFile=${bamName/.bam/.ir.rc.bam}
-                                                        else
-                                                                echo "The previous step was alignment"
+                            if [ -z "$inAPair" ] && [ -z "$inAFam" ] ; then
+                                echo "This sample isn't paired a solo indel realign was done"
+                                prevStepFile=$bamName
+                                inputForNext=$irBamFile
+                                prevStepExtn="indelRealignPass"
+                                rcBamFile=${bamName/.bam/.ir.rc.bam}
+                            else
+                                echo "The previous step was alignment"
                                 prevStepFile=$bamName
                                 inputForNext=$bamName
                                 prevStepExtn="dnaAlignPass"
